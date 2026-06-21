@@ -609,6 +609,14 @@ async function listChapters(env, slug) {
   return json(results);
 }
 
+// 解析定时发布时间为 SQLite datetime 兼容格式
+function parseScheduledAt(input) {
+  if (!input) return null;
+  const d = new Date(input);
+  if (isNaN(d.getTime())) return null; // 无效时间 → null
+  return d.toISOString().replace('T', ' ').slice(0, 19); // "2026-06-22 08:00:00"
+}
+
 async function addChapter(env, slug, data) {
   const book = await env.DB.prepare('SELECT * FROM books WHERE slug = ?').bind(slug).first();
   if (!book) return json({ error: 'Book not found' }, 404);
@@ -664,7 +672,7 @@ async function addChapter(env, slug, data) {
     title || `Chapter ${number}`,
     content,
     wordCount,
-    data.scheduledAt || null,
+    parseScheduledAt(data.scheduledAt),
     data.published ? 1 : 0
   ).run();
 
@@ -700,7 +708,7 @@ async function updateChapter(env, slug, number, data) {
     data.title || existing.title,
     data.content || existing.content,
     data.wordCount ?? existing.word_count,
-    data.scheduledAt || existing.scheduled_at,
+    data.scheduledAt !== undefined ? parseScheduledAt(data.scheduledAt) : existing.scheduled_at,
     data.published !== undefined ? (data.published ? 1 : 0) : existing.published,
     slug, number
   ).run();
