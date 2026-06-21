@@ -616,6 +616,25 @@ async function addChapter(env, slug, data) {
   const content = data.content || '';
   const title = data.title || '';
 
+  // 计算实际字数（英文按空格分词，中文按字符）
+  function countWords(text) {
+    if (!text) return 0;
+    const cleaned = text.replace(/<[^>]+>/g, ' ').replace(/[^\w\u4e00-\u9fff\s]/g, ' ');
+    const words = cleaned.split(/\s+/).filter(w => w.length > 0);
+    let total = 0;
+    for (const w of words) {
+      if (/[\u4e00-\u9fff]/.test(w)) {
+        // 中文：按字符数
+        total += w.length;
+      } else {
+        // 英文：每个token计1词
+        total += 1;
+      }
+    }
+    return total;
+  }
+  const wordCount = data.wordCount || countWords(content) || 1;
+
   // ═══ 自动审核 ═══
   const review = reviewContent(title, content);
 
@@ -644,7 +663,7 @@ async function addChapter(env, slug, data) {
     slug, number,
     title || `Chapter ${number}`,
     content,
-    data.wordCount || 2000,
+    wordCount,
     data.scheduledAt || null,
     data.published ? 1 : 0
   ).run();
@@ -1636,6 +1655,8 @@ async function autoMigrate(env) {
     "ALTER TABLE review_queue ADD COLUMN email_sent INTEGER DEFAULT 0",
     "ALTER TABLE chapters ADD COLUMN publish_status TEXT DEFAULT 'published'",
     "ALTER TABLE books ADD COLUMN publish_status TEXT DEFAULT 'published'",
+    "ALTER TABLE books ADD COLUMN chapters INTEGER DEFAULT 0",
+    "ALTER TABLE books ADD COLUMN wordCount INTEGER DEFAULT 0",
     `CREATE TABLE IF NOT EXISTS email_queue (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       author_email TEXT NOT NULL,

@@ -187,6 +187,10 @@ ALTER TABLE review_queue ADD COLUMN email_sent INTEGER DEFAULT 0;
 ALTER TABLE chapters ADD COLUMN publish_status TEXT DEFAULT 'published';
 ALTER TABLE books ADD COLUMN publish_status TEXT DEFAULT 'published';
 
+-- v4: book stats columns (for updateBookStats after chapter CRUD)
+ALTER TABLE books ADD COLUMN chapters INTEGER DEFAULT 0;
+ALTER TABLE books ADD COLUMN wordCount INTEGER DEFAULT 0;
+
 -- ═══ Email Notification Queue ═══
 CREATE TABLE IF NOT EXISTS email_queue (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
