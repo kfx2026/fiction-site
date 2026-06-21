@@ -10,9 +10,6 @@ on:
 jobs:
   deploy-worker:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./worker
 
     steps:
       - uses: actions/checkout@v4
@@ -22,10 +19,8 @@ jobs:
           node-version: '22'
 
       - name: Deploy Worker
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
-          apiEmail: ${{ secrets.CLOUDFLARE_EMAIL }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'worker'
-          command: deploy
+        run: npx wrangler@4 deploy
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
