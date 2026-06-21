@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FictionVerse Admin</title>
+<style>
+:root{--bg:#0a0b10;--card:#11131f;--text:#d8dae0;--dim:#8b8fa0;--accent:#4f8cff;--gold:#e8c040;--green:#34c759;--red:#ff4757}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;min-height:100vh}
+a{color:var(--accent)}
+.container{max-width:1000px;margin:0 auto;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:var(--card);border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:24px}
+.header h1{font-size:1.1rem;color:#fff}
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--card);border-radius:10px;padding:4px}
+.tab{flex:1;text-align:center;padding:10px;border-radius:8px;cursor:pointer;font-size:0.82rem;color:var(--dim);transition:all 0.15s}
+.tab:hover{color:#fff}
+.tab.active{background:var(--accent);color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:20px;margin-bottom:16px}
+.card h3{font-size:0.9rem;color:#fff;margin-bottom:16px}
+.form-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.form-group{flex:1;min-width:200px}
+.form-group label{display:block;font-size:0.72rem;color:var(--dim);margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#fff;font-size:0.82rem;font-family:inherit}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-group select{appearance:none;cursor:pointer}
+.btn{padding:8px 18px;border-radius:6px;border:none;font-size:0.8rem;cursor:pointer;font-weight:600;transition:all 0.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{opacity:0.9}
+.btn-green{background:var(--green);color:#0a0b10}
+.btn-gold{background:var(--gold);color:#0a0b10}
+.btn-red{background:var(--red);color:#fff}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--dim)}
+.btn-sm{padding:4px 10px;font-size:0.7rem}
+.book-list-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;transition:background 0.15s;margin-bottom:4px}
+.book-list-item:hover{background:rgba(255,255,255,0.02)}
+.book-list-item .title{flex:1;font-size:0.85rem;color:#fff}
+.book-list-item .meta{font-size:0.7rem;color:var(--dim)}
+.code-block{background:#000;color:var(--green);padding:16px;border-radius:8px;font-family:monospace;font-size:0.8rem;overflow-x:auto;white-space:pre-wrap;margin:12px 0}
+.copy-btn{float:right;font-size:0.7rem;padding:4px 10px;cursor:pointer}
+.status-msg{padding:8px 14px;border-radius:6px;font-size:0.78rem;margin-top:12px;display:none}
+.status-msg.success{background:rgba(52,199,89,0.1);color:var(--green);display:block}
+.status-msg.error{background:rgba(255,71,87,0.1);color:var(--red);display:block}
+.login-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.login-box{background:var(--card);padding:32px;border-radius:12px;text-align:center;width:340px}
+.login-box input{width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;text-align:center;font-size:1rem;margin:16px 0}
+.chapter-row{display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;border-radius:6px;background:rgba(255,255,255,0.02)}
+.chapter-row input{flex:1;padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;font-size:0.78rem}
+.chapter-row .ch-num{color:var(--accent);font-weight:700;min-width:30px;font-size:0.78rem}
+</style>
+</head>
+<body>
+
+<!-- Login Gate -->
+<div class="login-overlay" id="loginGate">
+  <div class="login-box">
+    <h2 style="color:#fff;margin-bottom:4px">FictionVerse Admin</h2>
+    <p style="color:var(--dim);font-size:0.82rem">Enter admin password</p>
+    <input type="password" id="loginPwd" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" onclick="doLogin()" style="width:100%">Login</button>
+  </div>
+</div>
+
+<div class="header">
+  <h1>📖 FictionVerse Admin</h1>
+  <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchPanel('books')">📚 Books</div>
+    <div class="tab" onclick="switchPanel('chapters')">📄 Chapters</div>
+    <div class="tab" onclick="switchPanel('build')">🚀 Build & Deploy</div>
+    <a href="review.html" class="tab" style="text-decoration:none">🔍 审核</a>
+  </div>
+
+  <!-- Books Panel -->
+  <div class="panel active" id="panel-books">
+    <div class="card">
+      <h3 id="bookFormTitle">Add New Book</h3>
+      <form id="bookForm" onsubmit="saveBook(event)">
+        <input type="hidden" id="bookIdx" value="-1">
+        <div class="form-row">
+          <div class="form-group"><label>Title *</label><input id="bTitle" required></div>
+          <div class="form-group"><label>Slug *</label><input id="bSlug" required placeholder="auto-from-title"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Author *</label><input id="bAuthor" required></div>
+          <div class="form-group"><label>Author Bio</label><input id="bAuthorBio"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Genre *</label>
+            <select id="bGenre">
+              <option value="xianxia">Xianxia / Cultivation</option><option value="wuxia">Wuxia</option>
+              <option value="urban">Urban Fantasy</option><option value="scifi">Sci-Fi</option>
+              <option value="litrpg">LitRPG / GameLit</option><option value="isekai">Isekai / Transmigration</option>
+              <option value="fantasy">Epic Fantasy</option><option value="magic-academy">Magic Academy</option>
+              <option value="romance">Romance</option><option value="harem">Harem / Reverse Harem</option>
+              <option value="yaoi">Boys Love / Yaoi</option><option value="horror">Horror / Thriller</option>
+              <option value="apocalypse">Apocalypse / Survival</option><option value="supernatural">Supernatural / Paranormal</option>
+              <option value="mystery">Mystery / Detective</option><option value="action">Action / Adventure</option>
+              <option value="historical">Historical Fiction</option><option value="slice-of-life">Slice of Life</option>
+              <option value="comedy">Comedy / Satire</option><option value="drama">Drama / Tragedy</option>
+            </select></div>
+          <div class="form-group"><label>Tier</label>
+            <select id="bTier"><option value="paid">Paid</option><option value="free">Free</option></select></div>
+          <div class="form-group"><label>Price ($)</label><input id="bPrice" type="number" step="0.01" value="4.99"></div>
+          <div class="form-group"><label>Free Chapters</label><input id="bFreeCh" type="number" value="5"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Status</label>
+            <select id="bStatus"><option value="ongoing">Ongoing</option><option value="completed">Completed</option></select></div>
+          <div class="form-group"><label>Rating</label><input id="bRating" type="number" step="0.1" min="1" max="5" value="4.5"></div>
+          <div class="form-group"><label>Reviews</label><input id="bReviews" type="number" value="0"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="flex:2"><label>Cover Image Path</label><input id="bCover" placeholder="/images/covers/my-book.png"></div>
+          <div class="form-group" style="flex:2"><label>Cover Alt Text</label><input id="bCoverAlt" placeholder="Book cover description"></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="bDesc" rows="3"></textarea></div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button type="submit" class="btn btn-primary">Save Book</button>
+          <button type="button" class="btn btn-outline" onclick="resetBookForm()">Clear</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Current Books</h3>
+      <div id="bookList">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Chapters Panel -->
+  <div class="panel" id="panel-chapters">
+    <div class="card">
+      <h3>Chapter Editor</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Select Book</label><select id="chBookSelect" onchange="loadChapters()"><option value="">— Choose —</option></select></div>
+      </div>
+      <div id="chapterEditor" style="margin-top:16px"></div>
+    </div>
+  </div>
+
+  <!-- Build Panel -->
+  <div class="panel" id="panel-build">
+    <div class="card">
+      <h3>1. Build Site</h3>
+      <p style="font-size:0.78rem;color:var(--dim);margin-bottom:8px">Run this command in your terminal at <code>D:/网站源码/fiction-site/</code>:</p>
+      <div class="code-block">node build.js</div>
+      <p style="font-size:0.72rem;color:var(--dim)">Expected: ✓ index.html, book pages, genre pages, unlock pages, sitemap</p>
+    </div>
+
+    <div class="card">
+      <h3>2. Deploy to Cloudflare</h3>
+      <div class="code-block">set CLOUDFLARE_API_TOKEN=&lt;your_cf_api_token&gt;
+set CLOUDFLARE_ACCOUNT_ID=9d1d9c36d0f3586acf70d4cc7693ba59
+npx wrangler@3 pages deploy ./ --project-name=fiction-site --branch=main --commit-dirty=true</div>
+    </div>
+
+    <div class="card">
+      <h3>3. Verify</h3>
+      <p style="font-size:0.78rem;color:var(--dim)">
+        ✅ <a href="https://fiction.aichatmail.one/" target="_blank">fiction.aichatmail.one</a><br>
+        ✅ <a href="https://fiction.aichatmail.one/free/" target="_blank">Free books</a><br>
+        ✅ <a href="https://fiction.aichatmail.one/paid/" target="_blank">Paid books</a><br>
+        ✅ <a href="https://fiction.aichatmail.one/genre/xianxia/" target="_blank">Genre pages</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ AUTH ═══════════════
+var _adminLogged=false;
+const ADMIN_PWD = 'fiction2026';
+// 尝试从sessionStorage恢复
+try{ if(sessionStorage.getItem('fv_admin')==='1') _adminLogged=true; }catch(e){}
+if (_adminLogged) {
+  var lg=document.getElementById('loginGate');if(lg)lg.style.display='none';
+}
+function doLogin() {
+  if (document.getElementById('loginPwd').value === ADMIN_PWD) {
+    _adminLogged=true;
+    document.getElementById('loginGate').style.display = 'none';
+    try{ sessionStorage.setItem('fv_admin', '1'); }catch(e){}
+  } else {
+    var inp=document.getElementById('loginPwd');
+    inp.style.border='2px solid #ff4757';
+    setTimeout(function(){inp.style.border='';},1500);
+  }
+}
+function logout() {
+  _adminLogged=false;
+  try{ sessionStorage.removeItem('fv_admin'); }catch(e){}
+  var lg=document.getElementById('loginGate');if(lg)lg.style.display='flex';
+  document.getElementById('loginPwd').value = '';
+}
+
+// ═══════════════ DATA ═══════════════
+let booksData = [];
+function loadBooks() {
+  fetch('data/books.json?t='+Date.now())
+    .then(r => r.json())
+    .then(data => { booksData = data; renderBookList(); populateBookSelects(); })
+    .catch(e => {
+      // Fallback: show template if offline
+      document.getElementById('bookList').innerHTML = '<p style="color:var(--dim);font-size:0.82rem">⚠️ Cannot load books.json. Run from local server or open this file in the fiction-site directory.</p>';
+    });
+}
+
+// ═══════════════ BOOK MANAGEMENT ═══════════════
+function renderBookList() {
+  var html = '';
+  booksData.forEach(function(b, i) {
+    html += '<div class="book-list-item">'+
+      '<span style="color:var(--dim);font-size:0.7rem;min-width:20px">'+(i+1)+'</span>'+
+      '<span class="title">'+b.title+'</span>'+
+      '<span class="meta">by '+b.author+' · '+(b.genre||'')+' · '+(b.tier||'free')+'</span>'+
+      '<button class="btn btn-outline btn-sm" onclick="editBook('+i+')">Edit</button>'+
+      '<button class="btn btn-red btn-sm" onclick="deleteBook('+i+')">×</button>'+
+    '</div>';
+  });
+  document.getElementById('bookList').innerHTML = html || '<p style="color:var(--dim)">No books yet.</p>';
+}
+
+function editBook(idx) {
+  var b = booksData[idx];
+  document.getElementById('bookFormTitle').textContent = 'Edit: ' + b.title;
+  document.getElementById('bookIdx').value = idx;
+  ['bTitle','bSlug','bAuthor','bAuthorBio'].forEach(function(id){ document.getElementById(id).value = b[id.replace('b','').toLowerCase()] || ''; });
+  document.getElementById('bGenre').value = b.genre || 'xianxia';
+  document.getElementById('bTier').value = b.tier || 'paid';
+  document.getElementById('bPrice').value = b.price || 4.99;
+  document.getElementById('bFreeCh').value = b.freeChapters || 5;
+  document.getElementById('bStatus').value = b.status || 'ongoing';
+  document.getElementById('bRating').value = b.rating || 4.5;
+  document.getElementById('bReviews').value = b.reviews || 0;
+  document.getElementById('bCover').value = b.cover || '';
+  document.getElementById('bCoverAlt').value = b.coverAlt || '';
+  document.getElementById('bDesc').value = b.description || '';
+}
+
+function resetBookForm() {
+  document.getElementById('bookFormTitle').textContent = 'Add New Book';
+  document.getElementById('bookIdx').value = '-1';
+  document.getElementById('bookForm').reset();
+}
+
+function saveBook(e) {
+  e.preventDefault();
+  var idx = parseInt(document.getElementById('bookIdx').value);
+  var book = {
+    slug: document.getElementById('bSlug').value,
+    title: document.getElementById('bTitle').value,
+    author: document.getElementById('bAuthor').value,
+    authorBio: document.getElementById('bAuthorBio').value,
+    genre: document.getElementById('bGenre').value,
+    genres: [document.getElementById('bGenre').selectedOptions[0].textContent.split(' / ')[0]],
+    tier: document.getElementById('bTier').value,
+    price: parseFloat(document.getElementById('bPrice').value) || 4.99,
+    status: document.getElementById('bStatus').value,
+    rating: parseFloat(document.getElementById('bRating').value) || 4.5,
+    reviews: parseInt(document.getElementById('bReviews').value) || 0,
+    chapters: 0,
+    wordCount: 0,
+    cover: document.getElementById('bCover').value || '/images/covers/'+document.getElementById('bSlug').value+'.png',
+    coverAlt: document.getElementById('bCoverAlt').value,
+    freeChapters: parseInt(document.getElementById('bFreeCh').value) || 5,
+    updated: new Date().toISOString().split('T')[0],
+    description: document.getElementById('bDesc').value
+  };
+
+  if (idx >= 0) {
+    // Preserve chapters/wordCount from existing
+    var old = booksData[idx];
+    book.chapters = old.chapters || 0;
+    book.wordCount = old.wordCount || 0;
+    booksData[idx] = book;
+  } else {
+    booksData.push(book);
+  }
+
+  // Download JSON
+  downloadJSON('books.json', booksData);
+  renderBookList();
+  populateBookSelects();
+  resetBookForm();
+  showStatus('bookSaved', 'Book saved! Copy this JSON to data/books.json, then run build.js.', 'success');
+}
+
+function deleteBook(idx) {
+  if (!confirm('Delete "'+booksData[idx].title+'"? This cannot be undone.')) return;
+  booksData.splice(idx, 1);
+  downloadJSON('books.json', booksData);
+  renderBookList();
+  populateBookSelects();
+  showStatus('bookSaved', 'Book deleted. Update data/books.json and rebuild.', 'success');
+}
+
+function showStatus(id, msg, type) {
+  var el = document.getElementById(id) || createStatusEl();
+  el.textContent = msg;
+  el.className = 'status-msg ' + type;
+  setTimeout(function() { el.className = 'status-msg'; }, 5000);
+}
+function createStatusEl() {
+  var el = document.createElement('div');
+  el.id = 'bookSaved';
+  el.style.marginTop = '12px';
+  document.getElementById('bookForm').appendChild(el);
+  return el;
+}
+
+// ═══════════════ CHAPTER EDITOR ═══════════════
+function populateBookSelects() {
+  var html = '<option value="">— Choose —</option>';
+  booksData.forEach(function(b) {
+    html += '<option value="'+b.slug+'">'+b.title+'</option>';
+  });
+  document.getElementById('chBookSelect').innerHTML = html;
+}
+
+function loadChapters() {
+  var slug = document.getElementById('chBookSelect').value;
+  if (!slug) { document.getElementById('chapterEditor').innerHTML = ''; return; }
+
+  fetch('data/chapters/'+slug+'.json?t='+Date.now())
+    .then(r => r.json())
+    .then(chs => renderChapterEditor(slug, chs))
+    .catch(e => {
+      document.getElementById('chapterEditor').innerHTML = '<p style="color:var(--dim)">No chapters file yet for this book. Create one below.</p>'+
+        '<button class="btn btn-primary btn-sm" onclick="initChapters()">Create 20 Chapters</button>';
+    });
+}
+
+var currentChapters = [];
+var currentSlug = '';
+
+function renderChapterEditor(slug, chs) {
+  currentChapters = chs;
+  currentSlug = slug;
+  var html = '<div style="margin-bottom:8px;display:flex;gap:8px;align-items:center">'+
+    '<span style="font-size:0.78rem;color:var(--dim)">'+chs.length+' chapters</span>'+
+    '<button class="btn btn-outline btn-sm" onclick="addChapter()">+ Add</button>'+
+    '<button class="btn btn-green btn-sm" onclick="saveChapters()">💾 Save Chapters</button>'+
+    '</div>';
+
+  chs.forEach(function(ch, i) {
+    html += '<div class="chapter-row">'+
+      '<span class="ch-num">'+(i+1)+'.</span>'+
+      '<input value="'+ch.title+'" onchange="currentChapters['+i+'].title=this.value" placeholder="Chapter title">'+
+      '<input type="number" value="'+ch.wordCount+'" onchange="currentChapters['+i+'].wordCount=parseInt(this.value)||2000" style="width:80px" title="Word count">'+
+      '<button class="btn btn-red btn-sm" onclick="deleteChapter('+i+')">×</button>'+
+    '</div>';
+  });
+  document.getElementById('chapterEditor').innerHTML = html;
+}
+
+function initChapters() {
+  var slug = document.getElementById('chBookSelect').value;
+  if (!slug) return;
+  currentChapters = [];
+  currentSlug = slug;
+  for (var i = 0; i < 20; i++) {
+    currentChapters.push({ number: i+1, title: 'Chapter '+(i+1), wordCount: 2000, updated: new Date().toISOString().split('T')[0] });
+  }
+  renderChapterEditor(slug, currentChapters);
+}
+
+function addChapter() {
+  var n = currentChapters.length + 1;
+  currentChapters.push({ number: n, title: 'Chapter '+n, wordCount: 2000, updated: new Date().toISOString().split('T')[0] });
+  renderChapterEditor(currentSlug, currentChapters);
+}
+
+function deleteChapter(idx) {
+  currentChapters.splice(idx, 1);
+  for (var i = 0; i < currentChapters.length; i++) currentChapters[i].number = i + 1;
+  renderChapterEditor(currentSlug, currentChapters);
+}
+
+function saveChapters() {
+  downloadJSON('chapters-'+currentSlug+'.json', currentChapters);
+  alert('Chapters JSON downloaded! Copy to data/chapters/'+currentSlug+'.json, then run build.js.');
+}
+
+// ═══════════════ UTILS ═══════════════
+function downloadJSON(filename, data) {
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function switchPanel(name) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+}
+
+// Init
+loadBooks();
+</script>
+</body>
+</html>

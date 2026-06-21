@@ -1,0 +1,12 @@
+name = "fiction-verse-api"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fiction-verse-db"
+database_id = ""  # fill after `wrangler d1 create fiction-verse-db`
+
+[vars]
+ADMIN_PASSWORD_HASH = ""  # generated via /api/setup on first run, or preset here
+DEPLOY_HOOK_URL = ""     # CF Pages Deploy Hook URL for auto-deploy

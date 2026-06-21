@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community — FictionVerse</title>
+<meta name="description" content="Discuss web novels with fellow readers on the FictionVerse community forum.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="FictionVerse">
+<link rel="canonical" href="https://fiction.aichatmail.one/community">
+<meta property="og:title" content="Community — FictionVerse">
+<meta property="og:description" content="Discuss web novels with fellow readers on the FictionVerse community forum.">
+<meta property="og:url" content="https://fiction.aichatmail.one/community">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Community — FictionVerse","description":"Discuss web novels with fellow readers on the FictionVerse community forum.","isPartOf":{"@type":"WebSite","name":"FictionVerse","url":"https://fiction.aichatmail.one"}}</script>
+<style>
+:root{--bg:#0a0b10;--card:#11131f;--text:#d8dae0;--dim:#8b8fa0;--gold:#e8c040;--purple:#9b8cf0;--accent:#7c5cf0;--accent2:#4f8cff;--green:#34c759}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Georgia,'Times New Roman',serif;color:var(--text);background:var(--bg);line-height:1.6}
+a{color:inherit;text-decoration:none}
+/* Header */
+.hd{position:sticky;top:0;z-index:100;background:rgba(10,11,16,0.95);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(12px)}
+.hd-in{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.hd-logo{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.hd-nav{display:flex;gap:24px}
+.hd-nav a{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;color:var(--dim);transition:color 0.15s}
+.hd-nav a:hover{color:var(--gold)}
+/* Hero */
+.hero{position:relative;background:url('/images/hero-bg.jpg') center/cover no-repeat;min-height:35vh;display:flex;align-items:flex-end}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,11,16,0.2) 0%,rgba(10,11,16,0.4) 60%,var(--bg) 100%);z-index:1}
+.hero-in{position:relative;z-index:2;padding:36px 40px 20px;width:100%;max-width:1120px;margin:0 auto}
+.hero h1{font-size:2rem;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:4px}
+.hero p{font-size:0.85rem;color:rgba(255,255,255,0.55);max-width:480px}
+/* Content */
+.ct{max-width:1120px;margin:0 auto;padding:0 24px 40px}
+.tb{display:flex;align-items:center;justify-content:space-between;margin:24px 0 20px;flex-wrap:wrap;gap:10px}
+.tb-count{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;color:var(--dim)}
+.tb-sort{font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:6px 14px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;font-size:0.78rem;outline:none}
+/* Book Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:48px}
+.bk{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;transition:border-color 0.2s,transform 0.15s}
+.bk:hover{border-color:rgba(124,92,240,0.2);transform:translateY(-2px)}
+.bk-cv{aspect-ratio:2/3;background:rgba(255,255,255,0.02);overflow:hidden}
+.bk-cv img{width:100%;height:100%;object-fit:cover}
+.bk-bd{padding:14px}
+.bk-genre{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.58rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent2);margin-bottom:4px}
+.bk-title{font-size:0.9rem;font-weight:700;margin-bottom:4px;color:#fff}
+.bk-title a:hover{color:var(--accent2)}
+.bk-author{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim);margin-bottom:6px}
+.bk-meta{display:flex;align-items:center;gap:10px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim)}
+.bk-rating{color:var(--gold);font-weight:600}
+.bk-status{font-size:0.6rem;padding:2px 7px;border-radius:100px;font-weight:600}
+.s-go{color:var(--green);background:rgba(52,199,89,0.08)}
+.s-done{color:var(--accent2);background:rgba(79,140,255,0.08)}
+/* Detail */
+.detail{margin-bottom:48px}
+.detail-hd{display:flex;gap:24px;margin-bottom:24px;padding-top:24px}
+.detail-cv{width:160px;flex-shrink:0;aspect-ratio:2/3;border-radius:8px;overflow:hidden}
+.detail-cv img{width:100%;height:100%;object-fit:cover}
+.detail-info h1{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:6px}
+.detail-info .by{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.85rem;color:var(--dim);margin-bottom:10px}
+.detail-info .bio{font-size:0.78rem;color:var(--dim);line-height:1.6;margin-bottom:10px}
+.detail-stats{display:flex;gap:18px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim);margin-bottom:10px}
+.detail-stats .vl{color:#fff;font-weight:600}
+.detail-desc{font-size:0.85rem;color:var(--dim);line-height:1.7}
+/* Chapter list */
+.ch-sec{margin-top:24px}
+.ch-sec h2{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.85rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.ch-list{display:flex;flex-direction:column;gap:1px}
+.ch-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;transition:background 0.15s}
+.ch-item:hover{background:rgba(255,255,255,0.02)}
+.ch-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--accent2);font-weight:700;min-width:28px;text-align:right;font-size:0.75rem}
+.ch-title{font-size:0.82rem;color:var(--dim)}
+.ch-title a:hover{color:#fff}
+/* Chapter page */
+.cp{max-width:720px;margin:24px auto;padding:0 24px}
+.cp-hd{margin-bottom:20px}
+.cp-hd .cp-book{font-size:0.82rem;color:var(--dim)}
+.cp-hd .cp-book a{color:var(--accent2)}
+.cp-hd h1{font-size:1.2rem;font-weight:700;color:#fff;margin:4px 0}
+.cp-nav{display:flex;justify-content:space-between;align-items:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;margin:32px 0;padding:12px 0;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)}
+.cp-nav a{color:var(--accent2)}
+.cp-nav a:hover{color:#fff}
+.cp-nav span{color:var(--dim)}
+.ch-content{font-size:0.88rem;color:var(--dim);line-height:1.85;white-space:pre-line}
+/* Footer */
+.ft{text-align:center;padding:24px;border-top:1px solid rgba(255,255,255,0.05);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.68rem;color:var(--dim)}
+.ft nav{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+.ft nav a:hover{color:#fff}
+/* 404 */
+.err{text-align:center;padding:80px 24px}
+.err h1{font-size:3rem;color:#fff;margin-bottom:8px}
+.err p{color:var(--dim);margin-bottom:16px}
+.err a{color:var(--accent2);font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+@media(max-width:768px){
+  .hero-in{padding:24px 16px 16px}
+  .hero h1{font-size:1.4rem}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .bk-bd{padding:10px}
+  .bk-title{font-size:0.78rem}
+  .detail-hd{flex-direction:column;align-items:center;text-align:center}
+  .detail-cv{width:120px}
+  .hd-in{padding:10px 16px}
+  .hd-nav{gap:14px}
+}
+</style>
+</head>
+<body><header class="hd"><div class="hd-in">
+  <a href="/" class="hd-logo">FictionVerse</a>
+  <nav class="hd-nav"><a href="/">Library</a><a href="/bookshelf">📚 Shelf</a><a href="/community">💬 Forum</a><a href="/about">About</a><a href="/author">Publish</a></nav>
+</div></header>
+<main class="ct" style="max-width:720px;margin:24px auto">
+  <h1 style="font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:4px">Community — FictionVerse</h1>
+  <p style="font-size:0.72rem;color:var(--dim);margin-bottom:24px">Updated June 21, 2026</p>
+  <div id="fv-forum">
+  <div id="fv-forum-new" style="margin-bottom:16px">
+    <form onsubmit="postTopic(event)" style="display:flex;gap:8px">
+      <input id="fv-topic-title" placeholder="Start a discussion..." style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.82rem;font-family:inherit">
+      <button type="submit" style="padding:8px 20px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:0.82rem;font-family:inherit">Post</button>
+    </form>
+  </div>
+  <div id="fv-forum-list" style="font-size:0.82rem;color:var(--dim)">Loading discussions...</div>
+</div>
+<script src="/reader.js"></script>
+  <nav style="margin-top:32px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem"><a href="/" style="color:var(--accent2)">← Back to Library</a></nav>
+</main><footer class="ft" role="contentinfo">
+  <nav><a href="/">Library</a><a href="/about">About</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:support@fiction.aichatmail.one">Support</a></nav>
+  <p>© 2026 FictionVerse Publishing. Original fiction, independently published. All novels undergo editorial review. Contact: support@fiction.aichatmail.one</p>
+</footer>
+<script src="/app.js"></script>
+<script>window._FV_BOOK_COUNT=3;</script>
+</body></html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FictionVerse 自动审核</title>
+<style>
+:root{--bg:#0a0b10;--card:#11131f;--text:#d8dae0;--dim:#8b8fa0;--a:#4f8cff;--g:#34c759;--r:#ff4757;--o:#ff9500;--p:#af52de}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;min-height:100vh}
+.ct{max-width:1100px;margin:0 auto;padding:24px}
+.hd{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:var(--card);margin-bottom:24px;border-radius:0 0 10px 10px}
+.hd h1{font-size:1.1rem;color:#fff}.badge{font-size:.65rem;padding:3px 8px;border-radius:10px;background:var(--a);color:#fff}
+.btn{padding:8px 18px;border-radius:6px;border:none;font-size:.82rem;cursor:pointer;font-weight:600;font-family:inherit}
+.b1{background:var(--a);color:#fff}.b1:hover{opacity:.85}.b2{background:var(--g);color:#0a0b10}.b3{background:var(--r);color:#fff}.b4{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--dim)}
+.bs{padding:5px 12px;font-size:.72rem}.bl{padding:12px 28px;font-size:.9rem}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:20px;margin-bottom:16px}
+.card h3{font-size:.9rem;color:#fff;margin-bottom:12px}
+textarea{width:100%;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:.85rem;font-family:inherit;resize:vertical;line-height:1.7}
+textarea:focus{outline:none;border-color:var(--a)}textarea::placeholder{color:rgba(255,255,255,.2)}
+.frow{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.fg{flex:1;min-width:150px}.fg label{display:block;font-size:.72rem;color:var(--dim);margin-bottom:4px}
+.fg input{width:100%;padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:#fff;font-size:.82rem;font-family:inherit}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:700;margin-right:8px}
+.tag.g{background:rgba(52,199,89,.12);color:var(--g)}.tag.r{background:rgba(255,71,87,.12);color:var(--r)}
+.tag.o{background:rgba(255,149,0,.12);color:var(--o)}.tag.b{background:rgba(79,140,255,.1);color:var(--a)}.tag.p{background:rgba(175,82,222,.1);color:var(--p)}
+.vi{display:flex;gap:10px;padding:8px 12px;margin:0 0 4px 0;border-radius:0 6px 6px 0;font-size:.78rem}
+.vi.fail{background:rgba(255,71,87,.06);border-left:3px solid var(--r)}
+.vi.warn{background:rgba(255,149,0,.06);border-left:3px solid var(--o)}
+.vi.info{background:rgba(79,140,255,.04);border-left:3px solid var(--a)}
+.vc{font-weight:700;min-width:50px;font-size:.7rem}.vc.r{color:var(--r)}.vc.o{color:var(--o)}.vc.b{color:var(--a)}
+.vd{flex:1;color:var(--dim)}.vd strong{color:#fff}.hl{background:rgba(255,71,87,.2);padding:1px 4px;border-radius:3px;color:#ff6b7a}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.qi{background:rgba(255,255,255,.02);border-radius:8px;padding:14px;text-align:center}
+.qv{font-size:1.6rem;font-weight:800}.qv.g{color:var(--g)}.qv.w{color:var(--o)}.qv.bad{color:var(--r)}
+.ql{font-size:.65rem;color:var(--dim);margin-top:4px}
+.bn{padding:16px 20px;border-radius:10px;margin:16px 0;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:12px}
+.bn.pass{background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.2);color:var(--g)}
+.bn.fail{background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);color:var(--r)}
+.bn.warn{background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.2);color:var(--o)}
+.bn .bi{font-size:2rem}
+.lo{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.lb{background:var(--card);padding:32px;border-radius:12px;text-align:center;width:340px}
+.lb input{width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;text-align:center;font-size:1rem;margin:16px 0}
+.hidden{display:none!important}.mt12{margin-top:12px}.mb12{margin-bottom:12px}
+.sr{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}.sb{text-align:center;min-width:80px}
+.sb .sv{font-size:1.3rem;font-weight:700;color:#fff}.sb .sl{font-size:.62rem;color:var(--dim)}
+.bh-item{display:flex;align-items:center;gap:8px;padding:6px 10px;margin-bottom:3px;border-radius:6px;background:rgba(255,255,255,.02);font-size:.72rem}
+.bh-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="lo" id="lg"><div class="lb">
+<h2 style="color:#fff;margin-bottom:4px">自动审核</h2>
+<p style="color:var(--dim);font-size:.82rem">输入管理密码</p>
+<input type="password" id="lp" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+<button class="btn b1" onclick="doLogin()" style="width:100%">登入</button>
+</div></div>
+
+<div class="hd"><h1>自动审核 <span class="badge">Auto Review</span></h1>
+<div style="display:flex;gap:8px"><a href="admin.html" class="btn b4 bs">管理后台</a><button class="btn b4 bs" onclick="logout()">退出</button></div>
+</div>
+
+<div class="ct">
+<div class="card"><h3>提交审核</h3>
+<div class="frow"><div class="fg"><label>书名</label><input id="rt" placeholder="小说名称"></div>
+<div class="fg"><label>章节</label><input id="rc" placeholder="如: 第3章"></div>
+<div class="fg"><label>作者</label><input id="ra" placeholder="作者名"></div></div>
+<div class="fg mb12"><label>章节内容 (直接粘贴全文)</label>
+<textarea id="rx" rows="10" placeholder="在此粘贴需要审核的章节全文...
+
+系统自动检测：违禁词 | 内容质量 | AI生成痕迹 | 抄袭查重 | 格式规范 | 广告外链"></textarea>
+</div>
+<div class="fg mb12"><label>对照文本 — 抄袭查重 (可选，粘贴已有章节进行比对)</label>
+<textarea id="ref" rows="5" placeholder="可选：粘贴已有章节内容用于查重比对。留空则跳过抄袭检测。"></textarea>
+</div>
+<div style="display:flex;gap:12px"><button class="btn b1 bl" onclick="runReview()">开始审核</button>
+<button class="btn b4" onclick="clearReview()">清空</button>
+<span id="rs" style="font-size:.75rem;color:var(--dim)"></span></div></div>
+
+<div id="result" class="hidden">
+<div id="bn"></div>
+<div class="card"><h3>内容统计</h3><div class="sr" id="st"></div></div>
+<div class="card"><h3>违禁词检测 — 黄赌毒暴力 · 广告 · 严格</h3>
+<div class="mt12" id="fwTags"></div><div id="fwList"></div></div>
+<div class="card"><h3>内容质量 — 低质量水文 · 严格</h3>
+<div class="mt12" id="qTags"></div><div class="grid3" id="qMetrics"></div><div id="qList"></div></div>
+<div class="card"><h3>🤖 AI检测 — 参考建议·不作拒稿标准</h3>
+<div class="mt12" id="aiTags"></div><div id="aiList"></div></div>
+<div class="card"><h3>🧠 扣子AI深度审核 — 语义分析</h3>
+<div class="mt12" id="koziTags"></div><div id="koziList"></div></div>
+<div class="card"><h3>抄袭检测 — 与已有章节查重</h3>
+<div class="mt12" id="plTags"></div><div class="grid3" id="plMetrics"></div><div id="plList"></div></div>
+<div class="card"><h3>格式规范检查</h3>
+<div class="mt12" id="fmTags"></div><div id="fmList"></div></div>
+<div class="card"><h3>广告/外链检测 — URL · 二维码 · 联系方式</h3>
+<div class="mt12" id="adTags"></div><div id="adList"></div></div>
+</div>
+
+<div class="card"><h3>审核历史</h3>
+<p style="font-size:.72rem;color:var(--dim);margin-bottom:8px">本次会话记录</p>
+<div id="batchHistory" style="font-size:.75rem;color:var(--dim)">暂无记录</div></div>
+</div>
+
+<script>
+var _loggedIn=false;
+function doLogin(){
+  var p=document.getElementById('lp').value;
+  if(p==='fiction2026'){
+    _loggedIn=true;
+    document.getElementById('lg').style.display='none';
+  }else{
+    document.getElementById('lp').style.border='2px solid var(--r)';
+    setTimeout(function(){document.getElementById('lp').style.border='';},1500);
+  }
+}
+function logout(){location.href='admin.html';}
+</script>
+<script src="review.js"></script>
+</body></html>
