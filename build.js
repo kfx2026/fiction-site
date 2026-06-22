@@ -453,7 +453,7 @@ const editorPicks = picks.map(p => {
 }).join('\n');
 
 const indexHTML = `${BASE_HEAD('FictionVerse — Original English Web Novels | Free Chapters',
-  'Discover original English web novels across Xianxia, Urban Fantasy, Sci-Fi LitRPG. Read 5 chapters free, unlock full novels with one payment.',
+  'Discover original English web novels across Xianxia, Urban Fantasy, Sci-Fi LitRPG. Read everything free. No payment, no subscription.',
   site.url + '/',
   indexSchema.map(s => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join('\n') +
   `<script type="application/ld+json">${itemListSchema}</script>`)}
@@ -467,7 +467,7 @@ ${BASE_HEADER}
   <p class="hero-sub">Discover original English web novels crafted by independent authors. Start reading free — unlock what moves you.</p>
   <div class="hero-features">
     <div class="hero-ft"><div class="ft-icon ft-free">📖</div> Read 5 chapters free</div>
-    <div class="hero-ft"><div class="ft-icon ft-one">💎</div> One-time unlock · $4.99</div>
+    <div class="hero-ft"><div class="ft-icon ft-one">📚</div> All chapters free</div>
     <div class="hero-ft"><div class="ft-icon ft-daily">✨</div> New chapters weekly</div>
   </div>
   <div class="hero-cta">
