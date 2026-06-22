@@ -250,11 +250,16 @@ a{color:var(--accent);text-decoration:none}
 
     <!-- Deploy -->
     <div class="panel" id="panel-deploy">
-      <div class="header-bar"><h1>Deploy Site</h1></div>
+      <div class="header-bar"><h1>Site Deploy</h1></div>
       <div class="card">
-        <h3>🚀 Deploy to Cloudflare Pages</h3>
-        <p style="font-size:0.82rem;color:var(--dim);margin-bottom:12px">This triggers a rebuild of the static site from the latest published content. The site updates in ~1-2 minutes.</p>
-        <button class="btn btn-green" onclick="deploySite()">⚡ Deploy Now</button>
+        <h3>⚡ Auto-Deploy</h3>
+        <p style="font-size:0.82rem;color:var(--dim);margin-bottom:8px">
+          Every chapter save/add/delete <b style="color:var(--gold,#e8c040)">automatically triggers deploy</b>. Your site updates in ~1 min — no manual action needed.
+        </p>
+        <p style="font-size:0.75rem;color:rgba(255,255,255,0.2);margin-bottom:12px">
+          💡 Just write and save — the site rebuilds itself. Multiple rapid saves are debounced into one deploy.
+        </p>
+        <button class="btn btn-outline btn-sm" onclick="deploySite(true)" id="btnDeploy">🔄 Manual Deploy</button>
         <span id="deployStatus" style="margin-left:12px;font-size:0.82rem;color:var(--dim)"></span>
       </div>
       <div class="card">
@@ -717,17 +722,15 @@ function updateChapterField(slug, num, field, val) {
 
 function saveChapterFull(slug, num) {
   var data = chapterUpdates[slug+'-'+num] || {};
-  // Strip _dirty flag before sending
   delete data._dirty;
   if (Object.keys(data).length === 0) { toast('No changes to save', 'info'); return; }
 
-  // If wordCount is 0, compute from content
   if ((!data.wordCount || data.wordCount === 0) && data.content) {
     data.wordCount = countWords(data.content);
   }
 
   api('/api/books/'+slug+'/chapters/'+num, 'PUT', data).then(function(r) {
-    if (r.ok) { toast('Chapter #'+num+' saved!', 'success'); chapterUpdates[slug+'-'+num] = {}; loadChapterEditor(); }
+    if (r.ok) { toast('Chapter #'+num+' saved! Site updating...', 'success'); chapterUpdates[slug+'-'+num] = {}; loadChapterEditor(); autoDeploy(); }
     else toast(r.error||'Failed', 'error');
   });
 }
@@ -744,8 +747,9 @@ function saveAllChapters(slug) {
   var saved = 0, failed = 0;
   function processNext() {
     if (keys.length === 0) {
-      toast('Saved: '+saved+', Failed: '+failed, saved===keys.length?'success':'info');
+      toast('Saved: '+saved+', Failed: '+failed+' — Site updating...', saved===keys.length?'success':'info');
       loadChapterEditor();
+      autoDeploy();
       return;
     }
     var key = keys.shift();
@@ -772,7 +776,7 @@ function addNewChapter(slug) {
   var title = prompt('Chapter title:');
   if (!title) return;
   api('/api/books/'+slug+'/chapters', 'POST', { title: title }).then(function(r) {
-    if (r.ok) { toast('Chapter added!', 'success'); loadChapterEditor(); }
+    if (r.ok) { toast('Chapter added! Site updating...', 'success'); loadChapterEditor(); autoDeploy(); }
     else toast(r.error||'Failed', 'error');
   });
 }
@@ -782,28 +786,40 @@ function deleteChapter(slug, num) {
   // Clear any pending updates for this chapter
   delete chapterUpdates[slug+'-'+num];
   api('/api/books/'+slug+'/chapters/'+num, 'DELETE').then(function(r) {
-    if (r.ok) { toast('Deleted & re-numbered', 'success'); loadChapterEditor(); }
+    if (r.ok) { toast('Deleted — Site updating...', 'success'); loadChapterEditor(); autoDeploy(); }
     else toast(r.error||'Failed', 'error');
   });
 }
 
+// After any save/create/delete, auto-trigger deploy (debounced)
+var deployTimer = null;
+function autoDeploy() {
+  if (deployTimer) clearTimeout(deployTimer);
+  deployTimer = setTimeout(function() {
+    deploySite(false);
+  }, 3000); // 3s debounce: rapid saves only trigger one deploy
+}
+
 // ═══════════════ DEPLOY ═══════════════
-function deploySite() {
-  var btn = event.target;
-  btn.disabled = true;
-  btn.textContent = '⚡ Deploying...';
-  document.getElementById('deployStatus').textContent = 'Triggering build...';
+function deploySite(showToast) {
+  if (showToast === undefined) showToast = true;
+
+  // Handle both manual click (has event) and auto-trigger (no event)
+  var btn = document.getElementById('btnDeploy');
+  var statusEl = document.getElementById('deployStatus');
+  if (btn) { btn.disabled = true; btn.textContent = '⚡ Deploying...'; }
+  if (statusEl) statusEl.textContent = '🔄 Triggering build...';
 
   api('/api/deploy', 'POST').then(function(r) {
     if (r.ok) {
-      document.getElementById('deployStatus').textContent = '✅ Deploy triggered! Site updates in 1-2 min.';
-      toast('Deploy triggered!', 'success');
+      if (statusEl) statusEl.textContent = '✅ Site updating (1-2 min)...';
+      if (showToast) toast('Deploy triggered!', 'success');
     } else {
-      document.getElementById('deployStatus').textContent = '❌ '+(r.error||'Failed');
-      toast(r.error||'Deploy failed', 'error');
+      if (statusEl) statusEl.textContent = '❌ '+(r.error||'Failed');
+      if (showToast) toast(r.error||'Deploy failed', 'error');
     }
-    btn.disabled = false;
-    btn.textContent = '⚡ Deploy Now';
+    if (btn) { btn.disabled = false; btn.textContent = '⚡ Deploy Now'; }
+  });
   });
 }
 
