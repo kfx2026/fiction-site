@@ -279,23 +279,23 @@ a{color:inherit;text-decoration:none}
 <!-- Bottom Toolbar -->
 <div id="reader-tb" style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,11,16,0.96);border-top:1px solid rgba(255,255,255,0.06);padding:8px 0;padding-bottom:max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(10px);transition:opacity 0.3s,transform 0.3s;opacity:0.9;transform:translateY(0)">
   <div style="max-width:600px;margin:0 auto;padding:0 12px;display:flex;align-items:center;justify-content:space-between">
-    <button onclick="event.stopPropagation();fvFontDown()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A−</button>
+    <button id="fv-font-down" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A−</button>
     <span id="fv-font-val" style="font-size:0.62rem;color:var(--dim);min-width:30px;text-align:center">18</span>
-    <button onclick="event.stopPropagation();fvFontUp()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A+</button>
+    <button id="fv-font-up" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A+</button>
     <div style="width:1px;height:20px;background:rgba(255,255,255,0.06)"></div>
-    <button id="fv-theme-btn" onclick="event.stopPropagation();fvToggleTheme()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">🌙</button>
-    <button id="fv-mode-btn" onclick="event.stopPropagation();fvToggleMode()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">📃</button>
-    <button id="fv-bm-btn" onclick="event.stopPropagation();fvToggleBM()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit;opacity:0.5">🏷</button>
-    <button onclick="event.stopPropagation();fvToggleDrawer()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">☰</button>
+    <button id="fv-theme-btn" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">🌙</button>
+    <button id="fv-mode-btn" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">📃</button>
+    <button id="fv-bm-btn" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit;opacity:0.5">🏷</button>
+    <button id="fv-drawer-btn" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">☰</button>
   </div>
 </div>
 
 <!-- Page Nav -->
 <div id="fv-page-nav" style="display:none;max-width:800px;margin:0 auto;padding:0 16px 8px;text-align:center">
   <span style="display:inline-flex;align-items:center;gap:16px">
-    <button onclick="event.stopPropagation();fvPrevPage()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">◀ Prev</button>
+    <button id="fv-page-prev" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">◀ Prev</button>
     <span id="fv-page-ofs" style="font-size:0.7rem;color:var(--dim)">1/1</span>
-    <button onclick="event.stopPropagation();fvNextPage()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">Next ▶</button>
+    <button id="fv-page-next" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">Next ▶</button>
   </span>
 </div>
 
@@ -303,12 +303,33 @@ a{color:inherit;text-decoration:none}
 <div id="reader-drawer" style="position:fixed;top:0;right:0;bottom:0;width:300px;max-width:80vw;background:var(--card);z-index:400;transform:translateX(100%);transition:transform 0.25s;box-shadow:-4px 0 24px rgba(0,0,0,0.3);overflow-y:auto">
   <div id="reader-ch-list"></div>
 </div>
-<div id="reader-ov" onclick="fvToggleDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399"></div>
+<div id="reader-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399"></div>
 
 <style>
 #reader-mini-hd.on,#reader-tb.on{transform:translateY(0)!important;opacity:1!important}
 #reader-pb.on{top:43px}
 #fv-fav-btn.on{filter:none}
+
+/* ═══ Reading Themes ═══ */
+.fv-dark{--bg:#0a0b10;--card:#11131f;--text:#d8dae0;--dim:#8b8fa0}
+.fv-light{--bg:#fff;--card:#f5f5f5;--text:#222;--dim:#777;background:#fff!important}
+.fv-light body,.fv-light main{background:#fff;color:#222}
+.fv-light #reader-content{color:#222!important}
+.fv-light #reader-tb{background:rgba(255,255,255,0.96);border-color:rgba(0,0,0,0.08)}
+.fv-light #reader-tb button{color:#555}
+.fv-light #reader-mini-hd{background:rgba(255,255,255,0.96);border-color:rgba(0,0,0,0.06)}
+.fv-light #reader-mini-hd a,.fv-light #reader-mini-hd span{color:#555}
+.fv-light #reader-pb{background:rgba(0,0,0,0.04)}
+.fv-light .cp-nav a{color:var(--accent)!important}
+.fv-sepia{--bg:#f4ecd8;--card:#ede4d8;--text:#433422;--dim:#8b7355;background:#f4ecd8!important}
+.fv-sepia body,.fv-sepia main{background:#f4ecd8;color:#433422}
+.fv-sepia #reader-content{color:#433422!important}
+.fv-sepia #reader-tb{background:rgba(244,236,216,0.96);border-color:rgba(139,115,85,0.15)}
+.fv-sepia #reader-tb button{color:#8b7355}
+.fv-sepia #reader-mini-hd{background:rgba(244,236,216,0.96);border-color:rgba(139,115,85,0.1)}
+.fv-sepia #reader-mini-hd a,.fv-sepia #reader-mini-hd span{color:#8b7355}
+.fv-sepia #reader-pb{background:rgba(139,115,85,0.08)}
+.fv-sepia .cp-nav a{color:#8b7355!important}
 </style>
   <section id="fv-reviews" class="fv-reviews-section" style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06)">
     <h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Reviews <span id="fv-review-count" style="font-size:0.72rem;color:var(--dim)"></span></h3>
