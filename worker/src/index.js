@@ -264,6 +264,10 @@ async function handleRequest(request, env) {
     if (authErr) return json({ error: 'Unauthorized' }, 401);
     return json({ ok: true, message: 'Authenticated' });
   }
+  // Public: D1 → books.json export for static site sync
+  if (path === '/api/books/export' && request.method === 'GET') {
+    return exportBooksForBuild(env);
+  }
 
   // Setup (first run, no auth needed if no books exist)
   if (path === '/api/setup' && request.method === 'POST') {
@@ -325,6 +329,10 @@ async function handleRequest(request, env) {
   }
   if (path === '/api/books' && request.method === 'POST') {
     return createBook(env, await request.json(), authType);
+  }
+  // Export endpoint (must be before slug regex matcher)
+  if (path === '/api/books/export' && request.method === 'GET') {
+    return exportBooksForBuild(env);
   }
   const bookMatch = path.match(/^\/api\/books\/([a-z0-9-]+)$/);
   if (bookMatch) {
@@ -484,9 +492,11 @@ async function listBooks(env, authType) {
   const params = [];
   
   // Author isolation: non-admin users only see their own books
+  // Match by display_name OR email (API-uploaded books may have either as author)
   if (authType !== 'master' && authType && authType.display_name) {
-    sql += ' WHERE b.author = ?';
-    params.push(authType.display_name);
+    const email = authType.email || '';
+    sql += ' WHERE b.author = ? OR b.author = ?';
+    params.push(authType.display_name, email);
   }
   
   sql += ' ORDER BY b.updated_at DESC';
@@ -514,7 +524,7 @@ async function createBook(env, data, authType) {
      rating, reviews, cover, cover_alt, free_chapters, description, published, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
   ).bind(
-    slug, data.title, data.author, data.authorBio || '', data.genre || 'xianxia',
+    slug, data.title, author, data.authorBio || '', data.genre || 'xianxia',
     genres, data.tier || 'paid', data.price || 4.99, data.status || 'ongoing',
     data.rating || 4.5, data.reviews || 0, data.cover || `/images/covers/${slug}.png`,
     data.coverAlt || '', data.freeChapters || 5, data.description || '', data.published ? 1 : 0
@@ -571,16 +581,59 @@ async function deleteBook(env, slug) {
   return json({ ok: true });
 }
 
+// Export D1 books as books.json format for static site build sync
+async function exportBooksForBuild(env) {
+  try {
+    const { results: books } = await env.DB.prepare(
+      'SELECT * FROM books ORDER BY slug'
+    ).all();
+    const data = books.map(b => ({
+      slug: b.slug,
+      title: b.title,
+      author: b.author,
+      authorBio: b.author_bio || '',
+      genre: b.genre || 'xianxia',
+      genres: JSON.parse(b.genres || '[]'),
+      tier: b.tier || 'free',
+      price: b.price || 0,
+      status: b.status || 'ongoing',
+      rating: b.rating || 4.5,
+      reviews: b.reviews || 0,
+      cover: b.cover || '/images/covers/dao-celestial-blade.png',
+      coverAlt: b.cover_alt || '',
+      freeChapters: b.free_chapters || 0,
+      updated: b.updated_at || '2026-06-22',
+      description: b.description || ''
+    }));
+    return new Response(JSON.stringify(data, null, 2), {
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch(e) {
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
 // ═══ Content Review Engine ═══
-const BAD_WORDS=['fuck','porn','hentai','xxx','cum','dick','pussy','cock','tits','anal','blowjob','orgy','incest','rape','slut','whore','milf','gangbang','threesome','bukkake','futanari','ecchi','bdsm','masturb','ejaculat','penis','vagina','clitoris','prostitut','escort','squirting'];
+// 完整单词 → 整词边界 \b 匹配，避免子串误伤（cum→documented, anal→analysis, tits→titles）
+const BAD_WORDS_BOUNDARY=['fuck','porn','hentai','xxx','cum','dick','pussy','cock','tits','anal','blowjob','orgy','incest','rape','slut','whore','milf','gangbang','threesome','bukkake','futanari','ecchi','bdsm','penis','vagina','clitoris','escort','squirting'];
+// 词根 → 子串匹配（masturb→masturbation, ejaculat→ejaculation, prostitut→prostitution，无正常词含此词根）
+const BAD_WORDS_SUBSTR=['masturb','ejaculat','prostitut'];
+// 预编整词正则（一次编译，避免循环内 new RegExp）
+var BAD_RE_BOUNDARY=BAD_WORDS_BOUNDARY.map(function(w){ return {word:w,re:new RegExp('\\b'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i')}; });
 
 function reviewContent(title,content){
   var issues=[],severe=0,moderate=0;
   var t=(title+' '+content).toLowerCase();
   var chars=t.replace(/\s/g,'').length;
 
-  // 违禁词检测
-  BAD_WORDS.forEach(function(w){
+  // 违禁词检测 — 整词边界匹配
+  BAD_RE_BOUNDARY.forEach(function(entry){
+    if(entry.re.test(t)){issues.push({type:'forbidden',word:entry.word,severity:'severe'});severe++;}
+  });
+  // 词根子串匹配
+  BAD_WORDS_SUBSTR.forEach(function(w){
     if(t.indexOf(w)>=0){issues.push({type:'forbidden',word:w,severity:'severe'});severe++;}
   });
 
@@ -718,9 +771,17 @@ async function updateChapter(env, slug, number, data) {
 }
 
 async function deleteChapter(env, slug, number) {
+  // Delete the chapter
   await env.DB.prepare(
     'DELETE FROM chapters WHERE book_slug = ? AND number = ?'
   ).bind(slug, number).run();
+
+  // Re-number remaining chapters to fill the gap
+  await env.DB.prepare(
+    `UPDATE chapters SET number = number - 1
+     WHERE book_slug = ? AND number > ?`
+  ).bind(slug, number).run();
+
   await updateBookStats(env, slug);
   return json({ ok: true });
 }
@@ -983,10 +1044,20 @@ async function createApiToken(env, request, body) {
   return json({ ok: true, token: token, label: label, scope: scope, email: email });
 }
 
-async function revokeApiToken(env, token, request) {
+async function revokeApiToken(env, tokenId, request) {
   const authType = await getAuthType(env, request);
   if (!authType) return json({ error: 'Unauthorized' }, 401);
-  await env.DB.prepare('DELETE FROM api_tokens WHERE token = ?').bind(token).run();
+
+  // tokenId is the database row id (passed by frontend from listApiTokens response)
+  const email = authType === 'master' ? (new URL(request.url)).searchParams.get('email') || '' : (authType.email || '');
+  if (!email) return json({ error: 'email required' }, 400);
+
+  // Verify ownership: only the token owner (or master) can delete
+  const row = await env.DB.prepare('SELECT author_email FROM api_tokens WHERE id = ?').bind(tokenId).first();
+  if (!row) return json({ error: 'Token not found' }, 404);
+  if (authType !== 'master' && row.author_email !== email) return json({ error: 'Not your token' }, 403);
+
+  await env.DB.prepare('DELETE FROM api_tokens WHERE id = ?').bind(tokenId).run();
   return json({ ok: true });
 }
 

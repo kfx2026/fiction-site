@@ -62,6 +62,10 @@ a{color:var(--accent);text-decoration:none}
 .ch-fields input,.ch-fields textarea{width:100%;padding:6px 10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;font-size:0.78rem;font-family:inherit}
 .ch-fields textarea{min-height:60px}
 .ch-actions{display:flex;flex-direction:column;gap:4px;padding-top:4px}
+.ch-content-wrap{position:relative}
+.ch-content-ta{transition:all 0.2s}
+.ch-content-ta:focus{min-height:200px;height:auto}
+.ch-wc-badge{position:absolute;top:6px;right:8px;font-size:0.6rem;color:var(--dim);background:rgba(0,0,0,0.5);padding:1px 6px;border-radius:3px;pointer-events:none}
 /* Status bar */
 .status-bar{position:fixed;bottom:16px;right:16px;padding:10px 18px;border-radius:8px;font-size:0.78rem;display:none;z-index:100}
 .status-bar.success{background:var(--green);color:#0a0b10;display:block}
@@ -300,26 +304,18 @@ a{color:var(--accent);text-decoration:none}
 
     <!-- Payment -->
     <div class="panel" id="panel-payment">
-      <div class="header-bar"><h1>Payment Settings</h1><button class="btn btn-green btn-sm" onclick="loadPayment()">🔄 Refresh</button></div>
-      <div class="card">
-        <h3>💳 Bind Payment Method</h3>
-        <p style="font-size:0.78rem;color:var(--dim);margin-bottom:16px">Bind your payment account to receive royalties. Supports Alipay, Payoneer, and PayPal China.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
-          <div id="payAlipay" class="card" style="border:1px solid rgba(79,140,255,0.15)">
-            <h3 style="font-size:0.85rem">🇨🇳 Alipay</h3>
-            <div id="alipayBound" style="display:none"><p style="font-size:0.72rem;color:var(--green)">✅ Bound: <b id="alipayAccount"></b></p><button class="btn btn-red btn-sm" onclick="unbindPayment('alipay')" style="margin-top:6px">Unbind</button></div>
-            <div id="alipayForm"><input id="alipayInput" placeholder="Phone or email" style="width:100%;margin-bottom:6px;font-size:0.78rem"><button class="btn btn-primary btn-sm" onclick="bindPayment('alipay')">Bind</button></div>
-          </div>
-          <div id="payPayoneer" class="card" style="border:1px solid rgba(155,140,240,0.15)">
-            <h3 style="font-size:0.85rem">🌍 Payoneer</h3>
-            <div id="payoneerBound" style="display:none"><p style="font-size:0.72rem;color:var(--green)">✅ Bound: <b id="payoneerAccount"></b></p><button class="btn btn-red btn-sm" onclick="unbindPayment('payoneer')" style="margin-top:6px">Unbind</button></div>
-            <div id="payoneerForm"><input id="payoneerInput" placeholder="Registered email" style="width:100%;margin-bottom:6px;font-size:0.78rem"><button class="btn btn-primary btn-sm" onclick="bindPayment('payoneer')">Bind</button></div>
-          </div>
-          <div id="payPaypal" class="card" style="border:1px solid rgba(52,199,89,0.15)">
-            <h3 style="font-size:0.85rem">💵 PayPal</h3>
-            <div id="paypalBound" style="display:none"><p style="font-size:0.72rem;color:var(--green)">✅ Bound: <b id="paypalAccount"></b></p><button class="btn btn-red btn-sm" onclick="unbindPayment('paypal')" style="margin-top:6px">Unbind</button></div>
-            <div id="paypalForm"><input id="paypalInput" placeholder="PayPal email" style="width:100%;margin-bottom:6px;font-size:0.78rem"><button class="btn btn-primary btn-sm" onclick="bindPayment('paypal')">Bind</button></div>
-          </div>
+      <div class="header-bar"><h1>Payment Settings</h1></div>
+      <div class="card" style="text-align:center;padding:40px 24px">
+        <div style="font-size:2.5rem;margin-bottom:12px">🔒</div>
+        <h3 style="color:var(--gold,#e8c040);margin-bottom:8px">Payment Coming Soon</h3>
+        <p style="color:var(--dim);font-size:0.82rem;max-width:520px;margin:0 auto;line-height:1.6">
+          FictionVerse currently operates as a free reading platform. Payment features — including royalties, reader subscriptions, and paid chapter unlocks — are under development.
+        </p>
+        <p style="color:var(--dim);font-size:0.75rem;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.5">
+          When payment launches, we will use industry-standard OAuth-compliant payment gateways with proper KYC verification. All author earnings will be automatically tracked and paid out monthly.
+        </p>
+        <div style="margin-top:16px;padding:10px 16px;background:rgba(255,255,255,0.03);border-radius:8px;display:inline-block;font-size:0.72rem;color:var(--dim)">
+          📧 Questions? Contact support@fiction.aichatmail.one
         </div>
       </div>
       <div class="card">
@@ -577,6 +573,9 @@ function deleteBookConfirm(slug, title) {
 }
 
 // ═══════════════ CHAPTERS ═══════════════
+var chapterUpdates = {};
+var currentChapterSlug = '';
+
 function loadBookSelects() {
   api('/api/books', 'GET').then(function(books) {
     var html = '<option value="">— Choose —</option>';
@@ -586,38 +585,100 @@ function loadBookSelects() {
 }
 
 function loadChapterEditor() {
-  var slug = document.getElementById('chBookSelect').value;
-  if (!slug) { document.getElementById('chapterEditor').innerHTML = ''; return; }
+  var newSlug = document.getElementById('chBookSelect').value;
 
-  api('/api/books/'+slug+'/chapters', 'GET').then(function(chs) {
-    renderChapters(slug, chs);
+  // Check for unsaved changes before switching books
+  if (currentChapterSlug && newSlug !== currentChapterSlug && hasUnsavedChanges(currentChapterSlug)) {
+    if (!confirm('You have unsaved changes for book. Switch anyway? (unsaved changes will remain in memory but may be lost on page refresh)')) {
+      document.getElementById('chBookSelect').value = currentChapterSlug;
+      return;
+    }
+  }
+
+  if (!newSlug) { document.getElementById('chapterEditor').innerHTML = ''; currentChapterSlug = ''; return; }
+  currentChapterSlug = newSlug;
+
+  api('/api/books/'+newSlug+'/chapters', 'GET').then(function(chs) {
+    renderChapters(newSlug, chs);
   });
 }
 
+function hasUnsavedChanges(slug) {
+  for (var k in chapterUpdates) {
+    if (k.startsWith(slug+'-') && Object.keys(chapterUpdates[k]).length > 0) return true;
+  }
+  return false;
+}
+
+function countUnsaved(slug) {
+  var c = 0;
+  for (var k in chapterUpdates) {
+    if (k.startsWith(slug+'-') && Object.keys(chapterUpdates[k]).length > 0) c++;
+  }
+  return c;
+}
+
+// Word count helper (client-side)
+function countWords(text) {
+  if (!text) return 0;
+  var cleaned = text.replace(/<[^>]+>/g, ' ').replace(/[^\w\u4e00-\u9fff\s]/g, ' ');
+  var words = cleaned.split(/\s+/).filter(function(w) { return w.length > 0; });
+  var total = 0;
+  words.forEach(function(w) {
+    if (/[\u4e00-\u9fff]/.test(w)) { total += w.length; }
+    else { total += 1; }
+  });
+  return total || 1;
+}
+
 function renderChapters(slug, chs) {
-  var html = '<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">'+
+  var unsavedCount = countUnsaved(slug);
+  var html = '<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">'+
     '<strong style="color:#fff;font-size:0.85rem">'+chs.length+' chapters</strong>'+
-    '<button class="btn btn-outline btn-sm" onclick="addNewChapter(\''+slug+'\')">+ Add Chapter</button>'+
+    '<button class="btn btn-outline btn-sm" onclick="addNewChapter(\''+slug+'\')">+ Add</button>'+
+    (unsavedCount > 0
+      ? '<button class="btn btn-primary btn-sm" onclick="saveAllChapters(\''+slug+'\')" style="background:var(--gold,#e8c040);color:#222">💾 Save All ('+unsavedCount+' pending)</button>'
+      : '')+
     '</div><div class="ch-list">';
 
   chs.forEach(function(ch) {
-    var schedLabel = ch.scheduled_at ? ' 📅'+ch.scheduled_at.substring(0,16) : '';
-    html += '<div class="ch-item" id="ch-'+ch.number+'">'+
-      '<span class="ch-num">#'+ch.number+'</span>'+
+    var key = slug+'-'+ch.number;
+    var pending = chapterUpdates[key] || {};
+
+    // Merge pending edits with server data for display
+    var displayTitle = pending.title !== undefined ? pending.title : (ch.title||'');
+    var displayWc = pending.wordCount !== undefined ? pending.wordCount : (ch.word_count||0);
+    var displayContent = pending.content !== undefined ? pending.content : (ch.content||'');
+    var displaySched = pending.scheduledAt !== undefined ? pending.scheduledAt : (ch.scheduled_at||'');
+    var displayPublished = pending.published !== undefined ? pending.published : !!ch.published;
+    var isDirty = Object.keys(pending).length > 0;
+
+    var schedLabel = displaySched ? ' 📅'+displaySched.substring(0,16) : '';
+
+    html += '<div class="ch-item" id="ch-'+ch.number+'" style="'+(isDirty?'border-left:3px solid var(--gold,#e8c040)':'')+'">'+
+      '<span class="ch-num" style="'+(isDirty?'background:var(--gold,#e8c040);color:#222':'')+'">#'+ch.number+(isDirty?' *':'')+'</span>'+
       '<div class="ch-fields">'+
         '<div style="display:flex;gap:8px">'+
-          '<input value="'+ch.title+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'title\',this.value)" style="flex:2">'+
-          '<input type="number" value="'+ch.word_count+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'wordCount\',parseInt(this.value))" style="width:80px" title="Word count">'+
+          '<input value="'+escAttr(displayTitle)+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'title\',this.value)" oninput="autoSaveHint(event,\''+slug+'\','+ch.number+')" style="flex:2">'+
+          '<input type="number" value="'+displayWc+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'wordCount\',parseInt(this.value))" oninput="autoSaveHint(event,\''+slug+'\','+ch.number+')" style="width:80px" title="Word count (auto-computed on save if 0)">'+
         '</div>'+
-        '<textarea placeholder="Chapter content..." onchange="updateChapterField(\''+slug+'\','+ch.number+',\'content\',this.value)" rows="2">'+(ch.content||'')+'</textarea>'+
+        // Click-to-expand content editor
+        '<div class="ch-content-wrap">'+
+          '<textarea class="ch-content-ta" placeholder="Chapter content... (click to expand)" '+
+            'onfocus="expandChapterContent(this)" '+
+            'onchange="handleContentChange(this,\''+slug+'\','+ch.number+')" '+
+            'oninput="autoSaveHint(event,\''+slug+'\','+ch.number+')" '+
+            'rows="2">'+escHtml(displayContent)+'</textarea>'+
+          '<span class="ch-wc-badge" id="wc-badge-'+ch.number+'">'+displayWc+' words</span>'+
+        '</div>'+
         '<div style="display:flex;gap:8px;align-items:center;font-size:0.7rem">'+
-          '<label style="color:var(--dim)">Schedule: <input type="datetime-local" value="'+(ch.scheduled_at||'')+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'scheduledAt\',this.value)" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;padding:2px 6px;font-size:0.7rem"></label>'+
-          '<label style="color:var(--green);cursor:pointer"><input type="checkbox" '+(ch.published?'checked':'')+' onchange="updateChapterField(\''+slug+'\','+ch.number+',\'published\',this.checked)"> Published</label>'+
+          '<label style="color:var(--dim)">Schedule: <input type="datetime-local" value="'+escAttr(displaySched)+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'scheduledAt\',this.value)" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;padding:2px 6px;font-size:0.7rem"></label>'+
+          '<label style="color:var(--green);cursor:pointer"><input type="checkbox" '+(displayPublished?'checked':'')+' onclick="updateChapterField(\''+slug+'\','+ch.number+',\'published\',this.checked)"> Published</label>'+
           schedLabel+
         '</div>'+
       '</div>'+
-      '<div class="ch-actions">'+
-        '<button class="btn btn-outline btn-sm" onclick="saveChapterFull(\''+slug+'\','+ch.number+')">💾</button>'+
+      '<div class="ch-actions" style="flex-direction:column;gap:4px">'+
+        '<button class="btn btn-outline btn-sm" onclick="saveChapterFull(\''+slug+'\','+ch.number+')" '+(isDirty?'style="border-color:var(--gold,#e8c040);color:var(--gold,#e8c040)"':'')+'>💾</button>'+
         '<button class="btn btn-red btn-sm" onclick="deleteChapter(\''+slug+'\','+ch.number+')">×</button>'+
       '</div>'+
     '</div>';
@@ -627,19 +688,84 @@ function renderChapters(slug, chs) {
   document.getElementById('chapterEditor').innerHTML = html;
 }
 
-var chapterUpdates = {};
+// Escape helpers for safe HTML/attribute rendering
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function expandChapterContent(ta) {
+  if (ta.rows <= 2) ta.rows = 12;
+}
+
+function handleContentChange(ta, slug, num) {
+  updateChapterField(slug, num, 'content', ta.value);
+  // Auto-compute word count and show in badge
+  var wc = countWords(ta.value);
+  updateChapterField(slug, num, 'wordCount', wc);
+  var badge = document.getElementById('wc-badge-'+num);
+  if (badge) badge.textContent = wc + ' words (auto)';
+}
+
+function autoSaveHint(e, slug, num) {
+  updateChapterField(slug, num, '_dirty', true);
+}
+
 function updateChapterField(slug, num, field, val) {
-  if (!chapterUpdates[slug+'-'+num]) chapterUpdates[slug+'-'+num] = {};
-  chapterUpdates[slug+'-'+num][field] = val;
+  var key = slug+'-'+num;
+  if (!chapterUpdates[key]) chapterUpdates[key] = {};
+  chapterUpdates[key][field] = val;
 }
 
 function saveChapterFull(slug, num) {
   var data = chapterUpdates[slug+'-'+num] || {};
-  if (Object.keys(data).length === 0) { toast('No changes', 'info'); return; }
+  // Strip _dirty flag before sending
+  delete data._dirty;
+  if (Object.keys(data).length === 0) { toast('No changes to save', 'info'); return; }
+
+  // If wordCount is 0, compute from content
+  if ((!data.wordCount || data.wordCount === 0) && data.content) {
+    data.wordCount = countWords(data.content);
+  }
+
   api('/api/books/'+slug+'/chapters/'+num, 'PUT', data).then(function(r) {
     if (r.ok) { toast('Chapter #'+num+' saved!', 'success'); chapterUpdates[slug+'-'+num] = {}; loadChapterEditor(); }
     else toast(r.error||'Failed', 'error');
   });
+}
+
+function saveAllChapters(slug) {
+  var keys = [];
+  for (var k in chapterUpdates) {
+    if (k.startsWith(slug+'-') && Object.keys(chapterUpdates[k]).length > 0) {
+      keys.push(k);
+    }
+  }
+  if (keys.length === 0) { toast('Nothing to save', 'info'); return; }
+
+  var saved = 0, failed = 0;
+  function processNext() {
+    if (keys.length === 0) {
+      toast('Saved: '+saved+', Failed: '+failed, saved===keys.length?'success':'info');
+      loadChapterEditor();
+      return;
+    }
+    var key = keys.shift();
+    var parts = key.split('-');
+    var n = parts.pop();
+    var s = parts.join('-');
+    var data = chapterUpdates[key] || {};
+    delete data._dirty;
+    if (Object.keys(data).length === 0) { processNext(); return; }
+    if ((!data.wordCount || data.wordCount === 0) && data.content) {
+      data.wordCount = countWords(data.content);
+    }
+    api('/api/books/'+s+'/chapters/'+n, 'PUT', data).then(function(r) {
+      if (r.ok) { saved++; chapterUpdates[key] = {}; }
+      else failed++;
+      processNext();
+    });
+  }
+  toast('Saving '+keys.length+' chapters...', 'info');
+  processNext();
 }
 
 function addNewChapter(slug) {
@@ -652,9 +778,11 @@ function addNewChapter(slug) {
 }
 
 function deleteChapter(slug, num) {
-  if (!confirm('Delete chapter #'+num+'?')) return;
+  if (!confirm('Delete chapter #'+num+'? This will re-number subsequent chapters.')) return;
+  // Clear any pending updates for this chapter
+  delete chapterUpdates[slug+'-'+num];
   api('/api/books/'+slug+'/chapters/'+num, 'DELETE').then(function(r) {
-    if (r.ok) { toast('Deleted', 'success'); loadChapterEditor(); }
+    if (r.ok) { toast('Deleted & re-numbered', 'success'); loadChapterEditor(); }
     else toast(r.error||'Failed', 'error');
   });
 }
@@ -712,39 +840,16 @@ function revokeToken(id) {
 }
 
 // ═══ Payment Binding ═══
-var paymentData = { alipay:null, payoneer:null, paypal:null };
-
+// Payment features are not yet launched. All books are free.
+// When payment launches, this will use OAuth-compliant payment gateway integration.
 function loadPayment() {
-  try { var d = JSON.parse(localStorage.getItem('fv_payment_'+AUTH_TOKEN.substring(0,8))||'{}'); paymentData = Object.assign(paymentData, d); } catch(x){}
-  ['alipay','payoneer','paypal'].forEach(function(type) {
-    if (paymentData[type]) {
-      document.getElementById(type+'Bound').style.display = 'block';
-      document.getElementById(type+'Form').style.display = 'none';
-      document.getElementById(type+'Account').textContent = paymentData[type];
-    }
-  });
+  // Payment module is "coming soon" — no action needed.
+  // The HTML panel shows a static notice.
+  // This function exists to prevent console errors from the old nav onclick.
 }
 
-function bindPayment(type) {
-  var val = document.getElementById(type+'Input').value.trim();
-  if (!val) return toast('Please enter account info', 'error');
-  paymentData[type] = val;
-  localStorage.setItem('fv_payment_'+AUTH_TOKEN.substring(0,8), JSON.stringify(paymentData));
-  document.getElementById(type+'Bound').style.display = 'block';
-  document.getElementById(type+'Form').style.display = 'none';
-  document.getElementById(type+'Account').textContent = val;
-  toast('✅ '+(type==='alipay'?'Alipay':type==='payoneer'?'Payoneer':'PayPal')+' bound!', 'success');
-}
-
-function unbindPayment(type) {
-  if (!confirm('Remove '+(type==='alipay'?'Alipay':type==='payoneer'?'Payoneer':'PayPal')+' binding?')) return;
-  paymentData[type] = null;
-  localStorage.setItem('fv_payment_'+AUTH_TOKEN.substring(0,8), JSON.stringify(paymentData));
-  document.getElementById(type+'Bound').style.display = 'none';
-  document.getElementById(type+'Form').style.display = 'block';
-  document.getElementById(type+'Input').value = '';
-  toast('Unbound', 'info');
-}
+// Legacy stubs removed — payment binding previously used insecure localStorage
+// which has been replaced with a compliant "coming soon" notice.
 
 function loadEarnings() {
   document.getElementById('earningsStats').innerHTML = '<div class="stat-card"><div class="val" style="color:var(--gold)">$0</div><div class="lbl">Total Earned</div></div><div class="stat-card"><div class="val" style="color:var(--green)">$0</div><div class="lbl">Pending</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Sold</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Books</div></div>';
