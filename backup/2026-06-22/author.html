@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FictionVerse Author Dashboard</title>
+<style>
+:root{--bg:#0a0b10;--card:#11131f;--text:#d8dae0;--dim:#8b8fa0;--accent:#4f8cff;--gold:#e8c040;--green:#34c759;--red:#ff4757;--purple:#9b8cf0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+/* Login */
+.login-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+#app.hidden{display:none}
+.login-box{background:var(--card);padding:40px;border-radius:12px;text-align:center;width:380px}
+.login-box h2{color:#fff;margin-bottom:4px}
+.login-box p{color:var(--dim);font-size:0.82rem;margin-bottom:20px}
+.login-box input{width:100%;padding:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;text-align:center;font-size:1rem}
+.login-box button{width:100%;margin-top:12px;padding:12px;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
+.login-error{color:var(--red);font-size:0.78rem;margin-top:8px;display:none}
+/* Layout */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--card);border-right:1px solid rgba(255,255,255,0.05);padding:20px 0;z-index:10}
+.sidebar h3{padding:0 20px 16px;color:#fff;font-size:0.95rem}
+.sidebar nav a{display:block;padding:10px 20px;color:var(--dim);font-size:0.82rem;transition:all 0.15s}
+.sidebar nav a:hover,.sidebar nav a.active{color:#fff;background:rgba(79,140,255,0.08)}
+.content{margin-left:240px;padding:24px 32px;max-width:1100px}
+.header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.header-bar h1{font-size:1.2rem;color:#fff}
+/* Cards */
+.card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:20px;margin-bottom:16px}
+.card h3{font-size:0.9rem;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h3 .badge{font-size:0.62rem;padding:2px 8px;border-radius:100px;font-weight:600}
+.badge-draft{background:rgba(255,255,255,0.06);color:var(--dim)}
+.badge-pub{background:rgba(52,199,89,0.1);color:var(--green)}
+.badge-sched{background:rgba(232,192,64,0.1);color:var(--gold)}
+/* Forms */
+.form-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.form-group{flex:1;min-width:180px}
+.form-group label{display:block;font-size:0.7rem;color:var(--dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#fff;font-size:0.82rem;font-family:inherit}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-group input[type="datetime-local"]{color-scheme:dark}
+/* Buttons */
+.btn{padding:8px 18px;border-radius:6px;border:none;font-size:0.8rem;cursor:pointer;font-weight:600;transition:opacity 0.15s;display:inline-flex;align-items:center;gap:4px}
+.btn:hover{opacity:0.85}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-green{background:var(--green);color:#0a0b10}
+.btn-gold{background:var(--gold);color:#0a0b10}
+.btn-red{background:var(--red);color:#fff}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--dim)}
+.btn-sm{padding:4px 10px;font-size:0.7rem}
+/* Book list */
+.book-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;transition:background 0.15s;margin-bottom:2px;cursor:pointer}
+.book-row:hover{background:rgba(255,255,255,0.02)}
+.book-row .title{flex:1;font-size:0.85rem;color:#fff}
+.book-row .meta{font-size:0.7rem;color:var(--dim)}
+/* Chapter editor */
+.ch-list{max-height:500px;overflow-y:auto}
+.ch-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:6px;margin-bottom:4px;background:rgba(255,255,255,0.01)}
+.ch-item:hover{background:rgba(255,255,255,0.02)}
+.ch-num{color:var(--accent);font-weight:700;min-width:28px;text-align:right;font-size:0.8rem;padding-top:8px}
+.ch-fields{flex:1;display:flex;flex-direction:column;gap:4px}
+.ch-fields input,.ch-fields textarea{width:100%;padding:6px 10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;font-size:0.78rem;font-family:inherit}
+.ch-fields textarea{min-height:60px}
+.ch-actions{display:flex;flex-direction:column;gap:4px;padding-top:4px}
+/* Status bar */
+.status-bar{position:fixed;bottom:16px;right:16px;padding:10px 18px;border-radius:8px;font-size:0.78rem;display:none;z-index:100}
+.status-bar.success{background:var(--green);color:#0a0b10;display:block}
+.status-bar.error{background:var(--red);color:#fff;display:block}
+.status-bar.info{background:var(--accent);color:#fff;display:block}
+/* Panel toggle */
+.panel{display:none}
+.panel.active{display:block}
+/* Quick stats */
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.stat-card{flex:1;min-width:140px;background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:16px;text-align:center}
+.stat-card .val{font-size:1.5rem;font-weight:800;color:#fff}
+.stat-card .lbl{font-size:0.68rem;color:var(--dim);margin-top:4px}
+/* Toast */
+.toast{position:fixed;top:16px;right:16px;padding:10px 20px;border-radius:8px;font-size:0.82rem;z-index:200;animation:fadeIn 0.2s}
+.toast.success{background:var(--green);color:#0a0b10}
+.toast.error{background:var(--red);color:#fff}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login-overlay" id="loginGate">
+  <div class="login-box" style="width:480px;padding:32px 36px;max-height:92vh;overflow-y:auto">
+    <h2 style="font-size:1.3rem;margin-bottom:2px">📖 FictionVerse Author</h2>
+    <p style="margin-bottom:24px;font-size:0.76rem;color:var(--dim)">Create your account and start publishing.</p>
+    
+    <input type="email" id="loginEmail" placeholder="your@email.com" style="text-align:left;margin-bottom:8px">
+    <input type="password" id="loginPwd" placeholder="Password (8+ chars, A-Z + 0-9)" style="text-align:left;margin-bottom:16px">
+    
+    <!-- ═══ Author Agreement (must scroll to bottom) ═══ -->
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+        <span style="font-size:0.75rem;color:#fff;font-weight:700">📜 Author Agreement</span>
+        <span style="font-size:0.6rem;color:var(--dim)">(Scroll to bottom to accept)</span>
+      </div>
+      <div id="agreementBox" onscroll="checkAgreementScroll()" style="background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:16px;text-align:left;font-size:0.66rem;color:var(--dim);line-height:1.65;max-height:180px;overflow-y:auto">
+        <p style="margin-bottom:10px;color:#fff;font-size:0.7rem;font-weight:600">By creating an account on FictionVerse, you agree to ALL of the following:</p>
+        
+        <p style="margin-bottom:8px"><b style="color:#ff4757">1. PROHIBITED CONTENT — STRICTLY ENFORCED</b><br>
+        The following content is <b style="color:#fff">absolutely prohibited</b> and will result in immediate account termination and content removal:<br>
+        • Pornography, sexual content, or sexually suggestive material<br>
+        • Depictions of sexual violence, rape, or sexual abuse<br>
+        • <b>Child sexual abuse material (CSAM) — reported to law enforcement</b><br>
+        • Extreme violence, gore, torture, or cruel depictions<br>
+        • Hate speech, racial discrimination, or ethnic vilification<br>
+        • Terrorism promotion or glorification of violent extremism<br>
+        • Gambling promotion, casino advertising, or betting services<br>
+        • Drug glorification, drug manufacturing instructions, or substance abuse promotion</p>
+
+        <p style="margin-bottom:8px"><b style="color:#fff">2. AI-ASSISTED WRITING</b><br>
+        FictionVerse welcomes AI-assisted writing. You may use AI tools for drafting, editing, and idea generation. All submissions undergo automated review PLUS AI-quality assessment. Low-quality or AI-only generated content without human refinement may be flagged or rejected.</p>
+
+        <p style="margin-bottom:8px"><b style="color:#fff">3. REVIEW & MODERATION</b><br>
+        Every chapter is reviewed by FictionVerse's automated review engine and AI reviewer. Flagged content may require revision within 24 hours. Rejected content that is not revised within the deadline will be moved to the Unpublished section and hidden from readers.</p>
+
+        <p style="margin-bottom:8px"><b style="color:#fff">4. INTELLECTUAL PROPERTY</b><br>
+        You retain full copyright ownership of your original work. By publishing on FictionVerse, you grant us a non-exclusive, worldwide license to display, distribute, and monetize your content on this platform. You warrant that your content is original and does not infringe any third-party rights.</p>
+
+        <p style="margin-bottom:8px"><b style="color:#fff">5. REVENUE SHARING</b><br>
+        Authors earn 85% of net revenue from paid chapters. Platform fee is 15%. Payments are processed monthly. You are responsible for any applicable taxes in your jurisdiction.</p>
+
+        <p style="margin-bottom:8px"><b style="color:#fff">6. DATA & PRIVACY</b><br>
+        Your email, pen name, agreement acceptance, and submission history are stored securely. We do not sell or share your personal data with third parties. See our <a href="/privacy" target="_blank" style="color:var(--accent)">Privacy Policy</a> for details.</p>
+
+        <p style="margin-bottom:4px"><b style="color:#fff">7. TERMINATION</b><br>
+        You may delete your account and remove all content at any time. FictionVerse reserves the right to suspend or terminate accounts that violate these terms. This agreement is legally binding and stored in your author profile.</p>
+
+        <p id="agreementEnd" style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;color:var(--green);font-size:0.7rem">✔ You have reached the end of the Author Agreement</p>
+      </div>
+    </div>
+
+    <label id="agreeLabel" style="display:flex;align-items:flex-start;gap:8px;font-size:0.7rem;color:var(--dim);text-align:left;margin-bottom:16px;opacity:0.4;pointer-events:none;transition:opacity 0.3s">
+      <input type="checkbox" id="agreeTerms" disabled style="width:auto;margin-top:2px;accent-color:var(--accent);min-width:14px">
+      <span>I have <b style="color:#fff">read the entire Author Agreement</b> above. I understand that my content will be reviewed and that prohibited content will result in immediate termination. <b>This agreement will be stored in my author profile.</b></span>
+    </label>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button onclick="doEmailLogin()" style="flex:1">Login</button>
+      <button id="btnRegister" onclick="doEmailRegister()" style="flex:1;background:var(--green);color:#0a0b10;opacity:0.4;pointer-events:none;transition:opacity 0.3s" disabled>Register</button>
+    </div>
+
+    <!-- Verify code -->
+    <div id="verifyBox" style="display:none;margin-bottom:16px;padding:14px;background:rgba(232,192,64,0.05);border:1px solid rgba(232,192,64,0.15);border-radius:8px">
+      <p style="font-size:0.72rem;color:var(--dim);margin-bottom:8px">📧 Verification code sent. Check inbox & spam.</p>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="verifyCode" placeholder="000000" maxlength="6" style="text-align:center;font-size:1.2rem;letter-spacing:4px;flex:2">
+        <button onclick="doVerify()" style="flex:1;background:var(--gold);color:#0a0b10;font-weight:700">Verify</button>
+      </div>
+    </div>
+
+    <p class="login-error" id="loginError"></p>
+
+    <!-- Admin Token (bottom divider) -->
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)">
+      <p style="font-size:0.64rem;color:var(--dim);text-align:center;margin-bottom:8px">🔑 Admin / API Access</p>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="loginToken" placeholder="Admin Token" style="text-align:left;font-size:0.78rem;flex:2" onkeydown="if(event.key==='Enter')doLogin()">
+        <button onclick="doLogin()" style="flex:1;font-size:0.78rem">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <div class="sidebar">
+    <h3>📖 FictionVerse</h3>
+    <nav>
+      <a href="#" class="active" data-panel="dashboard" onclick="showPanel('dashboard')">📊 Dashboard</a>
+      <a href="#" data-panel="books" onclick="showPanel('books')">📚 My Books</a>
+      <a href="#" data-panel="chapters" onclick="showPanel('chapters')">📄 Chapter Editor</a>
+      <a href="#" data-panel="earnings" onclick="showPanel('earnings')">💰 My Earnings</a>
+      <a href="#" data-panel="payment" onclick="showPanel('payment')">💳 Payment Settings</a>
+      <a href="#" data-panel="deploy" onclick="showPanel('deploy')">🚀 Deploy</a>
+      <a href="#" data-panel="apitoken" onclick="showPanel('apitoken')" style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;font-size:0.72rem;color:var(--dim)">🔑 API Token</a>
+    </nav>
+  </div>
+
+  <div class="content">
+    <!-- Dashboard -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="header-bar"><h1>Dashboard</h1><button class="btn btn-green btn-sm" onclick="loadDashboard()">🔄 Refresh</button></div>
+      <div class="stats" id="dashStats"></div>
+      <div class="card"><h3>Recent Activity</h3><div id="recentActivity"></div></div>
+    </div>
+
+    <!-- Books -->
+    <div class="panel" id="panel-books">
+      <div class="header-bar"><h1>Books</h1><button class="btn btn-primary" onclick="showBookForm()">+ New Book</button></div>
+      <div class="card" id="bookFormCard" style="display:none">
+        <h3 id="bookFormTitle">New Book</h3>
+        <form id="bookForm" onsubmit="saveBook(event)">
+          <input type="hidden" id="bookSlugOld">
+          <div class="form-row">
+            <div class="form-group"><label>Title *</label><input id="bTitle" required></div>
+            <div class="form-group"><label>Slug</label><input id="bSlug" placeholder="auto"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Author *</label><input id="bAuthor" required></div>
+            <div class="form-group"><label>Author Bio</label><input id="bAuthorBio"></div>
+            <div class="form-group"><label>Genre</label>
+              <select id="bGenre">
+<option>Xianxia / Cultivation</option><option>Wuxia</option><option>Urban Fantasy</option><option>Sci-Fi</option>
+<option>LitRPG / GameLit</option><option>Isekai / Transmigration</option><option>Epic Fantasy</option><option>Magic Academy</option>
+<option>Romance</option><option>Harem / Reverse Harem</option><option>Boys Love / Yaoi</option><option>Horror / Thriller</option>
+<option>Apocalypse / Survival</option><option>Supernatural / Paranormal</option><option>Mystery / Detective</option><option>Action / Adventure</option>
+<option>Historical Fiction</option><option>Slice of Life</option><option>Comedy / Satire</option><option>Drama / Tragedy</option>
+</select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Tier</label><select id="bTier"><option value="paid">Paid</option><option value="free">Free</option></select></div>
+            <div class="form-group"><label>Price ($)</label><input id="bPrice" type="number" step="0.01" value="4.99"></div>
+            <div class="form-group"><label>Free Chapters</label><input id="bFreeCh" type="number" value="5"></div>
+            <div class="form-group"><label>Status</label><select id="bStatus"><option value="ongoing">Ongoing</option><option value="completed">Completed</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Rating</label><input id="bRating" type="number" step="0.1" value="4.5"></div>
+            <div class="form-group"><label>Cover Path</label><input id="bCover" placeholder="/images/covers/x.png"></div>
+            <div class="form-group"><label>Cover Alt</label><input id="bCoverAlt"></div>
+          </div>
+          <div class="form-group"><label>Description</label><textarea id="bDesc" rows="2"></textarea></div>
+          <div class="form-group"><label><input type="checkbox" id="bPublished"> Published (visible on site)</label></div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-outline" onclick="hideBookForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div id="bookList">Loading...</div>
+    </div>
+
+    <!-- Chapters -->
+    <div class="panel" id="panel-chapters">
+      <div class="header-bar"><h1>Chapter Editor</h1></div>
+      <div class="form-row" style="margin-bottom:16px">
+        <div class="form-group"><label>Select Book</label><select id="chBookSelect" onchange="loadChapterEditor()"><option value="">— Choose —</option></select></div>
+      </div>
+      <div id="chapterEditor"></div>
+    </div>
+
+    <!-- Deploy -->
+    <div class="panel" id="panel-deploy">
+      <div class="header-bar"><h1>Deploy Site</h1></div>
+      <div class="card">
+        <h3>🚀 Deploy to Cloudflare Pages</h3>
+        <p style="font-size:0.82rem;color:var(--dim);margin-bottom:12px">This triggers a rebuild of the static site from the latest published content. The site updates in ~1-2 minutes.</p>
+        <button class="btn btn-green" onclick="deploySite()">⚡ Deploy Now</button>
+        <span id="deployStatus" style="margin-left:12px;font-size:0.82rem;color:var(--dim)"></span>
+      </div>
+      <div class="card">
+        <h3>📅 Scheduled Chapters</h3>
+        <p style="font-size:0.78rem;color:var(--dim);margin-bottom:8px">Chapters with a future schedule time will auto-publish and trigger deploy via Cron (every 5 min).</p>
+        <div id="scheduledList" style="font-size:0.82rem;color:var(--dim)">Select a book in Chapter Editor to see scheduled chapters.</div>
+      </div>
+    </div>
+
+    <!-- API Token -->
+    <div class="panel" id="panel-apitoken">
+      <div class="header-bar"><h1>API Token</h1><button class="btn btn-green btn-sm" onclick="loadTokens()">🔄 Refresh</button></div>
+      <div class="card" style="background:linear-gradient(135deg,rgba(79,140,255,0.06),rgba(155,140,240,0.04))">
+        <h3>🤖 AI-Assisted Writing is Welcome!</h3>
+        <p style="font-size:0.78rem;color:var(--dim);margin-bottom:8px">Generate an API Token below and use it with AI tools (like 扣子/Coze) to upload chapters programmatically.</p>
+        <p style="font-size:0.72rem;color:var(--dim)">All AI-generated chapters go through our quality review pipeline. Your token is scoped — create separate tokens for different tools.</p>
+      </div>
+      <div class="card">
+        <h3>Generate New Token</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Label</label><input id="tokenLabel" placeholder="e.g. Coze Writer" value="Default"></div>
+          <div class="form-group"><label>Scope</label><select id="tokenScope"><option value="full">Full Access</option><option value="review">Review Only</option></select></div>
+        </div>
+        <button class="btn btn-primary" onclick="generateToken()">Generate Token</button>
+        <div id="newTokenBox" style="display:none;margin-top:12px;padding:12px;background:rgba(52,199,89,0.08);border:1px solid rgba(52,199,89,0.2);border-radius:8px">
+          <p style="font-size:0.7rem;color:var(--green);margin-bottom:4px">✅ Token generated. <b>Copy it now — it won't be shown again!</b></p>
+          <code id="newToken" style="display:block;padding:8px;background:rgba(0,0,0,0.3);border-radius:4px;font-size:0.72rem;word-break:break-all;color:#fff"></code>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Your Tokens</h3>
+        <div id="tokenList" style="font-size:0.78rem;color:var(--dim)">Loading...</div>
+      </div>
+      <div class="card">
+        <h3>📋 cURL Example (upload chapter via API)</h3>
+        <code style="display:block;padding:12px;background:rgba(0,0,0,0.3);border-radius:6px;font-size:0.68rem;color:var(--dim);white-space:pre-wrap;overflow-x:auto">curl -X POST https://api.aichatmail.one/api/book/&lt;slug&gt;/chapters \
+  -H "Authorization: Bearer &lt;YOUR_API_TOKEN&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": 1,
+    "title": "Chapter Title",
+    "content": "Full chapter text here...",
+    "word_count": 3200
+  }'</code>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="panel" id="panel-payment">
+      <div class="header-bar"><h1>Payment Settings</h1><button class="btn btn-green btn-sm" onclick="loadPayment()">🔄 Refresh</button></div>
+      <div class="card">
+        <h3>💳 Bind Payment Method</h3>
+        <p style="font-size:0.78rem;color:var(--dim);margin-bottom:16px">Bind your payment account to receive royalties. Supports Alipay, Payoneer, and PayPal China.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+          <div id="payAlipay" class="card" style="border:1px solid rgba(79,140,255,0.15)">
+            <h3 style="font-size:0.85rem">🇨🇳 Alipay</h3>
+            <div id="alipayBound" style="display:none"><p style="font-size:0.72rem;color:var(--green)">✅ Bound: <b id="alipayAccount"></b></p><button class="btn btn-red btn-sm" onclick="unbindPayment('alipay')" style="margin-top:6px">Unbind</button></div>
+            <div id="alipayForm"><input id="alipayInput" placeholder="Phone or email" style="width:100%;margin-bottom:6px;font-size:0.78rem"><button class="btn btn-primary btn-sm" onclick="bindPayment('alipay')">Bind</button></div>
+          </div>
+          <div id="payPayoneer" class="card" style="border:1px solid rgba(155,140,240,0.15)">
+            <h3 style="font-size:0.85rem">🌍 Payoneer</h3>
+            <div id="payoneerBound" style="display:none"><p style="font-size:0.72rem;color:var(--green)">✅ Bound: <b id="payoneerAccount"></b></p><button class="btn btn-red btn-sm" onclick="unbindPayment('payoneer')" style="margin-top:6px">Unbind</button></div>
+            <div id="payoneerForm"><input id="payoneerInput" placeholder="Registered email" style="width:100%;margin-bottom:6px;font-size:0.78rem"><button class="btn btn-primary btn-sm" onclick="bindPayment('payoneer')">Bind</button></div>
+          </div>
+          <div id="payPaypal" class="card" style="border:1px solid rgba(52,199,89,0.15)">
+            <h3 style="font-size:0.85rem">💵 PayPal</h3>
+            <div id="paypalBound" style="display:none"><p style="font-size:0.72rem;color:var(--green)">✅ Bound: <b id="paypalAccount"></b></p><button class="btn btn-red btn-sm" onclick="unbindPayment('paypal')" style="margin-top:6px">Unbind</button></div>
+            <div id="paypalForm"><input id="paypalInput" placeholder="PayPal email" style="width:100%;margin-bottom:6px;font-size:0.78rem"><button class="btn btn-primary btn-sm" onclick="bindPayment('paypal')">Bind</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📊 Earnings</h3>
+        <div class="stats"><div class="stat-card"><div class="val" style="color:var(--gold)">$0.00</div><div class="lbl">Pending</div></div><div class="stat-card"><div class="val" style="color:var(--green)">$0.00</div><div class="lbl">Earned</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Sold</div></div></div>
+        <p style="font-size:0.7rem;color:var(--dim);margin-top:8px">Payout monthly at $10+ balance. Split: You 85% / Platform 15%.</p>
+      </div>
+    </div>
+
+    <!-- My Earnings -->
+    <div class="panel" id="panel-earnings">
+      <div class="header-bar"><h1>My Earnings</h1><button class="btn btn-green btn-sm" onclick="loadEarnings()">🔄 Refresh</button></div>
+      <div class="stats" id="earningsStats"><div class="stat-card"><div class="val" style="color:var(--gold)">$0</div><div class="lbl">Total Earned</div></div><div class="stat-card"><div class="val" style="color:var(--green)">$0</div><div class="lbl">Pending Payout</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Chapters Sold</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Books Published</div></div></div>
+      <div class="card"><h3>Transaction History</h3><div id="txList" style="font-size:0.78rem;color:var(--dim)">No transactions yet. Publish paid chapters to start earning.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ CONFIG ═══════════════
+const API_BASE = 'https://api.aichatmail.one';
+let AUTH_TOKEN = '';
+let REG_EMAIL = '';
+let agreementScrolled = false;
+
+// Genre name → slug mapping
+const GENRE_MAP = {
+  'Xianxia / Cultivation': 'xianxia', 'Wuxia': 'wuxia', 'Urban Fantasy': 'urban', 'Sci-Fi': 'scifi',
+  'LitRPG / GameLit': 'litrpg', 'Isekai / Transmigration': 'isekai', 'Epic Fantasy': 'fantasy',
+  'Magic Academy': 'magic-academy', 'Romance': 'romance', 'Harem / Reverse Harem': 'harem',
+  'Boys Love / Yaoi': 'yaoi', 'Horror / Thriller': 'horror', 'Apocalypse / Survival': 'apocalypse',
+  'Supernatural / Paranormal': 'supernatural', 'Mystery / Detective': 'mystery',
+  'Action / Adventure': 'action', 'Historical Fiction': 'historical', 'Slice of Life': 'slice-of-life',
+  'Comedy / Satire': 'comedy', 'Drama / Tragedy': 'drama'
+};
+const GENRE_SLUG_TO_NAME = {}; for (var k in GENRE_MAP) GENRE_SLUG_TO_NAME[GENRE_MAP[k]] = k;
+
+function checkAgreementScroll() {
+  if (agreementScrolled) return;
+  var box = document.getElementById('agreementBox');
+  if (box.scrollTop + box.clientHeight >= box.scrollHeight - 10) {
+    agreementScrolled = true;
+    var label = document.getElementById('agreeLabel');
+    var cb = document.getElementById('agreeTerms');
+    var btn = document.getElementById('btnRegister');
+    label.style.opacity = '1'; label.style.pointerEvents = 'auto';
+    cb.disabled = false;
+    btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; btn.disabled = false;
+  }
+}
+
+// ═══════════════ AUTH ═══════════════
+function doEmailLogin() {
+  var e = document.getElementById('loginEmail').value.trim();
+  var p = document.getElementById('loginPwd').value;
+  if (!e || !p) return;
+  fetch(API_BASE+'/api/author/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p}) })
+    .then(r => r.json())
+    .then(d => {
+      if (d.token) { AUTH_TOKEN = d.token; try { sessionStorage.setItem('fv_token', d.token); } catch(x){} enterApp(); }
+      else if (d.error === 'Need verification') { REG_EMAIL = e; document.getElementById('verifyBox').style.display='block'; }
+      else { showErr(d.error || 'Login failed'); }
+    }).catch(() => showErr('API unreachable'));
+}
+
+function doEmailRegister() {
+  var e = document.getElementById('loginEmail').value.trim();
+  var p = document.getElementById('loginPwd').value;
+  if (!e || !p) return;
+  if (p.length < 8) { showErr('Password need 8+ chars'); return; }
+  if (!document.getElementById('agreeTerms').checked) { showErr('Please agree to Author Agreement first'); return; }
+  fetch(API_BASE+'/api/author/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p,displayName:e.split('@')[0],agreeToTerms:true,agreementTimestamp:new Date().toISOString()}) })
+    .then(r => r.json())
+    .then(d => {
+      if (d.ok) { REG_EMAIL = e; document.getElementById('verifyBox').style.display='block'; }
+      else { showErr(d.error || 'Register failed'); }
+    }).catch(() => showErr('API unreachable'));
+}
+
+function doVerify() {
+  var code = document.getElementById('verifyCode').value.trim();
+  if (!code) return;
+  fetch(API_BASE+'/api/author/verify', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:REG_EMAIL,code:code}) })
+    .then(r => r.json())
+    .then(d => {
+      if (d.token) { AUTH_TOKEN = d.token; try { sessionStorage.setItem('fv_token', d.token); } catch(x){} enterApp(); }
+      else { showErr(d.error || 'Wrong code'); }
+    }).catch(() => showErr('API unreachable'));
+}
+
+function showErr(msg) { document.getElementById('loginError').textContent = msg; document.getElementById('loginError').style.display = 'block'; }
+function enterApp() { document.getElementById('loginGate').style.display = 'none'; document.getElementById('app').classList.remove('hidden'); loadDashboard(); loadBookList(); }
+
+function doLogin() {
+  var token = document.getElementById('loginToken').value.trim();
+  if (!token) return;
+  AUTH_TOKEN = token;
+  fetch(API_BASE+'/api/auth/check', { headers: { Authorization: 'Bearer '+token } })
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      try { sessionStorage.setItem('fv_token', token); } catch(x){}
+      enterApp();
+    })
+    .catch(() => { showErr('Invalid token'); });
+}
+
+// Auto-login from session
+(function() {
+  var t = null;
+  try { t = sessionStorage.getItem('fv_token'); } catch(x) {}
+  if (t) { AUTH_TOKEN = t; enterApp(); }
+})();
+
+// ═══════════════ API HELPERS ═══════════════
+function api(path, method, body) {
+  var opts = { method: method, headers: { 'Authorization': 'Bearer '+AUTH_TOKEN } };
+  if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  return fetch(API_BASE+path, opts).then(r => r.json());
+}
+
+function toast(msg, type) {
+  var t = document.createElement('div');
+  t.className = 'toast '+type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3000);
+}
+
+// ═══════════════ PANELS ═══════════════
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+  document.querySelector('[data-panel="'+name+'"]').classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'books') loadBookList();
+  if (name === 'chapters') loadBookSelects();
+}
+
+// ═══════════════ DASHBOARD ═══════════════
+function loadDashboard() {
+  api('/api/books', 'GET').then(function(books) {
+    var pub = books.filter(b => b.published);
+    var unpub = books.filter(b => !b.published);
+    var stats = '<div class="stat-card"><div class="val">'+books.length+'</div><div class="lbl">Total Books</div></div>'+
+      '<div class="stat-card"><div class="val">'+pub.length+'</div><div class="lbl">Published</div></div>'+
+      '<div class="stat-card"><div class="val">'+unpub.length+'</div><div class="lbl">Drafts</div></div>'+
+      '<div class="stat-card"><div class="val">'+books.reduce((s,b)=>s+(parseInt(b.chapter_count)||0),0)+'</div><div class="lbl">Total Chapters</div></div>';
+    document.getElementById('dashStats').innerHTML = stats;
+
+    var act = books.slice(0, 5).map(function(b) {
+      return '<div class="book-row" onclick="editBook(\''+b.slug+'\')">'+
+        '<span class="title">'+b.title+'</span>'+
+        '<span class="meta">'+b.chapter_count+' ch · '+(b.published?'✅ Published':'📝 Draft')+'</span>'+
+        '</div>';
+    }).join('') || '<p style="color:var(--dim)">No books yet.</p>';
+    document.getElementById('recentActivity').innerHTML = act;
+  });
+}
+
+// ═══════════════ BOOKS ═══════════════
+function loadBookList() {
+  api('/api/books', 'GET').then(function(books) {
+    var html = '';
+    books.forEach(function(b) {
+      html += '<div class="book-row">'+
+        '<span class="title">'+b.title+' <span style="font-size:0.65rem;color:var(--dim)">/'+b.slug+'</span></span>'+
+        '<span class="meta">by '+b.author+' · '+(b.genre||'')+' · '+(b.tier||'free')+' · '+b.chapter_count+' ch</span>'+
+        '<span class="badge '+(b.published?'badge-pub':'badge-draft')+'">'+(b.published?'Published':'Draft')+'</span>'+
+        '<button class="btn btn-outline btn-sm" onclick="editBook(\''+b.slug+'\')">✏️</button>'+
+        '<button class="btn btn-red btn-sm" onclick="deleteBookConfirm(\''+b.slug+'\',\''+b.title+'\')">×</button>'+
+      '</div>';
+    });
+    document.getElementById('bookList').innerHTML = html || '<p style="color:var(--dim)">No books yet. Create your first book!</p>';
+  });
+}
+
+function showBookForm() {
+  document.getElementById('bookFormCard').style.display = 'block';
+  document.getElementById('bookFormTitle').textContent = 'New Book';
+  document.getElementById('bookSlugOld').value = '';
+  document.getElementById('bookForm').reset();
+  document.getElementById('bPublished').checked = false;
+}
+
+function hideBookForm() {
+  document.getElementById('bookFormCard').style.display = 'none';
+}
+
+function editBook(slug) {
+  api('/api/books/'+slug, 'GET').then(function(b) {
+    document.getElementById('bookFormCard').style.display = 'block';
+    document.getElementById('bookFormTitle').textContent = 'Edit: '+b.title;
+    document.getElementById('bookSlugOld').value = b.slug;
+    document.getElementById('bTitle').value = b.title||'';
+    document.getElementById('bSlug').value = b.slug||'';
+    document.getElementById('bAuthor').value = b.author||'';
+    document.getElementById('bAuthorBio').value = b.author_bio||'';
+    document.getElementById('bGenre').value = GENRE_SLUG_TO_NAME[b.genre]||b.genre||'';
+    document.getElementById('bTier').value = b.tier||'paid';
+    document.getElementById('bPrice').value = b.price||4.99;
+    document.getElementById('bFreeCh').value = b.free_chapters||5;
+    document.getElementById('bStatus').value = b.status||'ongoing';
+    document.getElementById('bRating').value = b.rating||4.5;
+    document.getElementById('bCover').value = b.cover||'';
+    document.getElementById('bCoverAlt').value = b.cover_alt||'';
+    document.getElementById('bDesc').value = b.description||'';
+    document.getElementById('bPublished').checked = !!b.published;
+    showPanel('books');
+  });
+}
+
+function saveBook(e) {
+  e.preventDefault();
+  var oldSlug = document.getElementById('bookSlugOld').value;
+  var data = {
+    title: document.getElementById('bTitle').value,
+    slug: document.getElementById('bSlug').value || document.getElementById('bTitle').value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),
+    author: document.getElementById('bAuthor').value,
+    authorBio: document.getElementById('bAuthorBio').value,
+    genre: GENRE_MAP[document.getElementById('bGenre').value]||'xianxia',
+    tier: document.getElementById('bTier').value,
+    price: parseFloat(document.getElementById('bPrice').value)||4.99,
+    freeChapters: parseInt(document.getElementById('bFreeCh').value)||5,
+    status: document.getElementById('bStatus').value,
+    rating: parseFloat(document.getElementById('bRating').value)||4.5,
+    cover: document.getElementById('bCover').value,
+    coverAlt: document.getElementById('bCoverAlt').value,
+    description: document.getElementById('bDesc').value,
+    published: document.getElementById('bPublished').checked
+  };
+
+  var method = oldSlug ? 'PUT' : 'POST';
+  var path = oldSlug ? '/api/books/'+oldSlug : '/api/books';
+
+  api(path, method, data).then(function(r) {
+    if (r.ok || r.slug) {
+      toast(oldSlug ? 'Book updated!' : 'Book created!', 'success');
+      hideBookForm();
+      loadBookList();
+      loadBookSelects();
+    } else {
+      toast(r.error||'Failed', 'error');
+    }
+  });
+}
+
+function deleteBookConfirm(slug, title) {
+  if (!confirm('Delete "'+title+'"? All chapters will be lost.')) return;
+  api('/api/books/'+slug, 'DELETE').then(function(r) {
+    toast('Book deleted', 'success');
+    loadBookList();
+    loadBookSelects();
+  });
+}
+
+// ═══════════════ CHAPTERS ═══════════════
+function loadBookSelects() {
+  api('/api/books', 'GET').then(function(books) {
+    var html = '<option value="">— Choose —</option>';
+    books.forEach(function(b) { html += '<option value="'+b.slug+'">'+b.title+'</option>'; });
+    document.getElementById('chBookSelect').innerHTML = html;
+  });
+}
+
+function loadChapterEditor() {
+  var slug = document.getElementById('chBookSelect').value;
+  if (!slug) { document.getElementById('chapterEditor').innerHTML = ''; return; }
+
+  api('/api/books/'+slug+'/chapters', 'GET').then(function(chs) {
+    renderChapters(slug, chs);
+  });
+}
+
+function renderChapters(slug, chs) {
+  var html = '<div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">'+
+    '<strong style="color:#fff;font-size:0.85rem">'+chs.length+' chapters</strong>'+
+    '<button class="btn btn-outline btn-sm" onclick="addNewChapter(\''+slug+'\')">+ Add Chapter</button>'+
+    '</div><div class="ch-list">';
+
+  chs.forEach(function(ch) {
+    var schedLabel = ch.scheduled_at ? ' 📅'+ch.scheduled_at.substring(0,16) : '';
+    html += '<div class="ch-item" id="ch-'+ch.number+'">'+
+      '<span class="ch-num">#'+ch.number+'</span>'+
+      '<div class="ch-fields">'+
+        '<div style="display:flex;gap:8px">'+
+          '<input value="'+ch.title+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'title\',this.value)" style="flex:2">'+
+          '<input type="number" value="'+ch.word_count+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'wordCount\',parseInt(this.value))" style="width:80px" title="Word count">'+
+        '</div>'+
+        '<textarea placeholder="Chapter content..." onchange="updateChapterField(\''+slug+'\','+ch.number+',\'content\',this.value)" rows="2">'+(ch.content||'')+'</textarea>'+
+        '<div style="display:flex;gap:8px;align-items:center;font-size:0.7rem">'+
+          '<label style="color:var(--dim)">Schedule: <input type="datetime-local" value="'+(ch.scheduled_at||'')+'" onchange="updateChapterField(\''+slug+'\','+ch.number+',\'scheduledAt\',this.value)" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;color:#fff;padding:2px 6px;font-size:0.7rem"></label>'+
+          '<label style="color:var(--green);cursor:pointer"><input type="checkbox" '+(ch.published?'checked':'')+' onchange="updateChapterField(\''+slug+'\','+ch.number+',\'published\',this.checked)"> Published</label>'+
+          schedLabel+
+        '</div>'+
+      '</div>'+
+      '<div class="ch-actions">'+
+        '<button class="btn btn-outline btn-sm" onclick="saveChapterFull(\''+slug+'\','+ch.number+')">💾</button>'+
+        '<button class="btn btn-red btn-sm" onclick="deleteChapter(\''+slug+'\','+ch.number+')">×</button>'+
+      '</div>'+
+    '</div>';
+  });
+
+  html += '</div>';
+  document.getElementById('chapterEditor').innerHTML = html;
+}
+
+var chapterUpdates = {};
+function updateChapterField(slug, num, field, val) {
+  if (!chapterUpdates[slug+'-'+num]) chapterUpdates[slug+'-'+num] = {};
+  chapterUpdates[slug+'-'+num][field] = val;
+}
+
+function saveChapterFull(slug, num) {
+  var data = chapterUpdates[slug+'-'+num] || {};
+  if (Object.keys(data).length === 0) { toast('No changes', 'info'); return; }
+  api('/api/books/'+slug+'/chapters/'+num, 'PUT', data).then(function(r) {
+    if (r.ok) { toast('Chapter #'+num+' saved!', 'success'); chapterUpdates[slug+'-'+num] = {}; loadChapterEditor(); }
+    else toast(r.error||'Failed', 'error');
+  });
+}
+
+function addNewChapter(slug) {
+  var title = prompt('Chapter title:');
+  if (!title) return;
+  api('/api/books/'+slug+'/chapters', 'POST', { title: title }).then(function(r) {
+    if (r.ok) { toast('Chapter added!', 'success'); loadChapterEditor(); }
+    else toast(r.error||'Failed', 'error');
+  });
+}
+
+function deleteChapter(slug, num) {
+  if (!confirm('Delete chapter #'+num+'?')) return;
+  api('/api/books/'+slug+'/chapters/'+num, 'DELETE').then(function(r) {
+    if (r.ok) { toast('Deleted', 'success'); loadChapterEditor(); }
+    else toast(r.error||'Failed', 'error');
+  });
+}
+
+// ═══════════════ DEPLOY ═══════════════
+function deploySite() {
+  var btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '⚡ Deploying...';
+  document.getElementById('deployStatus').textContent = 'Triggering build...';
+
+  api('/api/deploy', 'POST').then(function(r) {
+    if (r.ok) {
+      document.getElementById('deployStatus').textContent = '✅ Deploy triggered! Site updates in 1-2 min.';
+      toast('Deploy triggered!', 'success');
+    } else {
+      document.getElementById('deployStatus').textContent = '❌ '+(r.error||'Failed');
+      toast(r.error||'Deploy failed', 'error');
+    }
+    btn.disabled = false;
+    btn.textContent = '⚡ Deploy Now';
+  });
+}
+
+// ═══ API Token Management ═══
+function loadTokens() {
+  api('/api/author/tokens', 'GET').then(function(r) {
+    var list = document.getElementById('tokenList');
+    if (!r || r.length===0) { list.innerHTML = '<p style="color:var(--dim)">No tokens yet. Generate one above.</p>'; return; }
+    list.innerHTML = r.map(function(t) {
+      return '<div class="book-row" style="cursor:default"><div class="title">🔑 '+(t.label||'Default')+'</div><div class="meta">Scope: <b style="color:var(--accent)">'+(t.scope||'full')+'</b> | Created: '+t.created_at.substring(0,10)+' | Last used: '+(t.last_used||'Never').substring(0,10)+'</div><div style="margin-left:auto"><button class="btn btn-red btn-sm" onclick="revokeToken(\''+t.id+'\')">Revoke</button></div></div>';
+    }).join('');
+  }).catch(function() { document.getElementById('tokenList').innerHTML = '<p style="color:var(--red)">Failed to load tokens</p>'; });
+}
+
+function generateToken() {
+  var label = document.getElementById('tokenLabel').value || 'Default';
+  var scope = document.getElementById('tokenScope').value;
+  api('/api/author/tokens', 'POST', {label:label, scope:scope}).then(function(r) {
+    if (r.token) {
+      document.getElementById('newTokenBox').style.display='block';
+      document.getElementById('newToken').textContent = r.token;
+      toast('Token generated! Copy it now!', 'success');
+      loadTokens();
+    } else { toast(r.error||'Failed', 'error'); }
+  });
+}
+
+function revokeToken(id) {
+  if (!confirm('Revoke this token? It will stop working immediately.')) return;
+  api('/api/author/tokens/'+id, 'DELETE').then(function(r) {
+    if (r.ok) { toast('Token revoked', 'success'); loadTokens(); }
+    else toast(r.error||'Failed', 'error');
+  });
+}
+
+// ═══ Payment Binding ═══
+var paymentData = { alipay:null, payoneer:null, paypal:null };
+
+function loadPayment() {
+  try { var d = JSON.parse(localStorage.getItem('fv_payment_'+AUTH_TOKEN.substring(0,8))||'{}'); paymentData = Object.assign(paymentData, d); } catch(x){}
+  ['alipay','payoneer','paypal'].forEach(function(type) {
+    if (paymentData[type]) {
+      document.getElementById(type+'Bound').style.display = 'block';
+      document.getElementById(type+'Form').style.display = 'none';
+      document.getElementById(type+'Account').textContent = paymentData[type];
+    }
+  });
+}
+
+function bindPayment(type) {
+  var val = document.getElementById(type+'Input').value.trim();
+  if (!val) return toast('Please enter account info', 'error');
+  paymentData[type] = val;
+  localStorage.setItem('fv_payment_'+AUTH_TOKEN.substring(0,8), JSON.stringify(paymentData));
+  document.getElementById(type+'Bound').style.display = 'block';
+  document.getElementById(type+'Form').style.display = 'none';
+  document.getElementById(type+'Account').textContent = val;
+  toast('✅ '+(type==='alipay'?'Alipay':type==='payoneer'?'Payoneer':'PayPal')+' bound!', 'success');
+}
+
+function unbindPayment(type) {
+  if (!confirm('Remove '+(type==='alipay'?'Alipay':type==='payoneer'?'Payoneer':'PayPal')+' binding?')) return;
+  paymentData[type] = null;
+  localStorage.setItem('fv_payment_'+AUTH_TOKEN.substring(0,8), JSON.stringify(paymentData));
+  document.getElementById(type+'Bound').style.display = 'none';
+  document.getElementById(type+'Form').style.display = 'block';
+  document.getElementById(type+'Input').value = '';
+  toast('Unbound', 'info');
+}
+
+function loadEarnings() {
+  document.getElementById('earningsStats').innerHTML = '<div class="stat-card"><div class="val" style="color:var(--gold)">$0</div><div class="lbl">Total Earned</div></div><div class="stat-card"><div class="val" style="color:var(--green)">$0</div><div class="lbl">Pending</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Sold</div></div><div class="stat-card"><div class="val">0</div><div class="lbl">Books</div></div>';
+  api('/api/earnings', 'GET').then(function(r) {
+    if (r && r.total) {
+      document.getElementById('earningsStats').innerHTML = '<div class="stat-card"><div class="val" style="color:var(--gold)">$'+r.total.toFixed(2)+'</div><div class="lbl">Total Earned</div></div><div class="stat-card"><div class="val" style="color:var(--green)">$'+(r.pending||0).toFixed(2)+'</div><div class="lbl">Pending</div></div><div class="stat-card"><div class="val">'+(r.sold||0)+'</div><div class="lbl">Sold</div></div><div class="stat-card"><div class="val">'+(r.books||0)+'</div><div class="lbl">Books</div></div>';
+    }
+    var list = document.getElementById('txList');
+    if (r && r.transactions && r.transactions.length) {
+      list.innerHTML = '<table style="width:100%;font-size:0.72rem"><thead><tr style="color:var(--dim);text-align:left"><th>Date</th><th>Book</th><th>Amount</th><th>Fee</th><th>Net</th></tr></thead><tbody>'+r.transactions.map(function(t){return '<tr><td>'+t.date+'</td><td>'+t.book+'</td><td>$'+t.amount+'</td><td>-$'+(t.platform_fee||0)+'</td><td style="color:var(--green)">$'+(t.author_share||0)+'</td></tr>';}).join('')+'</tbody></table>';
+    }
+  }).catch(function() {});
+}
+</script>
+</body>
+</html>

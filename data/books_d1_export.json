@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "abyss-rancher",
+    "title": "The Abyss Rancher: How I Saved the World by Farming",
+    "author": "Kuang Shan",
+    "authorBio": "",
+    "genre": "Default",
+    "genres": [
+      "Default"
+    ],
+    "tier": "paid",
+    "price": 4.99,
+    "status": "ongoing",
+    "rating": 4.5,
+    "reviews": 0,
+    "cover": "/images/covers/abyss-rancher.png",
+    "coverAlt": "",
+    "freeChapters": 5,
+    "updated": "2026-06-22 04:29:06",
+    "description": "A modern Chengdu delivery driver is pulled into an abyss-infested world where he must farm to survive. Armed with his great-grandfather mysterious book and a vine that grew from blood, he becomes the first human to bridge abyss and surface through agriculture."
+  },
+  {
+    "slug": "dao-celestial-blade",
+    "title": "Dao of the Celestial Blade",
+    "author": "Azure Ink",
+    "authorBio": "Azure Ink is a Xianxia author weaving tales of cultivation, destiny, and divine ambition.",
+    "genre": "xianxia",
+    "genres": [
+      "xianxia"
+    ],
+    "tier": "paid",
+    "price": 4.99,
+    "status": "ongoing",
+    "rating": 4.8,
+    "reviews": 126,
+    "cover": "/images/covers/dao-celestial-blade.png",
+    "coverAlt": "Dao of the Celestial Blade novel cover",
+    "freeChapters": 5,
+    "updated": "2026-06-21 16:45:27",
+    "description": "Lin Feng was the weakest disciple in the Seven Stars Sect"
+  },
+  {
+    "slug": "last-oracle-shanghai",
+    "title": "The Last Oracle of Shanghai",
+    "author": "Midnight Quill",
+    "authorBio": "Midnight Quill writes urban supernatural fiction.",
+    "genre": "urban",
+    "genres": [
+      "urban"
+    ],
+    "tier": "paid",
+    "price": 4.99,
+    "status": "ongoing",
+    "rating": 4.6,
+    "reviews": 89,
+    "cover": "/images/covers/last-oracle-shanghai.png",
+    "coverAlt": "The Last Oracle of Shanghai novel cover",
+    "freeChapters": 5,
+    "updated": "2026-06-21 01:52:03",
+    "description": "Chen Wei runs a tiny antique shop by day."
+  },
+  {
+    "slug": "system-crash-reboot",
+    "title": "System Crash: Reboot Protocol",
+    "author": "Zero Day",
+    "authorBio": "Zero Day crafts immersive LitRPG sci-fi.",
+    "genre": "scifi",
+    "genres": [
+      "scifi"
+    ],
+    "tier": "free",
+    "price": 4.99,
+    "status": "ongoing",
+    "rating": 4.9,
+    "reviews": 203,
+    "cover": "/images/covers/system-crash-reboot.png",
+    "coverAlt": "System Crash Reboot Protocol novel cover",
+    "freeChapters": 5,
+    "updated": "2026-06-21 01:52:07",
+    "description": "When the world first full-dive VRMMO goes live."
+  }
+]

@@ -102,38 +102,69 @@ const totalChapters = books.reduce((s, b) => s + b.chapters, 0);
 const totalWords = books.reduce((s, b) => s + b.wordCount, 0);
 const allGenres = [...new Set(books.flatMap(b => b.genres))];
 
-// ─── 流派分类体系 ───
+// ─── 流派分类体系（含分组） ───
 const GENRE_TAXONOMY = {
-  'xianxia':          { name: 'Xianxia / Cultivation',  desc: 'Cultivation, immortal heroes, ancient martial worlds' },
-  'wuxia':            { name: 'Wuxia',                    desc: 'Martial arts masters, honor, and legendary blades in ancient China' },
-  'urban':            { name: 'Urban Fantasy',           desc: 'Magic, supernatural forces, hidden worlds in modern cities' },
-  'scifi':            { name: 'Sci-Fi',                  desc: 'Futuristic technology, space exploration, digital realities' },
-  'litrpg':           { name: 'LitRPG / GameLit',        desc: 'Game mechanics, leveling systems, stats, and virtual worlds' },
-  'isekai':           { name: 'Isekai / Transmigration', desc: 'Reborn in another world, portal fantasies, and parallel universes' },
-  'fantasy':          { name: 'Epic Fantasy',            desc: 'Dragons, magic systems, and sprawling otherworldly realms' },
-  'magic-academy':    { name: 'Magic Academy',           desc: 'Wizard schools, magical training, and academic rivalries' },
-  'romance':          { name: 'Romance',                 desc: 'Love stories across settings — contemporary, historical, and fantasy' },
-  'harem':            { name: 'Harem / Reverse Harem',   desc: 'Multiple love interests, romantic entanglements, and relationship drama' },
-  'yaoi':             { name: 'Boys Love / Yaoi',        desc: 'Male-male romance, LGBTQ+ stories across all genres' },
-  'horror':           { name: 'Horror / Thriller',       desc: 'Suspense, psychological terror, supernatural dread' },
-  'apocalypse':       { name: 'Apocalypse / Survival',   desc: 'End of the world, zombie outbreaks, and post-catastrophe survival' },
-  'supernatural':     { name: 'Supernatural / Paranormal', desc: 'Ghosts, vampires, werewolves, and otherworldly beings' },
-  'mystery':          { name: 'Mystery / Detective',     desc: 'Whodunits, crime investigations, and puzzle-solving plots' },
-  'action':           { name: 'Action / Adventure',      desc: 'High-stakes battles, quests, treasure hunts, and non-stop thrills' },
-  'historical':       { name: 'Historical Fiction',      desc: 'Stories set in richly imagined historical periods' },
-  'slice-of-life':    { name: 'Slice of Life',           desc: 'Everyday life, heartwarming drama, character-driven tales' },
-  'comedy':           { name: 'Comedy / Satire',         desc: 'Humor, parody, and lighthearted storytelling' },
-  'drama':            { name: 'Drama / Tragedy',         desc: 'Emotional depth, character conflict, and powerful storytelling' },
+  'xianxia':          { name: 'Xianxia / Cultivation',  desc: 'Cultivation, immortal heroes, ancient martial worlds', group: 'martial-cultivation', icon: '⚔️' },
+  'wuxia':            { name: 'Wuxia',                    desc: 'Martial arts masters, honor, and legendary blades in ancient China', group: 'martial-cultivation', icon: '🥋' },
+  'urban':            { name: 'Urban Fantasy',           desc: 'Magic, supernatural forces, hidden worlds in modern cities', group: 'modern-urban', icon: '🏙️' },
+  'scifi':            { name: 'Sci-Fi',                  desc: 'Futuristic technology, space exploration, digital realities', group: 'scifi-tech', icon: '🚀' },
+  'litrpg':           { name: 'LitRPG / GameLit',        desc: 'Game mechanics, leveling systems, stats, and virtual worlds', group: 'scifi-tech', icon: '🎮' },
+  'isekai':           { name: 'Isekai / Transmigration', desc: 'Reborn in another world, portal fantasies, and parallel universes', group: 'fantasy-worlds', icon: '🌌' },
+  'fantasy':          { name: 'Epic Fantasy',            desc: 'Dragons, magic systems, and sprawling otherworldly realms', group: 'fantasy-worlds', icon: '🐉' },
+  'magic-academy':    { name: 'Magic Academy',           desc: 'Wizard schools, magical training, and academic rivalries', group: 'fantasy-worlds', icon: '✨' },
+  'romance':          { name: 'Romance',                 desc: 'Love stories across settings — contemporary, historical, and fantasy', group: 'romance', icon: '💕' },
+  'harem':            { name: 'Harem / Reverse Harem',   desc: 'Multiple love interests, romantic entanglements, and relationship drama', group: 'romance', icon: '💝' },
+  'yaoi':             { name: 'Boys Love / Yaoi',        desc: 'Male-male romance, LGBTQ+ stories across all genres', group: 'romance', icon: '🌈' },
+  'horror':           { name: 'Horror / Thriller',       desc: 'Suspense, psychological terror, supernatural dread', group: 'mystery-thriller', icon: '👻' },
+  'apocalypse':       { name: 'Apocalypse / Survival',   desc: 'End of the world, zombie outbreaks, and post-catastrophe survival', group: 'scifi-tech', icon: '🧟' },
+  'supernatural':     { name: 'Supernatural / Paranormal', desc: 'Ghosts, vampires, werewolves, and otherworldly beings', group: 'modern-urban', icon: '🦇' },
+  'mystery':          { name: 'Mystery / Detective',     desc: 'Whodunits, crime investigations, and puzzle-solving plots', group: 'mystery-thriller', icon: '🔍' },
+  'action':           { name: 'Action / Adventure',      desc: 'High-stakes battles, quests, treasure hunts, and non-stop thrills', group: 'mystery-thriller', icon: '💥' },
+  'historical':       { name: 'Historical Fiction',      desc: 'Stories set in richly imagined historical periods', group: 'drama-literary', icon: '📜' },
+  'slice-of-life':    { name: 'Slice of Life',           desc: 'Everyday life, heartwarming drama, character-driven tales', group: 'modern-urban', icon: '🏡' },
+  'comedy':           { name: 'Comedy / Satire',         desc: 'Humor, parody, and lighthearted storytelling', group: 'drama-literary', icon: '😂' },
+  'drama':            { name: 'Drama / Tragedy',         desc: 'Emotional depth, character conflict, and powerful storytelling', group: 'drama-literary', icon: '🎭' },
+};
+
+// 流派分组定义
+const GENRE_GROUPS = {
+  'martial-cultivation': { name: 'Martial & Cultivation', icon: '⚔️', desc: 'Cultivation paths, martial arts, immortal heroes' },
+  'fantasy-worlds':      { name: 'Fantasy Worlds', icon: '🐉', desc: 'Epic realms, magic systems, portal adventures' },
+  'scifi-tech':          { name: 'Sci-Fi & Tech', icon: '🚀', desc: 'Futuristic worlds, game systems, digital realities' },
+  'romance':             { name: 'Romance', icon: '💕', desc: 'Love, relationships, and heart-tugging entanglements' },
+  'modern-urban':        { name: 'Modern & Urban', icon: '🏙️', desc: 'Supernatural in cities, everyday magic, slice of life' },
+  'mystery-thriller':    { name: 'Mystery & Thriller', icon: '🔍', desc: 'Suspense, investigations, high-stakes action' },
+  'drama-literary':      { name: 'Drama & Literary', icon: '🎭', desc: 'Character depth, historical tales, emotional journeys' },
 };
 
 // 统计每个流派下的书籍
 const genreStats = {};
 for (const book of books) {
   const g = book.genre;
-  if (!GENRE_TAXONOMY[g]) continue; // skip unknown genres
+  if (!GENRE_TAXONOMY[g]) continue;
   if (!genreStats[g]) genreStats[g] = { ...GENRE_TAXONOMY[g], books: [] };
   genreStats[g].books.push(book);
 }
+
+// 按分组组织流派
+const groupGenres = {};
+for (const [gk, gc] of Object.entries(GENRE_GROUPS)) {
+  groupGenres[gk] = { ...gc, genres: [] };
+}
+for (const [gk, gs] of Object.entries(genreStats)) {
+  const group = GENRE_TAXONOMY[gk]?.group;
+  if (group && groupGenres[group]) {
+    groupGenres[group].genres.push({ key: gk, ...gs, count: gs.books.length });
+  }
+}
+// 过滤空分组，按流派总数排序
+const groupOrder = Object.keys(groupGenres)
+  .filter(gk => groupGenres[gk].genres.length > 0)
+  .sort((a, b) => {
+    const ta = groupGenres[a].genres.reduce((s, g) => s + g.count, 0);
+    const tb = groupGenres[b].genres.reduce((s, g) => s + g.count, 0);
+    return tb - ta;
+  });
 
 // 按书籍数量排序流派
 const genreOrder = Object.keys(genreStats).sort((a, b) => genreStats[b].books.length - genreStats[a].books.length);
@@ -373,6 +404,103 @@ a{color:inherit;text-decoration:none}
   .ft-grid{gap:20px;padding:24px 12px}.ft-col h4{font-size:0.65rem}.ft-col a{font-size:0.62rem}.ft-bottom{font-size:0.58rem}
   .unlock-box{padding:20px 16px!important}.unlock-box h2{font-size:1rem!important}
 }
+/* ═══════════════════════════════════════════
+   CATEGORY DISCOVERY CARDS
+   ═══════════════════════════════════════════ */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.cat-card{background:linear-gradient(160deg,var(--card) 40%,rgba(232,192,64,0.03) 100%);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all 0.3s;cursor:pointer;display:block;text-decoration:none;position:relative;overflow:hidden}
+.cat-card:hover{border-color:rgba(232,192,64,0.25);transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,0,0,0.3)}
+.cat-card::after{content:'';position:absolute;top:-40px;right:-40px;width:80px;height:80px;border-radius:50%;background:rgba(232,192,64,0.02);transition:transform 0.3s}
+.cat-card:hover::after{transform:scale(2.5)}
+.cat-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cat-icon{font-size:1.3rem}
+.cat-count{font-size:0.58rem;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--gold);background:rgba(232,192,64,0.1);padding:2px 8px;border-radius:100px}
+.cat-card h3{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;font-weight:700;color:#fff;margin-bottom:4px}
+.cat-desc{font-size:0.65rem;color:var(--dim);line-height:1.5;margin-bottom:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.cat-covers{display:flex;align-items:center;position:relative;height:44px}
+.cat-cv-stack-item{width:36px;height:50px;border-radius:4px;overflow:hidden;border:1.5px solid var(--card);box-shadow:0 2px 8px rgba(0,0,0,0.4);flex-shrink:0;position:relative}
+.cat-cv-stack-item img{width:100%;height:100%;object-fit:cover}
+/* ═══════════════════════════════════════════
+   BROWSE LAYOUT — SIDEBAR + MAIN
+   ═══════════════════════════════════════════ */
+.browse-wrap{max-width:1280px;margin:0 auto;padding:20px 24px 40px;display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start}
+/* Sidebar */
+.browse-sidebar{position:sticky;top:70px;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;max-height:calc(100vh - 100px);overflow-y:auto;z-index:50}
+.browse-sidebar::-webkit-scrollbar{width:4px}
+.browse-sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.sb-header{display:none;padding:14px 16px;border-bottom:1px solid var(--border);align-items:center;justify-content:space-between}
+.sb-title{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.8rem;font-weight:700;color:#fff}
+.sb-close{background:none;border:none;color:var(--dim);font-size:1rem;cursor:pointer;padding:4px 8px}
+.sb-nav{padding:8px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:all 0.15s;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim)}
+.sb-item:hover{background:rgba(255,255,255,0.03);color:#fff}
+.sb-item.active{background:rgba(232,192,64,0.1);color:var(--gold)}
+.sb-item.sb-parent{font-weight:600}
+.sb-item.sb-sub{padding-left:32px;font-size:0.7rem}
+.sb-icon{font-size:0.85rem;flex-shrink:0;width:20px;text-align:center}
+.sb-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-badge{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.58rem;padding:1px 6px;border-radius:100px;background:rgba(255,255,255,0.06);color:var(--dim);flex-shrink:0}
+.sb-item.active .sb-badge{background:rgba(232,192,64,0.15);color:var(--gold)}
+.sb-arrow{font-size:0.55rem;color:var(--dim);transition:transform 0.2s;flex-shrink:0}
+/* Sidebar Overlay */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:55}
+/* Main Content */
+.browse-main{min-width:0}
+.sidebar-toggle-btn{display:none;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.68rem;color:var(--gold);background:rgba(232,192,64,0.08);border:1px solid rgba(232,192,64,0.15);padding:5px 12px;border-radius:100px;cursor:pointer}
+/* Mobile Chip Bar */
+.mb-chips{display:none;flex-wrap:wrap;gap:6px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.mb-chip{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;padding:5px 11px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--dim);cursor:pointer;white-space:nowrap;transition:all 0.15s}
+.mb-chip:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.mb-chip.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.25)}
+.mb-chip .cnt{font-size:0.55rem;opacity:0.6}
+/* Browse Toolbar */
+.browse-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.browse-search{flex:1;min-width:180px;position:relative}
+.browse-search input{width:100%;padding:10px 14px 10px 36px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;outline:none}
+.browse-search input:focus{border-color:var(--gold)}
+.browse-search .sch-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.8rem;opacity:0.4;pointer-events:none}
+.browse-filters{display:flex;gap:8px;flex-wrap:wrap}
+.browse-filter{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;padding:8px 12px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;outline:none;cursor:pointer}
+.browse-filter:focus{border-color:rgba(232,192,64,0.3)}
+/* Active Filter Info */
+.browse-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+#filterLabel{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px}
+/* Pagination */
+.pagination{margin-top:32px;text-align:center}
+.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
+.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s}
+.pg-btn:hover:not(:disabled){color:#fff;border-color:rgba(255,255,255,0.2)}
+.pg-btn:disabled{opacity:0.3;cursor:not-allowed}
+.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim)}
+.pg-nums{display:flex;align-items:center;justify-content:center;gap:6px}
+.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.pg-num:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.pg-num.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.25)}
+.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim);padding:0 4px}
+/* ═══════════════════════════════════════════
+   RESPONSIVE — SIDEBAR + BROWSE
+   ═══════════════════════════════════════════ */
+@media(max-width:900px){
+  .browse-wrap{grid-template-columns:1fr;padding:12px 16px 32px}
+  .browse-sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;z-index:60;border-radius:0;border:none;border-right:1px solid var(--border);transform:translateX(-100%);transition:transform 0.25s;max-height:100vh}
+  .browse-sidebar.open{transform:translateX(0)}
+  .sb-header{display:flex}
+  .sb-overlay.open{display:block}
+  .sidebar-toggle-btn{display:inline-flex}
+  .mb-chips{display:flex}
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .cat-card{padding:14px}.cat-card h3{font-size:0.72rem}.cat-desc{display:none}
+}
+@media(max-width:480px){
+  .browse-wrap{padding:8px 10px 24px}
+  .browse-toolbar{flex-direction:column;gap:8px}
+  .browse-search{min-width:100%}
+  .browse-filters{width:100%}
+  .browse-filter{flex:1;font-size:0.62rem;padding:7px 8px}
+  .cat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .cat-card{padding:12px}.cat-covers{display:none}.cat-card h3{font-size:0.68rem}.cat-card-top{margin-bottom:6px}
+  .pg-num{width:28px;height:28px;font-size:0.65rem}
+}
 </style>
 </head>
 <body>`;
@@ -414,7 +542,7 @@ function bookCard(book) {
     : '<span class="bk-tier paid">$' + (book.price || '4.99') + '</span>';
   const genreClass = book.genre === 'scifi' ? 'g-scifi' : book.genre === 'xianxia' ? 'g-xianxia' : book.genre === 'urban' ? 'g-urban' : 'g-default';
   const genreLabels = (book.genres || [book.genre]).map(g => GENRE_TAXONOMY[g]?.name || g).join(' · ');
-  return `<article class="bk anim-up" data-genre="${book.genre}" data-tier="${book.tier || 'free'}" data-title="${esc(book.title)}" data-author="${esc(book.author)}">
+  return `<article class="bk anim-up" data-slug="${book.slug}" data-genre="${book.genre}" data-tier="${book.tier || 'free'}" data-title="${esc(book.title)}" data-author="${esc(book.author)}" data-status="${book.status || 'ongoing'}" data-words="${book.wordCount || 0}">
   <a href="/read/${book.slug}/" class="bk-cv"><img src="${book.cover}" alt="${book.coverAlt}" loading="lazy">${tierBadge}<div class="bk-progress"><div class="prog-bar" style="width:100%"></div></div></a>
   <div class="bk-bd">
     <div class="bk-genres"><span class="bk-genre ${genreClass}">${genreLabels}</span></div>
@@ -503,19 +631,14 @@ const indexHTML = `${BASE_HEAD('FictionVerse — Original English Web Novels | F
   `<script type="application/ld+json">${itemListSchema}</script>`)}
 ${BASE_HEADER}
 
-<!-- ═══════ HERO v2 ═══════ -->
+<!-- ═══════ HERO ═══════ -->
 <section class="hero-new"><div class="hero-grid">
 <div class="hero-text">
   <div class="hero-badge">Independent Original Fiction</div>
   <h1>Stories That <span class="hl">Stay With You</span></h1>
-  <p class="hero-sub">Discover original English web novels crafted by independent authors. Start reading free — unlock what moves you.</p>
-  <div class="hero-features">
-    <div class="hero-ft"><div class="ft-icon ft-free">📖</div> Read 5 chapters free</div>
-    <div class="hero-ft"><div class="ft-icon ft-one">📚</div> All chapters free</div>
-    <div class="hero-ft"><div class="ft-icon ft-daily">✨</div> New chapters weekly</div>
-  </div>
+  <p class="hero-sub">Discover original English web novels crafted by independent authors. Browse by genre, start reading free.</p>
   <div class="hero-cta">
-    <a href="#browse" class="btn btn-primary" onclick="document.getElementById('searchInput').focus();return false">Start Reading Free</a>
+    <a href="#browse" class="btn btn-primary">Browse Library</a>
     <a href="/author" class="btn btn-outline">Become an Author</a>
   </div>
 </div>
@@ -523,67 +646,148 @@ ${BASE_HEADER}
 ${sorted.slice(0, 3).map(b => `<a href="/read/${b.slug}/" class="hero-cv"><img src="${b.cover}" alt="${b.title}" loading="eager"></a>`).join('\n')}
 </div></div></section>
 
-<!-- ═══════ RANKINGS ═══════ -->
-<div class="sec"><div class="sec-hd"><h2>Top Rankings</h2><a href="#browse" class="sec-link">View all →</a></div>
-<div class="rank-grid">
-  <div class="rank-col anim-up d1"><div class="rc-hd"><span class="rc-icon">🔥</span><h3>Popular This Week</h3></div>${rankItemsPopular}</div>
-  <div class="rank-col anim-up d2"><div class="rc-hd"><span class="rc-icon">📚</span><h3>Most Content</h3></div>${rankItemsContent}</div>
-</div></div>
-
 <!-- ═══════ SOCIAL PROOF ═══════ -->
-<div class="social-bar anim-up d1"><div class="social-inner">
+<div class="social-bar"><div class="social-inner">
   <div class="social-stat"><div class="ss-num">${books.length}</div><div class="ss-label">Original Novels</div></div><div class="social-divider"></div>
   <div class="social-stat"><div class="ss-num">${totalChapters}</div><div class="ss-label">Chapters Published</div></div><div class="social-divider"></div>
   <div class="social-stat"><div class="ss-num">${(totalWords/1000).toFixed(0)}k</div><div class="ss-label">Total Words</div></div><div class="social-divider"></div>
   <div class="social-stat"><div class="ss-num">${books.length}</div><div class="ss-label">Active Authors</div></div>
 </div></div>
 
+<!-- ═══════ CATEGORY DISCOVERY CARDS ═══════ -->
+<div class="sec"><div class="sec-hd"><h2>Explore by Genre</h2><a href="#browse" class="sec-link">Browse all →</a></div>
+<div class="cat-grid anim-up">
+${groupOrder.map(gk => {
+  const g = groupGenres[gk];
+  const totalCount = g.genres.reduce((s, x) => s + x.count, 0);
+  const topCovers = g.genres.flatMap(x => x.books.slice(0, 2)).slice(0, 3);
+  const coverHTML = topCovers.map((b, i) => {
+    const delay = ['d1','d2','d3'][i] || 'd3';
+    return `<div class="cat-cv-stack-item" style="z-index:${3-i};${i>0?`transform:translateX(${i*12}px)`:'transform:none'}"><img src="${b.cover}" alt="${b.title}" loading="lazy"></div>`;
+  }).join('');
+  return `<a href="#browse" class="cat-card" onclick="document.querySelector('.sb-item[data-genre-group=\\'${gk}\\']').click();return false" style="animation-delay:${groupOrder.indexOf(gk)*0.08}s">
+    <div class="cat-card-top">
+      <span class="cat-icon">${g.icon}</span>
+      <span class="cat-count">${totalCount} novels</span>
+    </div>
+    <h3>${g.name}</h3>
+    <p class="cat-desc">${g.desc}</p>
+    <div class="cat-covers">${coverHTML}</div>
+  </a>`;
+}).join('\n')}
+</div></div>
+
 <!-- ═══════ LATEST UPDATES ═══════ -->
 <div class="sec"><div class="sec-hd"><h2>Latest Updates</h2><a href="#browse" class="sec-link">All novels →</a></div>
-<div class="updates-list anim-up d2">${latestUpdates}</div></div>
+<div class="updates-list">${latestUpdates}</div></div>
 
+<!-- ═══════ BROWSE — SIDEBAR + MAIN GRID ═══════ -->
 <div id="browse"></div>
-<section class="zone-tabs">
-  <button class="zt active" data-zone="all">All (${books.length})</button>
-  <button class="zt zt-green" data-zone="free">Free (${freeBooks.length})</button>
-  <button class="zt zt-gold" data-zone="paid">Paid (${paidBooks.length})</button>
-  <button class="zt zt-lib" data-zone="library">My Library</button>
-</section>
-<section class="sch-wrap"><div class="sch-bar">
-  <span class="sch-icon">&#128269;</span>
-  <input type="text" id="searchInput" placeholder="Search by title, author, or keyword..." oninput="filterBooks()">
-</div></section>
-<section class="gf-wrap"><div class="gf-bar" id="genreBar">
-  <button class="gf-chip active" data-genre="all" onclick="selectGenre('all')">All<span class="cnt">(${books.length})</span></button>
-  ${genreOrder.map(g => `<button class="gf-chip" data-genre="${g}" onclick="selectGenre('${g}')">${genreStats[g].name}<span class="cnt">(${genreStats[g].books.length})</span></button>`).join('\n')}
-</div></section>
-<main class="ct">
-  <div class="tb">
-    <span class="tb-count" id="tbCount">${books.length} novels · ${totalChapters} chapters · ${(totalWords/1000).toFixed(0)}k words</span>
-    <select class="tb-sort" onchange="sortBooks(this.value)">
-      <option value="rating">⭐ Top Rated</option>
-      <option value="newest">🕐 Recently Updated</option>
-      <option value="words">📖 Longest</option>
-    </select>
-  </div>
-  <div class="grid" id="bookGrid">${bookCards}</div>
-  <div class="no-results" id="noResults">No novels found. Try a different search or genre.</div>
-</main>
-<section class="lib-section" id="myLibrary">
-  <h2>My Library</h2>
-  <div class="lib-empty" id="libEmpty">
-    <p>You haven't unlocked any novels yet.</p>
-    <p style="margin-top:8px;font-size:0.72rem">Browse <a href="#" onclick="switchZone('free',document.querySelector('.zt[data-zone=free]'))">free novels</a> or <a href="#" onclick="switchZone('paid',document.querySelector('.zt[data-zone=paid]'))">paid novels</a> to get started.</p>
-  </div>
-  <div class="grid" id="libGrid" style="margin-top:12px"></div>
-</section>
+<div class="browse-wrap">
+  <!-- SIDEBAR -->
+  <aside class="browse-sidebar" id="browseSidebar">
+    <div class="sb-header">
+      <span class="sb-title">Categories</span>
+      <button class="sb-close" id="sbClose" onclick="toggleSidebar()" title="Close sidebar">✕</button>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-item active" data-genre-group="" data-genre="all" onclick="selectBrowse(this,'all','')">
+        <span class="sb-icon">📚</span>
+        <span class="sb-label">All Novels</span>
+        <span class="sb-badge">${books.length}</span>
+      </div>
+${groupOrder.map(gk => {
+  const g = groupGenres[gk];
+  const totalCount = g.genres.reduce((s, x) => s + x.count, 0);
+  const subHTML = g.genres.sort((a, b) => b.count - a.count).map(gg => 
+    `      <div class="sb-item sb-sub" data-genre-group="${gk}" data-genre="${gg.key}" onclick="event.stopPropagation();selectBrowse(this,'${gg.key}','${gk}')">
+        <span class="sb-icon">${gg.icon}</span>
+        <span class="sb-label">${gg.name}</span>
+        <span class="sb-badge">${gg.count}</span>
+      </div>`
+  ).join('\n');
+  return `      <div class="sb-group">
+        <div class="sb-item sb-parent" data-genre-group="${gk}" data-genre="" onclick="selectBrowse(this,'','${gk}')">
+          <span class="sb-icon">${g.icon}</span>
+          <span class="sb-label">${g.name}</span>
+          <span class="sb-arrow" id="sbArrow_${gk}">▸</span>
+          <span class="sb-badge">${totalCount}</span>
+        </div>
+        <div class="sb-subs" id="sbSubs_${gk}" style="display:none">
+${subHTML}
+        </div>
+      </div>`;
+}).join('\n')}
+    </nav>
+  </aside>
+
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="browse-main">
+    <!-- MOBILE CHIP BAR -->
+    <div class="mb-chips" id="mbChips">
+      <button class="mb-chip active" data-genre="all" onclick="selectBrowseMobile('all','')">All</button>
+${groupOrder.map(gk => {
+  const g = groupGenres[gk];
+  return g.genres.sort((a, b) => b.count - a.count).map(gg =>
+    `      <button class="mb-chip" data-genre="${gg.key}" onclick="selectBrowseMobile('${gg.key}','${gk}')">${gg.name}<span class="cnt">(${gg.count})</span></button>`
+  ).join('\n');
+}).join('\n')}
+    </div>
+
+    <!-- SEARCH + FILTERS -->
+    <div class="browse-toolbar">
+      <div class="browse-search">
+        <span class="sch-icon">&#128269;</span>
+        <input type="text" id="searchInput" placeholder="Search by title, author..." oninput="debounceFilter()">
+      </div>
+      <div class="browse-filters">
+        <select class="browse-filter" id="statusFilter" onchange="applyFilters()">
+          <option value="all">All Status</option>
+          <option value="ongoing">Ongoing</option>
+          <option value="completed">Completed</option>
+        </select>
+        <select class="browse-filter" id="wordsFilter" onchange="applyFilters()">
+          <option value="all">All Lengths</option>
+          <option value="0-50">Under 50k words</option>
+          <option value="50-100">50k – 100k words</option>
+          <option value="100-200">100k – 200k words</option>
+          <option value="200+">200k+ words</option>
+        </select>
+        <select class="browse-filter" id="sortSelect" onchange="applyFilters()">
+          <option value="rating">Top Rated</option>
+          <option value="chapters">Most Chapters</option>
+          <option value="words">Longest</option>
+          <option value="newest">Recently Updated</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ACTIVE FILTER INFO -->
+    <div class="browse-info" id="browseInfo">
+      <span id="filterLabel">All Novels (${books.length})</span>
+      <button class="sidebar-toggle-btn" id="sbToggle" onclick="toggleSidebar()" title="Show categories">☰ Categories</button>
+    </div>
+
+    <!-- BOOK GRID -->
+    <div class="grid" id="bookGrid">${bookCards}</div>
+
+    <!-- NO RESULTS -->
+    <div class="no-results" id="noResults">No novels found. Try adjusting your filters.</div>
+
+    <!-- PAGINATION -->
+    <div class="pagination" id="pagination"></div>
+  </main>
+</div>
 
 <!-- ═══════ EDITOR'S PICKS ═══════ -->
 <div class="sec"><div class="sec-hd"><h2>Editor's Picks</h2><a href="#browse" class="sec-link">Browse all →</a></div>
-<div class="picks-grid anim-up d3">${editorPicks}</div></div>
+<div class="picks-grid">${editorPicks}</div></div>
 
 <!-- ═══════ NEWSLETTER ═══════ -->
-<div class="news-sec anim-up d4"><div class="news-box">
+<div class="news-sec"><div class="news-box">
   <h2>Never Miss a New Chapter</h2>
   <p>Get notified when your favorite authors publish new stories. No spam, just stories.</p>
   <div class="news-form">
@@ -593,12 +797,257 @@ ${sorted.slice(0, 3).map(b => `<a href="/read/${b.slug}/" class="hero-cv"><img s
 </div></div>
 
 <script>
-const BOOKS = ${JSON.stringify(books.map(b=>({slug:b.slug,title:b.title,author:b.author,genre:b.genre,rating:b.rating,chapters:b.chapters,wordCount:b.wordCount})))};
-let activeGenre='all';
-let currentSort='rating';
-function selectGenre(g){activeGenre=g;document.querySelectorAll('.gf-chip').forEach(c=>c.classList.toggle('active',c.dataset.genre===g));filterBooks()}
-function filterBooks(){var q=document.getElementById('searchInput').value.toLowerCase().trim(),grid=document.getElementById('bookGrid'),cards=[...grid.querySelectorAll('.bk')],noRes=document.getElementById('noResults'),cntEl=document.getElementById('tbCount'),vis=0;cards.forEach(function(c){var g=activeGenre==='all'||c.dataset.genre===activeGenre,t=(c.dataset.title||'').toLowerCase(),a=(c.dataset.author||'').toLowerCase(),s=!q||t.includes(q)||a.includes(q),show=g&&s;c.classList.toggle('hidden',!show);if(show)vis++});noRes.style.display=vis===0?'block':'none';var fb=BOOKS.filter(function(b){return activeGenre==='all'||b.genre===activeGenre}),tc=fb.reduce(function(s,b){return s+b.chapters},0),tw=Math.round(fb.reduce(function(s,b){return s+b.wordCount},0)/1000);cntEl.textContent=vis+' of '+BOOKS.length+' novels · '+tc+' chapters · '+tw+'k words'}
-function sortBooks(v){currentSort=v;var grid=document.getElementById('bookGrid'),cards=[...grid.querySelectorAll('.bk')],vis=cards.filter(function(c){return!c.classList.contains('hidden')}),hid=cards.filter(function(c){return c.classList.contains('hidden')});if(v==='rating')vis.sort(function(a,b){return(b.querySelector('.bk-rating')?b.querySelector('.bk-rating').textContent:'').localeCompare(a.querySelector('.bk-rating')?a.querySelector('.bk-rating').textContent:'')});else if(v==='newest')vis.sort(function(){return Math.random()-0.5});else vis.sort(function(a,b){var ac=parseInt((a.querySelector('.bk-meta span:nth-child(2)')?a.querySelector('.bk-meta span:nth-child(2)').textContent:''))||0,bc=parseInt((b.querySelector('.bk-meta span:nth-child(2)')?b.querySelector('.bk-meta span:nth-child(2)').textContent:''))||0;return bc-ac});vis.concat(hid).forEach(function(c){grid.appendChild(c)})}
+// ─── BOOK DATA ───
+const BOOKS = ${JSON.stringify(books.map(b=>({slug:b.slug,title:b.title,author:b.author,genre:b.genre,genres:b.genres,rating:b.rating,chapters:b.chapters,wordCount:b.wordCount,status:b.status,tier:b.tier||'free'})))};
+
+// ─── STATE ───
+var state = {
+  genre: 'all',        // selected genre key (or 'all')
+  genreGroup: '',      // selected group key (or '')
+  status: 'all',
+  words: 'all',
+  sort: 'rating',
+  page: 1,
+  perPage: 20,
+  query: ''
+};
+
+// ─── DEBOUNCE ───
+var debounceTimer;
+function debounceFilter() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(function() {
+    state.query = document.getElementById('searchInput').value.toLowerCase().trim();
+    state.page = 1;
+    renderBooks();
+  }, 250);
+}
+
+// ─── SELECT BROWSE (SIDEBAR) ───
+function selectBrowse(el, genre, group) {
+  // Update state
+  state.genre = genre;
+  state.genreGroup = group;
+  state.page = 1;
+
+  // Toggle sub-items visibility
+  if (el.classList.contains('sb-parent')) {
+    var subs = document.getElementById('sbSubs_' + group);
+    var arrow = document.getElementById('sbArrow_' + group);
+    var isOpen = subs.style.display === 'block';
+    // Close all
+    document.querySelectorAll('.sb-subs').forEach(function(s) { s.style.display = 'none'; });
+    document.querySelectorAll('.sb-arrow').forEach(function(a) { a.textContent = '▸'; });
+    if (!isOpen) {
+      subs.style.display = 'block';
+      arrow.textContent = '▾';
+      // Don't change filter when just expanding
+      state.genre = '';
+      if (state.genreGroup !== group) { state.genreGroup = group; }
+      else { state.genreGroup = ''; }
+    } else {
+      state.genreGroup = '';
+    }
+  }
+
+  // Update active states
+  document.querySelectorAll('.sb-item').forEach(function(i) { i.classList.remove('active'); });
+  el.classList.add('active');
+  if (el.classList.contains('sb-parent') && el.classList.contains('active')) {
+    // Highlight parent when group is selected
+  }
+
+  // Sync mobile chips
+  document.querySelectorAll('.mb-chip').forEach(function(c) {
+    c.classList.toggle('active',
+      (c.dataset.genre === state.genre && state.genre !== '') ||
+      (c.dataset.genre === 'all' && state.genre === 'all' && state.genreGroup === '')
+    );
+  });
+
+  renderBooks();
+}
+
+// ─── SELECT BROWSE (MOBILE CHIPS) ───
+function selectBrowseMobile(genre, group) {
+  state.genre = genre;
+  state.genreGroup = group;
+  state.page = 1;
+
+  document.querySelectorAll('.mb-chip').forEach(function(c) {
+    c.classList.toggle('active',
+      (c.dataset.genre === state.genre && state.genre !== '') ||
+      (c.dataset.genre === 'all' && state.genre === 'all' && state.genreGroup === '')
+    );
+  });
+
+  // Sync sidebar
+  document.querySelectorAll('.sb-item').forEach(function(i) { i.classList.remove('active'); });
+  if (genre === 'all') {
+    var allBtn = document.querySelector('.sb-item[data-genre="all"]');
+    if (allBtn) allBtn.classList.add('active');
+  } else {
+    var subItem = document.querySelector('.sb-item.sb-sub[data-genre="' + genre + '"]');
+    if (subItem) subItem.classList.add('active');
+  }
+
+  renderBooks();
+}
+
+// ─── TOGGLE SIDEBAR ───
+function toggleSidebar() {
+  var sb = document.getElementById('browseSidebar');
+  var ov = document.getElementById('sbOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+}
+
+// ─── APPLY FILTERS ───
+function applyFilters() {
+  state.status = document.getElementById('statusFilter').value;
+  state.words = document.getElementById('wordsFilter').value;
+  state.sort = document.getElementById('sortSelect').value;
+  state.page = 1;
+  renderBooks();
+}
+
+// ─── FILTER MATCHING ───
+function bookMatches(b) {
+  // Genre filter
+  if (state.genre === 'all' && state.genreGroup === '') {
+    // Show all
+  } else if (state.genre !== '' && state.genre !== 'all') {
+    if (b.genre !== state.genre) return false;
+  } else if (state.genreGroup !== '') {
+    // Check if book's genre belongs to this group
+    var gt = ${JSON.stringify(Object.fromEntries(Object.entries(GENRE_TAXONOMY).map(([k,v])=>[k,v.group])))};
+    if (!gt[b.genre] || gt[b.genre] !== state.genreGroup) return false;
+  }
+
+  // Status filter
+  if (state.status !== 'all' && b.status !== state.status) return false;
+
+  // Word count filter
+  if (state.words !== 'all') {
+    var w = b.wordCount;
+    if (state.words === '0-50' && w >= 50000) return false;
+    if (state.words === '50-100' && (w < 50000 || w >= 100000)) return false;
+    if (state.words === '100-200' && (w < 100000 || w >= 200000)) return false;
+    if (state.words === '200+' && w < 200000) return false;
+  }
+
+  // Search
+  if (state.query) {
+    var t = b.title.toLowerCase();
+    var a = b.author.toLowerCase();
+    if (t.indexOf(state.query) === -1 && a.indexOf(state.query) === -1) return false;
+  }
+
+  return true;
+}
+
+// ─── RENDER ───
+function renderBooks() {
+  var filtered = BOOKS.filter(bookMatches);
+
+  // Sort
+  if (state.sort === 'rating') {
+    filtered.sort(function(a, b) { return b.rating - a.rating; });
+  } else if (state.sort === 'chapters') {
+    filtered.sort(function(a, b) { return b.chapters - a.chapters; });
+  } else if (state.sort === 'words') {
+    filtered.sort(function(a, b) { return b.wordCount - a.wordCount; });
+  } else if (state.sort === 'newest') {
+    filtered.sort(function(a, b) { return Math.random() - 0.5; });
+  }
+
+  // Pagination
+  var total = filtered.length;
+  var totalPages = Math.ceil(total / state.perPage);
+  if (state.page > totalPages) state.page = totalPages || 1;
+  var start = (state.page - 1) * state.perPage;
+  var pageBooks = filtered.slice(start, start + state.perPage);
+
+  // Show/hide cards
+  var grid = document.getElementById('bookGrid');
+  var cards = grid.querySelectorAll('.bk');
+  var pageSlugs = pageBooks.map(function(b) { return b.slug; });
+  cards.forEach(function(c) {
+    var slug = c.getAttribute('data-slug');
+    if (pageSlugs.indexOf(slug) >= 0) {
+      c.classList.remove('hidden');
+    } else {
+      c.classList.add('hidden');
+    }
+  });
+
+  // Sort visual order
+  pageBooks.forEach(function(b, i) {
+    var card = grid.querySelector('.bk[data-slug="' + b.slug + '"]');
+    if (card) grid.appendChild(card);
+  });
+
+  // No results
+  document.getElementById('noResults').style.display = total === 0 ? 'block' : 'none';
+
+  // Update label
+  var label = state.genre === 'all' && state.genreGroup === '' ? 'All Novels' : '';
+  if (!label && state.genreGroup) {
+    var gd = ${JSON.stringify(Object.fromEntries(Object.entries(GENRE_GROUPS).map(([k,v])=>[k,v.name])))};
+    label = gd[state.genreGroup] || '';
+  }
+  if (!label && state.genre) {
+    var gn = ${JSON.stringify(Object.fromEntries(Object.entries(GENRE_TAXONOMY).map(([k,v])=>[k,v.name])))};
+    label = gn[state.genre] || state.genre;
+  }
+  if (!label) label = 'All Novels';
+  var extras = [];
+  if (state.status !== 'all') extras.push(state.status === 'ongoing' ? 'Ongoing' : 'Completed');
+  if (state.words !== 'all') extras.push(state.words.replace('-','–') + 'k words');
+  if (state.query) extras.push('"' + state.query + '"');
+  document.getElementById('filterLabel').textContent = label + (extras.length ? ' · ' + extras.join(' · ') : '') + ' (' + total + ')';
+
+  // Pagination
+  renderPagination(totalPages);
+
+  // Scroll to grid top
+  var browseEl = document.getElementById('browse');
+  if (browseEl && state.page > 1) {
+    browseEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function renderPagination(totalPages) {
+  var pg = document.getElementById('pagination');
+  if (totalPages <= 1) { pg.innerHTML = ''; return; }
+
+  var html = '<div class="pg-inner">';
+  html += '<button class="pg-btn" onclick="goPage(' + (state.page - 1) + ')" ' + (state.page <= 1 ? 'disabled' : '') + '>◀ Prev</button>';
+  html += '<span class="pg-info">Page ' + state.page + ' of ' + totalPages + '</span>';
+  html += '<button class="pg-btn" onclick="goPage(' + (state.page + 1) + ')" ' + (state.page >= totalPages ? 'disabled' : '') + '>Next ▶</button>';
+  html += '</div>';
+
+  // Page number buttons
+  html += '<div class="pg-nums">';
+  var startPage = Math.max(1, state.page - 3);
+  var endPage = Math.min(totalPages, state.page + 3);
+  if (startPage > 1) html += '<button class="pg-num" onclick="goPage(1)">1</button><span class="pg-ellipsis">…</span>';
+  for (var p = startPage; p <= endPage; p++) {
+    html += '<button class="pg-num ' + (p === state.page ? 'active' : '') + '" onclick="goPage(' + p + ')">' + p + '</button>';
+  }
+  if (endPage < totalPages) html += '<span class="pg-ellipsis">…</span><button class="pg-num" onclick="goPage(' + totalPages + ')">' + totalPages + '</button>';
+  html += '</div>';
+
+  pg.innerHTML = html;
+}
+
+function goPage(n) {
+  state.page = n;
+  renderBooks();
+}
+
+// ─── INIT ───
+renderBooks();
 </script>
 ${BASE_FOOTER}`;
 
