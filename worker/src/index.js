@@ -314,6 +314,39 @@ async function handleRequest(request, env) {
     return getPoints(env, request);
   }
 
+  // Gifts (public)
+  const giftMatchPublic = path.match(/^\/api\/gifts\/([a-z0-9-]+)$/);
+  if (giftMatchPublic && request.method === 'GET') {
+    return listGifts(env, giftMatchPublic[1]);
+  }
+  if (path === '/api/gifts' && request.method === 'POST') {
+    return sendGift(env, await request.json());
+  }
+
+  // Forum (public read/write — reader_id based auth)
+  if (path === '/api/forum/topics' && request.method === 'GET') {
+    return listForumTopics(env, request);
+  }
+  if (path === '/api/forum/topics' && request.method === 'POST') {
+    return createForumTopic(env, await request.json());
+  }
+  const topicMatchPublic = path.match(/^\/api\/forum\/topics\/(\d+)$/);
+  if (topicMatchPublic && request.method === 'GET') {
+    return getForumTopic(env, parseInt(topicMatchPublic[1]));
+  }
+  if (topicMatchPublic && request.method === 'DELETE') {
+    return deleteForumTopic(env, parseInt(topicMatchPublic[1]));
+  }
+  const postMatchPublic = path.match(/^\/api\/forum\/topics\/(\d+)\/posts$/);
+  if (postMatchPublic && request.method === 'POST') {
+    return addForumPost(env, parseInt(postMatchPublic[1]), await request.json());
+  }
+
+  // Pageview tracking (public, lightweight)
+  if (path === '/api/track/pageview' && request.method === 'POST') {
+    return trackPageview(env, await request.json());
+  }
+
   const authType = await getAuthType(env, request);
   if (!authType) {
     return json({ error: 'Unauthorized' }, 401);
@@ -392,34 +425,6 @@ async function handleRequest(request, env) {
     return getAllEarnings(env);
   }
 
-  // Gifts (public)
-  const giftMatch = path.match(/^\/api\/gifts\/([a-z0-9-]+)$/);
-  if (giftMatch && request.method === 'GET') {
-    return listGifts(env, giftMatch[1]);
-  }
-  if (path === '/api/gifts' && request.method === 'POST') {
-    return sendGift(env, await request.json());
-  }
-
-  // Forum (public read, auth write)
-  if (path === '/api/forum/topics' && request.method === 'GET') {
-    return listForumTopics(env, request);
-  }
-  if (path === '/api/forum/topics' && request.method === 'POST') {
-    return createForumTopic(env, await request.json());
-  }
-  const topicMatch = path.match(/^\/api\/forum\/topics\/(\d+)$/);
-  if (topicMatch && request.method === 'GET') {
-    return getForumTopic(env, parseInt(topicMatch[1]));
-  }
-  if (topicMatch && request.method === 'DELETE') {
-    return deleteForumTopic(env, parseInt(topicMatch[1]));
-  }
-  const postMatch = path.match(/^\/api\/forum\/topics\/(\d+)\/posts$/);
-  if (postMatch && request.method === 'POST') {
-    return addForumPost(env, parseInt(postMatch[1]), await request.json());
-  }
-
   // Analytics (requires auth)
   if (path === '/api/analytics/books' && request.method === 'GET') {
     return getBookAnalytics(env);
@@ -427,11 +432,6 @@ async function handleRequest(request, env) {
   const analyticsBook = path.match(/^\/api\/analytics\/books\/([a-z0-9-]+)$/);
   if (analyticsBook && request.method === 'GET') {
     return getSingleBookAnalytics(env, analyticsBook[1]);
-  }
-
-  // Pageview tracking (public, lightweight)
-  if (path === '/api/track/pageview' && request.method === 'POST') {
-    return trackPageview(env, await request.json());
   }
 
   // Agreements
@@ -1322,6 +1322,9 @@ async function addReview(env, slug, body) {
   if (rating < 1 || rating > 5) return json({ error: 'Rating must be 1-5' }, 400);
 
   try {
+    // Ensure book record exists in D1 (auto-create for static books)
+    await ensureBook(env, slug);
+
     // One review per reader per book
     await env.DB.prepare('DELETE FROM reviews WHERE book_slug = ? AND reader_id = ?').bind(slug, reader_id).run();
     await env.DB.prepare(
@@ -1336,6 +1339,15 @@ async function addReview(env, slug, body) {
   } catch (e) {
     return json({ error: e.message }, 500);
   }
+}
+
+// Auto-create a minimal book record for static-site books
+async function ensureBook(env, slug) {
+  const existing = await env.DB.prepare('SELECT slug FROM books WHERE slug = ?').bind(slug).first();
+  if (existing) return;
+  await env.DB.prepare(
+    'INSERT INTO books (slug, title, author, genre, tier, price, status, rating, reviews, chapters, wordCount, cover, free_chapters, description, published, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime(\'now\'))'
+  ).bind(slug, slug.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()), 'Unknown', 'default', 'free', 0, 'ongoing', 4.5, 0, 0, 0, '/images/covers/'+slug+'.png', 0, 'A FictionVerse original', 0).run();
 }
 
 // --- Reading Progress ---
