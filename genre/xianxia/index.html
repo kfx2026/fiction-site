@@ -284,21 +284,27 @@ a{color:inherit;text-decoration:none}
 .browse-filters{display:flex;gap:8px;flex-wrap:wrap}
 .browse-filter{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;padding:8px 12px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;outline:none;cursor:pointer}
 .browse-filter:focus{border-color:rgba(232,192,64,0.3)}
+/* Quick Sort Chips */
+.qf-wrap{max-width:100%;padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.qf-bar{display:flex;gap:8px;flex-wrap:wrap}
+.qf-chip{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.75rem;padding:7px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.qf-chip:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.qf-chip.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.3);font-weight:600}
 /* Active Filter Info */
 .browse-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 #filterLabel{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px}
 /* Pagination */
-.pagination{margin-top:32px;text-align:center}
-.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
-.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s}
-.pg-btn:hover:not(:disabled){color:#fff;border-color:rgba(255,255,255,0.2)}
-.pg-btn:disabled{opacity:0.3;cursor:not-allowed}
-.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim)}
-.pg-nums{display:flex;align-items:center;justify-content:center;gap:6px}
-.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
-.pg-num:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
-.pg-num.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.25)}
-.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim);padding:0 4px}
+.pagination{margin-top:40px;padding:24px 0;border-top:1px solid var(--border);text-align:center}
+.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;padding:10px 22px;border-radius:100px;border:1px solid rgba(232,192,64,0.25);background:var(--card);color:var(--gold);cursor:pointer;transition:all 0.2s;font-weight:600}
+.pg-btn:hover:not(:disabled){background:rgba(232,192,64,0.1);border-color:rgba(232,192,64,0.5);color:#fff;transform:translateY(-1px)}
+.pg-btn:disabled{opacity:0.25;cursor:not-allowed;border-color:rgba(255,255,255,0.06);color:var(--dim)}
+.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim)}
+.pg-nums{display:flex;align-items:center;justify-content:center;gap:8px}
+.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;min-width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.pg-num:hover{color:#fff;border-color:var(--gold);background:rgba(232,192,64,0.06)}
+.pg-num.active{background:rgba(232,192,64,0.15);color:var(--gold);border-color:rgba(232,192,64,0.4);font-weight:700;box-shadow:0 0 12px rgba(232,192,64,0.1)}
+.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim);padding:0 6px}
 /* ═══════════════════════════════════════════
    RESPONSIVE — SIDEBAR + BROWSE
    ═══════════════════════════════════════════ */
@@ -321,7 +327,9 @@ a{color:inherit;text-decoration:none}
   .browse-filter{flex:1;font-size:0.62rem;padding:7px 8px}
   .cat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .cat-card{padding:12px}.cat-covers{display:none}.cat-card h3{font-size:0.68rem}.cat-card-top{margin-bottom:6px}
-  .pg-num{width:28px;height:28px;font-size:0.65rem}
+  .pg-num{min-width:28px;height:28px;font-size:0.65rem;border-radius:8px}
+  .pg-btn{font-size:0.68rem;padding:7px 14px}
+  .qf-chip{font-size:0.62rem;padding:5px 10px}
 }
 </style>
 </head>
@@ -354,7 +362,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>42 ch · 96k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1682 reads</span><span>📚 87 shelves</span></div>
+    <div class="bk-stats"><span>👁 736 reads</span><span>📚 67 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="dungeon-jade-emperor" data-genre="xianxia" data-tier="free" data-title="Dungeon of the Jade Emperor" data-author="Kuang Shan" data-status="ongoing" data-words="34931">
@@ -367,7 +375,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 35k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1542 reads</span><span>📚 63 shelves</span></div>
+    <div class="bk-stats"><span>👁 961 reads</span><span>📚 74 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="undying-pharmacist" data-genre="xianxia" data-tier="free" data-title="The Undying Pharmacist" data-author="Verdant Quill" data-status="ongoing" data-words="36147">
@@ -380,7 +388,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1244 reads</span><span>📚 59 shelves</span></div>
+    <div class="bk-stats"><span>👁 932 reads</span><span>📚 49 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="delivery-driver-gods" data-genre="xianxia" data-tier="free" data-title="Delivery Driver of the Gods" data-author="Lao Wang" data-status="ongoing" data-words="9478">
@@ -393,7 +401,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 795 reads</span><span>📚 82 shelves</span></div>
+    <div class="bk-stats"><span>👁 1256 reads</span><span>📚 54 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="fox-wife-bargain" data-genre="xianxia" data-tier="free" data-title="The Fox Wife's Bargain" data-author="Lan Hua" data-status="ongoing" data-words="8480">
@@ -406,7 +414,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1523 reads</span><span>📚 80 shelves</span></div>
+    <div class="bk-stats"><span>👁 1118 reads</span><span>📚 47 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="children-of-the-dragon" data-genre="xianxia" data-tier="free" data-title="Children of the Dragon" data-author="Long Wei" data-status="ongoing" data-words="8464">
@@ -419,7 +427,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 550 reads</span><span>📚 95 shelves</span></div>
+    <div class="bk-stats"><span>👁 845 reads</span><span>📚 26 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="system-architect-dao" data-genre="xianxia" data-tier="free" data-title="System Architect: Dao Genesis" data-author="Kael Storm" data-status="ongoing" data-words="33578">
@@ -432,7 +440,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 34k words</span>
     </div>
-    <div class="bk-stats"><span>👁 584 reads</span><span>📚 81 shelves</span></div>
+    <div class="bk-stats"><span>👁 1161 reads</span><span>📚 62 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="sword-god-regression" data-genre="xianxia" data-tier="free" data-title="Sword God's Regression" data-author="Azure Ink" data-status="ongoing" data-words="37217">
@@ -445,7 +453,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 37k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1582 reads</span><span>📚 21 shelves</span></div>
+    <div class="bk-stats"><span>👁 531 reads</span><span>📚 49 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="thousand-beast-valley" data-genre="xianxia" data-tier="free" data-title="Thousand Beast Valley" data-author="Storm Rider" data-status="ongoing" data-words="32243">
@@ -458,7 +466,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 32k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1426 reads</span><span>📚 58 shelves</span></div>
+    <div class="bk-stats"><span>👁 1461 reads</span><span>📚 49 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="phoenix-feather-sect" data-genre="xianxia" data-tier="free" data-title="The Phoenix Feather Sect" data-author="Feng Huang" data-status="ongoing" data-words="8074">
@@ -471,7 +479,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 641 reads</span><span>📚 57 shelves</span></div>
+    <div class="bk-stats"><span>👁 1526 reads</span><span>📚 27 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="reborn-demon-empress" data-genre="xianxia" data-tier="free" data-title="Reborn as the Demon Empress" data-author="Luna Nightshade" data-status="ongoing" data-words="35905">
@@ -484,7 +492,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1121 reads</span><span>📚 59 shelves</span></div>
+    <div class="bk-stats"><span>👁 576 reads</span><span>📚 93 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="green-snake-rises" data-genre="xianxia" data-tier="free" data-title="The Green Snake Rises" data-author="Xiao Qing" data-status="ongoing" data-words="27238">
@@ -497,7 +505,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>20 ch · 27k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1420 reads</span><span>📚 88 shelves</span></div>
+    <div class="bk-stats"><span>👁 1051 reads</span><span>📚 95 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="nine-tailed-empire" data-genre="xianxia" data-tier="free" data-title="Nine-Tailed Empire" data-author="Hu Li" data-status="ongoing" data-words="8652">
@@ -510,7 +518,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>20 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1109 reads</span><span>📚 41 shelves</span></div>
+    <div class="bk-stats"><span>👁 1230 reads</span><span>📚 89 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="merchant-prince-second-life" data-genre="xianxia" data-tier="free" data-title="The Merchant Prince's Second Life" data-author="Wei Lin" data-status="ongoing" data-words="30651">
@@ -523,7 +531,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.5</span>
       <span>20 ch · 31k words</span>
     </div>
-    <div class="bk-stats"><span>👁 680 reads</span><span>📚 30 shelves</span></div>
+    <div class="bk-stats"><span>👁 734 reads</span><span>📚 96 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="celestial-bureaucracy-online" data-genre="xianxia" data-tier="free" data-title="Celestial Bureaucracy Online" data-author="Jade Scroll" data-status="ongoing" data-words="36121">
@@ -536,7 +544,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1011 reads</span><span>📚 74 shelves</span></div>
+    <div class="bk-stats"><span>👁 1495 reads</span><span>📚 26 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="judge-of-the-dead" data-genre="xianxia" data-tier="free" data-title="Judge of the Dead: The Soul Reaper's Apprentice" data-author="Yan Luo" data-status="ongoing" data-words="35339">
@@ -549,7 +557,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 35k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1301 reads</span><span>📚 83 shelves</span></div>
+    <div class="bk-stats"><span>👁 1545 reads</span><span>📚 55 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="my-sect-startup" data-genre="xianxia" data-tier="free" data-title="My Sect is a Startup" data-author="Ren Wei" data-status="ongoing" data-words="35919">
@@ -562,7 +570,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1694 reads</span><span>📚 93 shelves</span></div>
+    <div class="bk-stats"><span>👁 670 reads</span><span>📚 78 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="doctor-reborn-apocalypse" data-genre="xianxia" data-tier="free" data-title="Doctor Reborn in the Apocalypse" data-author="Chen Wei" data-status="ongoing" data-words="8428">
@@ -575,7 +583,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 670 reads</span><span>📚 71 shelves</span></div>
+    <div class="bk-stats"><span>👁 1625 reads</span><span>📚 44 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="engineer-built-heaven" data-genre="xianxia" data-tier="free" data-title="The Engineer Who Built Heaven" data-author="Zhang Wei" data-status="ongoing" data-words="7952">
@@ -588,7 +596,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1271 reads</span><span>📚 77 shelves</span></div>
+    <div class="bk-stats"><span>👁 1633 reads</span><span>📚 92 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="ghost-scholar-academy" data-genre="xianxia" data-tier="free" data-title="The Ghost Scholar's Academy" data-author="Qing Lian" data-status="ongoing" data-words="35616">
@@ -601,7 +609,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1317 reads</span><span>📚 93 shelves</span></div>
+    <div class="bk-stats"><span>👁 1358 reads</span><span>📚 80 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="beastmaster-nine-realms" data-genre="xianxia" data-tier="free" data-title="Beastmaster of the Nine Realms" data-author="Shan Hai" data-status="ongoing" data-words="22956">
@@ -614,7 +622,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.2</span>
       <span>20 ch · 23k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1554 reads</span><span>📚 83 shelves</span></div>
+    <div class="bk-stats"><span>👁 970 reads</span><span>📚 70 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="keeper-of-the-kun-peng" data-genre="xianxia" data-tier="free" data-title="Keeper of the Kun Peng" data-author="Yu Zhou" data-status="ongoing" data-words="8193">
@@ -627,7 +635,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.2</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1587 reads</span><span>📚 53 shelves</span></div>
+    <div class="bk-stats"><span>👁 1685 reads</span><span>📚 32 shelves</span></div>
   </div>
 </article></div>
 </main>

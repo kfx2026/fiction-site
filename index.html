@@ -284,21 +284,27 @@ a{color:inherit;text-decoration:none}
 .browse-filters{display:flex;gap:8px;flex-wrap:wrap}
 .browse-filter{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;padding:8px 12px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;outline:none;cursor:pointer}
 .browse-filter:focus{border-color:rgba(232,192,64,0.3)}
+/* Quick Sort Chips */
+.qf-wrap{max-width:100%;padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.qf-bar{display:flex;gap:8px;flex-wrap:wrap}
+.qf-chip{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.75rem;padding:7px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.qf-chip:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.qf-chip.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.3);font-weight:600}
 /* Active Filter Info */
 .browse-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 #filterLabel{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px}
 /* Pagination */
-.pagination{margin-top:32px;text-align:center}
-.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
-.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s}
-.pg-btn:hover:not(:disabled){color:#fff;border-color:rgba(255,255,255,0.2)}
-.pg-btn:disabled{opacity:0.3;cursor:not-allowed}
-.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim)}
-.pg-nums{display:flex;align-items:center;justify-content:center;gap:6px}
-.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
-.pg-num:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
-.pg-num.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.25)}
-.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim);padding:0 4px}
+.pagination{margin-top:40px;padding:24px 0;border-top:1px solid var(--border);text-align:center}
+.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;padding:10px 22px;border-radius:100px;border:1px solid rgba(232,192,64,0.25);background:var(--card);color:var(--gold);cursor:pointer;transition:all 0.2s;font-weight:600}
+.pg-btn:hover:not(:disabled){background:rgba(232,192,64,0.1);border-color:rgba(232,192,64,0.5);color:#fff;transform:translateY(-1px)}
+.pg-btn:disabled{opacity:0.25;cursor:not-allowed;border-color:rgba(255,255,255,0.06);color:var(--dim)}
+.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim)}
+.pg-nums{display:flex;align-items:center;justify-content:center;gap:8px}
+.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;min-width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.pg-num:hover{color:#fff;border-color:var(--gold);background:rgba(232,192,64,0.06)}
+.pg-num.active{background:rgba(232,192,64,0.15);color:var(--gold);border-color:rgba(232,192,64,0.4);font-weight:700;box-shadow:0 0 12px rgba(232,192,64,0.1)}
+.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim);padding:0 6px}
 /* ═══════════════════════════════════════════
    RESPONSIVE — SIDEBAR + BROWSE
    ═══════════════════════════════════════════ */
@@ -321,7 +327,9 @@ a{color:inherit;text-decoration:none}
   .browse-filter{flex:1;font-size:0.62rem;padding:7px 8px}
   .cat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .cat-card{padding:12px}.cat-covers{display:none}.cat-card h3{font-size:0.68rem}.cat-card-top{margin-bottom:6px}
-  .pg-num{width:28px;height:28px;font-size:0.65rem}
+  .pg-num{min-width:28px;height:28px;font-size:0.65rem;border-radius:8px}
+  .pg-btn{font-size:0.68rem;padding:7px 14px}
+  .qf-chip{font-size:0.62rem;padding:5px 10px}
 }
 </style>
 </head>
@@ -399,151 +407,9 @@ a{color:inherit;text-decoration:none}
   </a>
 </div></div>
 
-<!-- ═══════ LATEST UPDATES ═══════ -->
-<div class="sec"><div class="sec-hd"><h2>Latest Updates</h2><a href="#browse" class="sec-link">All novels →</a></div>
-<div class="updates-list"><a href="/read/system-crash-reboot/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/system-crash-reboot.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">System Crash: Reboot Protocol</div><div class="upd-ch">Chapter 56 — The Source Code Breaks</div></div>
-    <span class="upd-badge new">NEW</span><span class="upd-time">2 days ago</span></a>
-<a href="/read/dao-celestial-blade/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Dao of the Celestial Blade</div><div class="upd-ch">Chapter 42 — The Sword God's Legacy</div></div>
-    <span class="upd-time">4 days ago</span></a>
-<a href="/read/dungeon-jade-emperor/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Dungeon of the Jade Emperor</div><div class="upd-ch">Chapter 38 — The Billionaire's Death Date</div></div>
-    <span class="upd-time">5 days ago</span></a>
-<a href="/read/undying-pharmacist/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Undying Pharmacist</div><div class="upd-ch">Chapter 11 — The First Harvest</div></div>
-    <span class="upd-time">6 days ago</span></a>
-<a href="/read/delivery-driver-gods/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Delivery Driver of the Gods</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">5 days ago</span></a>
-<a href="/read/fox-wife-bargain/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Fox Wife's Bargain</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">6 days ago</span></a>
-<a href="/read/painted-skin-retold/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Painted Skin: A Modern Retelling</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">7 days ago</span></a>
-<a href="/read/children-of-the-dragon/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Children of the Dragon</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">8 days ago</span></a>
-<a href="/read/system-architect-dao/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">System Architect: Dao Genesis</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">9 days ago</span></a>
-<a href="/read/sword-god-regression/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Sword God's Regression</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">10 days ago</span></a>
-<a href="/read/thousand-beast-valley/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Thousand Beast Valley</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">11 days ago</span></a>
-<a href="/read/serpent-kiss-modern/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Serpent's Kiss</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">12 days ago</span></a>
-<a href="/read/phoenix-feather-sect/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Phoenix Feather Sect</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">13 days ago</span></a>
-<a href="/read/gods-gig-economy/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Gods of the Gig Economy</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">14 days ago</span></a>
-<a href="/read/last-oracle-shanghai/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/last-oracle-shanghai.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Last Oracle of Shanghai</div><div class="upd-ch">Chapter 38</div></div>
-    <span class="upd-time">15 days ago</span></a>
-<a href="/read/reborn-demon-empress/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Reborn as the Demon Empress</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">16 days ago</span></a>
-<a href="/read/green-snake-rises/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Green Snake Rises</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">17 days ago</span></a>
-<a href="/read/nine-tailed-empire/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Nine-Tailed Empire</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">18 days ago</span></a>
-<a href="/read/demon-kitchen/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Demon Kitchen</div><div class="upd-ch">Chapter 5</div></div>
-    <span class="upd-time">19 days ago</span></a>
-<a href="/read/abyss-rancher/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/abyss-rancher.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Abyss Rancher: How I Saved the World by Farming</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">20 days ago</span></a>
-<a href="/read/infinite-earth-five-elements/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Infinite Earth: The Five Element Lord</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">21 days ago</span></a>
-<a href="/read/merchant-prince-second-life/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Merchant Prince's Second Life</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">22 days ago</span></a>
-<a href="/read/celestial-bureaucracy-online/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Celestial Bureaucracy Online</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">23 days ago</span></a>
-<a href="/read/silver-fang-academy/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Silver Fang Academy</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">24 days ago</span></a>
-<a href="/read/judge-of-the-dead/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Judge of the Dead: The Soul Reaper's Apprentice</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">25 days ago</span></a>
-<a href="/read/samsara-app/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Samsara App</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">26 days ago</span></a>
-<a href="/read/last-alchemist-chengdu/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Last Alchemist of Chengdu</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">27 days ago</span></a>
-<a href="/read/my-sect-startup/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">My Sect is a Startup</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">28 days ago</span></a>
-<a href="/read/blood-moon-rising/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Blood Moon Rising: The Wolf King's Awakening</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">29 days ago</span></a>
-<a href="/read/doctor-reborn-apocalypse/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Doctor Reborn in the Apocalypse</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">30 days ago</span></a>
-<a href="/read/engineer-built-heaven/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Engineer Who Built Heaven</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">31 days ago</span></a>
-<a href="/read/ghost-scholar-academy/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">The Ghost Scholar's Academy</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">32 days ago</span></a>
-<a href="/read/beastmaster-nine-realms/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Beastmaster of the Nine Realms</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">33 days ago</span></a>
-<a href="/read/keeper-of-the-kun-peng/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Keeper of the Kun Peng</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">34 days ago</span></a>
-<a href="/read/spirit-taxi/" class="upd-item">
-    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
-    <div class="upd-info"><div class="upd-title">Spirit Taxi</div><div class="upd-ch">Chapter 20</div></div>
-    <span class="upd-time">35 days ago</span></a></div></div>
-
 <!-- ═══════ BROWSE — SIDEBAR + MAIN GRID ═══════ -->
 <div id="browse"></div>
+<div class="sec"><div class="sec-hd"><h2>Browse Library</h2><span class="sec-link" id="browsePageLabel">35 novels</span></div></div>
 <div class="browse-wrap">
   <!-- SIDEBAR -->
   <aside class="browse-sidebar" id="browseSidebar">
@@ -618,6 +484,14 @@ a{color:inherit;text-decoration:none}
       <button class="mb-chip" data-genre="scifi" onclick="selectBrowseMobile('scifi','scifi-tech')">Sci-Fi<span class="cnt">(2)</span></button>
     </div>
 
+    <!-- QUICK SORT CHIPS -->
+    <div class="qf-wrap"><div class="qf-bar">
+      <button class="qf-chip active" data-sort="rating" onclick="quickSort('rating',this)">⭐ Top Rated</button>
+      <button class="qf-chip" data-sort="chapters" onclick="quickSort('chapters',this)">📖 Most Chapters</button>
+      <button class="qf-chip" data-sort="newest" onclick="quickSort('newest',this)">🔥 Recently Updated</button>
+      <button class="qf-chip" data-sort="words" onclick="quickSort('words',this)">📚 Longest</button>
+    </div></div>
+
     <!-- SEARCH + FILTERS -->
     <div class="browse-toolbar">
       <div class="browse-search">
@@ -663,7 +537,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.9</span>
       <span>56 ch · 131k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1640 reads</span><span>📚 98 shelves</span></div>
+    <div class="bk-stats"><span>👁 1238 reads</span><span>📚 36 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="dao-celestial-blade" data-genre="xianxia" data-tier="free" data-title="Dao of the Celestial Blade" data-author="Azure Ink" data-status="ongoing" data-words="96332">
@@ -676,7 +550,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>42 ch · 96k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1514 reads</span><span>📚 30 shelves</span></div>
+    <div class="bk-stats"><span>👁 969 reads</span><span>📚 76 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="dungeon-jade-emperor" data-genre="xianxia" data-tier="free" data-title="Dungeon of the Jade Emperor" data-author="Kuang Shan" data-status="ongoing" data-words="34931">
@@ -689,7 +563,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 35k words</span>
     </div>
-    <div class="bk-stats"><span>👁 664 reads</span><span>📚 25 shelves</span></div>
+    <div class="bk-stats"><span>👁 748 reads</span><span>📚 78 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="undying-pharmacist" data-genre="xianxia" data-tier="free" data-title="The Undying Pharmacist" data-author="Verdant Quill" data-status="ongoing" data-words="36147">
@@ -702,7 +576,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 976 reads</span><span>📚 27 shelves</span></div>
+    <div class="bk-stats"><span>👁 919 reads</span><span>📚 79 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="delivery-driver-gods" data-genre="xianxia" data-tier="free" data-title="Delivery Driver of the Gods" data-author="Lao Wang" data-status="ongoing" data-words="9478">
@@ -715,7 +589,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1315 reads</span><span>📚 37 shelves</span></div>
+    <div class="bk-stats"><span>👁 829 reads</span><span>📚 74 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="fox-wife-bargain" data-genre="xianxia" data-tier="free" data-title="The Fox Wife's Bargain" data-author="Lan Hua" data-status="ongoing" data-words="8480">
@@ -728,7 +602,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 763 reads</span><span>📚 56 shelves</span></div>
+    <div class="bk-stats"><span>👁 1310 reads</span><span>📚 96 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="painted-skin-retold" data-genre="urban" data-tier="free" data-title="Painted Skin: A Modern Retelling" data-author="Mei Lin" data-status="ongoing" data-words="31795">
@@ -741,7 +615,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 32k words</span>
     </div>
-    <div class="bk-stats"><span>👁 818 reads</span><span>📚 23 shelves</span></div>
+    <div class="bk-stats"><span>👁 1380 reads</span><span>📚 92 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="children-of-the-dragon" data-genre="xianxia" data-tier="free" data-title="Children of the Dragon" data-author="Long Wei" data-status="ongoing" data-words="8464">
@@ -754,7 +628,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 676 reads</span><span>📚 72 shelves</span></div>
+    <div class="bk-stats"><span>👁 1582 reads</span><span>📚 89 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="system-architect-dao" data-genre="xianxia" data-tier="free" data-title="System Architect: Dao Genesis" data-author="Kael Storm" data-status="ongoing" data-words="33578">
@@ -767,7 +641,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 34k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1227 reads</span><span>📚 54 shelves</span></div>
+    <div class="bk-stats"><span>👁 1423 reads</span><span>📚 70 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="sword-god-regression" data-genre="xianxia" data-tier="free" data-title="Sword God's Regression" data-author="Azure Ink" data-status="ongoing" data-words="37217">
@@ -780,7 +654,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 37k words</span>
     </div>
-    <div class="bk-stats"><span>👁 805 reads</span><span>📚 85 shelves</span></div>
+    <div class="bk-stats"><span>👁 540 reads</span><span>📚 95 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="thousand-beast-valley" data-genre="xianxia" data-tier="free" data-title="Thousand Beast Valley" data-author="Storm Rider" data-status="ongoing" data-words="32243">
@@ -793,7 +667,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 32k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1019 reads</span><span>📚 81 shelves</span></div>
+    <div class="bk-stats"><span>👁 1414 reads</span><span>📚 28 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="serpent-kiss-modern" data-genre="urban" data-tier="free" data-title="Serpent's Kiss" data-author="Xu Xian" data-status="ongoing" data-words="36212">
@@ -806,7 +680,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1312 reads</span><span>📚 38 shelves</span></div>
+    <div class="bk-stats"><span>👁 719 reads</span><span>📚 26 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="phoenix-feather-sect" data-genre="xianxia" data-tier="free" data-title="The Phoenix Feather Sect" data-author="Feng Huang" data-status="ongoing" data-words="8074">
@@ -819,7 +693,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1381 reads</span><span>📚 89 shelves</span></div>
+    <div class="bk-stats"><span>👁 1161 reads</span><span>📚 45 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="gods-gig-economy" data-genre="urban" data-tier="free" data-title="Gods of the Gig Economy" data-author="Wang Cai" data-status="ongoing" data-words="8287">
@@ -832,7 +706,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 665 reads</span><span>📚 23 shelves</span></div>
+    <div class="bk-stats"><span>👁 1645 reads</span><span>📚 85 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="last-oracle-shanghai" data-genre="urban" data-tier="free" data-title="The Last Oracle of Shanghai" data-author="Midnight Quill" data-status="ongoing" data-words="88148">
@@ -845,7 +719,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>38 ch · 88k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1112 reads</span><span>📚 24 shelves</span></div>
+    <div class="bk-stats"><span>👁 1310 reads</span><span>📚 38 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="reborn-demon-empress" data-genre="xianxia" data-tier="free" data-title="Reborn as the Demon Empress" data-author="Luna Nightshade" data-status="ongoing" data-words="35905">
@@ -858,7 +732,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1157 reads</span><span>📚 97 shelves</span></div>
+    <div class="bk-stats"><span>👁 1083 reads</span><span>📚 81 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="green-snake-rises" data-genre="xianxia" data-tier="free" data-title="The Green Snake Rises" data-author="Xiao Qing" data-status="ongoing" data-words="27238">
@@ -871,7 +745,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>20 ch · 27k words</span>
     </div>
-    <div class="bk-stats"><span>👁 605 reads</span><span>📚 82 shelves</span></div>
+    <div class="bk-stats"><span>👁 1607 reads</span><span>📚 53 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="nine-tailed-empire" data-genre="xianxia" data-tier="free" data-title="Nine-Tailed Empire" data-author="Hu Li" data-status="ongoing" data-words="8652">
@@ -884,7 +758,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>20 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1417 reads</span><span>📚 30 shelves</span></div>
+    <div class="bk-stats"><span>👁 1371 reads</span><span>📚 36 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="demon-kitchen" data-genre="urban" data-tier="free" data-title="The Demon Kitchen" data-author="Shi Fu" data-status="ongoing" data-words="9011">
@@ -897,7 +771,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>5 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1057 reads</span><span>📚 48 shelves</span></div>
+    <div class="bk-stats"><span>👁 604 reads</span><span>📚 87 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="abyss-rancher" data-genre="Default" data-tier="free" data-title="The Abyss Rancher: How I Saved the World by Farming" data-author="Kuang Shan" data-status="ongoing" data-words="46921">
@@ -910,7 +784,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.5</span>
       <span>20 ch · 47k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1402 reads</span><span>📚 93 shelves</span></div>
+    <div class="bk-stats"><span>👁 1062 reads</span><span>📚 24 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="infinite-earth-five-elements" data-genre="scifi" data-tier="free" data-title="Infinite Earth: The Five Element Lord" data-author="Zero Day" data-status="ongoing" data-words="35354">
@@ -923,7 +797,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.5</span>
       <span>20 ch · 35k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1366 reads</span><span>📚 24 shelves</span></div>
+    <div class="bk-stats"><span>👁 1388 reads</span><span>📚 30 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="merchant-prince-second-life" data-genre="xianxia" data-tier="free" data-title="The Merchant Prince's Second Life" data-author="Wei Lin" data-status="ongoing" data-words="30651">
@@ -936,7 +810,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.5</span>
       <span>20 ch · 31k words</span>
     </div>
-    <div class="bk-stats"><span>👁 772 reads</span><span>📚 54 shelves</span></div>
+    <div class="bk-stats"><span>👁 1094 reads</span><span>📚 39 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="celestial-bureaucracy-online" data-genre="xianxia" data-tier="free" data-title="Celestial Bureaucracy Online" data-author="Jade Scroll" data-status="ongoing" data-words="36121">
@@ -949,7 +823,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 626 reads</span><span>📚 54 shelves</span></div>
+    <div class="bk-stats"><span>👁 1025 reads</span><span>📚 84 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="silver-fang-academy" data-genre="urban" data-tier="free" data-title="Silver Fang Academy" data-author="Luna Grey" data-status="ongoing" data-words="29636">
@@ -962,7 +836,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 30k words</span>
     </div>
-    <div class="bk-stats"><span>👁 958 reads</span><span>📚 90 shelves</span></div>
+    <div class="bk-stats"><span>👁 1597 reads</span><span>📚 52 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="judge-of-the-dead" data-genre="xianxia" data-tier="free" data-title="Judge of the Dead: The Soul Reaper's Apprentice" data-author="Yan Luo" data-status="ongoing" data-words="35339">
@@ -975,7 +849,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 35k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1005 reads</span><span>📚 20 shelves</span></div>
+    <div class="bk-stats"><span>👁 1381 reads</span><span>📚 66 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="samsara-app" data-genre="urban" data-tier="free" data-title="The Samsara App" data-author="Liu Xing" data-status="ongoing" data-words="7597">
@@ -988,7 +862,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1313 reads</span><span>📚 77 shelves</span></div>
+    <div class="bk-stats"><span>👁 527 reads</span><span>📚 41 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="last-alchemist-chengdu" data-genre="urban" data-tier="free" data-title="The Last Alchemist of Chengdu" data-author="Midnight Quill" data-status="ongoing" data-words="34017">
@@ -1001,7 +875,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 34k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1682 reads</span><span>📚 65 shelves</span></div>
+    <div class="bk-stats"><span>👁 564 reads</span><span>📚 76 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="my-sect-startup" data-genre="xianxia" data-tier="free" data-title="My Sect is a Startup" data-author="Ren Wei" data-status="ongoing" data-words="35919">
@@ -1014,7 +888,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 638 reads</span><span>📚 86 shelves</span></div>
+    <div class="bk-stats"><span>👁 775 reads</span><span>📚 43 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="blood-moon-rising" data-genre="urban" data-tier="free" data-title="Blood Moon Rising: The Wolf King's Awakening" data-author="Fenrir Shadow" data-status="ongoing" data-words="33372">
@@ -1027,7 +901,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 33k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1357 reads</span><span>📚 52 shelves</span></div>
+    <div class="bk-stats"><span>👁 1533 reads</span><span>📚 30 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="doctor-reborn-apocalypse" data-genre="xianxia" data-tier="free" data-title="Doctor Reborn in the Apocalypse" data-author="Chen Wei" data-status="ongoing" data-words="8428">
@@ -1040,7 +914,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1284 reads</span><span>📚 21 shelves</span></div>
+    <div class="bk-stats"><span>👁 1041 reads</span><span>📚 28 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="engineer-built-heaven" data-genre="xianxia" data-tier="free" data-title="The Engineer Who Built Heaven" data-author="Zhang Wei" data-status="ongoing" data-words="7952">
@@ -1053,7 +927,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1563 reads</span><span>📚 58 shelves</span></div>
+    <div class="bk-stats"><span>👁 1032 reads</span><span>📚 35 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="ghost-scholar-academy" data-genre="xianxia" data-tier="free" data-title="The Ghost Scholar's Academy" data-author="Qing Lian" data-status="ongoing" data-words="35616">
@@ -1066,7 +940,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1067 reads</span><span>📚 43 shelves</span></div>
+    <div class="bk-stats"><span>👁 1441 reads</span><span>📚 42 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="beastmaster-nine-realms" data-genre="xianxia" data-tier="free" data-title="Beastmaster of the Nine Realms" data-author="Shan Hai" data-status="ongoing" data-words="22956">
@@ -1079,7 +953,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.2</span>
       <span>20 ch · 23k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1569 reads</span><span>📚 52 shelves</span></div>
+    <div class="bk-stats"><span>👁 1317 reads</span><span>📚 79 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="keeper-of-the-kun-peng" data-genre="xianxia" data-tier="free" data-title="Keeper of the Kun Peng" data-author="Yu Zhou" data-status="ongoing" data-words="8193">
@@ -1092,7 +966,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.2</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1546 reads</span><span>📚 58 shelves</span></div>
+    <div class="bk-stats"><span>👁 1262 reads</span><span>📚 80 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="spirit-taxi" data-genre="urban" data-tier="free" data-title="Spirit Taxi" data-author="Chen Mo" data-status="ongoing" data-words="8839">
@@ -1105,7 +979,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.2</span>
       <span>20 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1631 reads</span><span>📚 54 shelves</span></div>
+    <div class="bk-stats"><span>👁 559 reads</span><span>📚 47 shelves</span></div>
   </div>
 </article></div>
 
@@ -1116,6 +990,41 @@ a{color:inherit;text-decoration:none}
     <div class="pagination" id="pagination"></div>
   </main>
 </div>
+
+<!-- ═══════ LATEST UPDATES ═══════ -->
+<div class="sec"><div class="sec-hd"><h2>Latest Updates</h2><a href="#browse" class="sec-link">All novels →</a></div>
+<div class="updates-list"><a href="/read/system-crash-reboot/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/system-crash-reboot.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">System Crash: Reboot Protocol</div><div class="upd-ch">Chapter 56 — The Source Code Breaks</div></div>
+    <span class="upd-badge new">NEW</span><span class="upd-time">2 days ago</span></a>
+<a href="/read/dao-celestial-blade/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">Dao of the Celestial Blade</div><div class="upd-ch">Chapter 42 — The Sword God's Legacy</div></div>
+    <span class="upd-time">4 days ago</span></a>
+<a href="/read/dungeon-jade-emperor/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">Dungeon of the Jade Emperor</div><div class="upd-ch">Chapter 38 — The Billionaire's Death Date</div></div>
+    <span class="upd-time">5 days ago</span></a>
+<a href="/read/undying-pharmacist/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">The Undying Pharmacist</div><div class="upd-ch">Chapter 11 — The First Harvest</div></div>
+    <span class="upd-time">6 days ago</span></a>
+<a href="/read/delivery-driver-gods/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">Delivery Driver of the Gods</div><div class="upd-ch">Chapter 20</div></div>
+    <span class="upd-time">5 days ago</span></a>
+<a href="/read/fox-wife-bargain/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">The Fox Wife's Bargain</div><div class="upd-ch">Chapter 20</div></div>
+    <span class="upd-time">6 days ago</span></a>
+<a href="/read/painted-skin-retold/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">Painted Skin: A Modern Retelling</div><div class="upd-ch">Chapter 20</div></div>
+    <span class="upd-time">7 days ago</span></a>
+<a href="/read/children-of-the-dragon/" class="upd-item">
+    <div class="upd-cover"><img src="/images/covers/dao-celestial-blade.png" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">Children of the Dragon</div><div class="upd-ch">Chapter 20</div></div>
+    <span class="upd-time">8 days ago</span></a></div></div>
 
 <!-- ═══════ EDITOR'S PICKS ═══════ -->
 <div class="sec"><div class="sec-hd"><h2>Editor's Picks</h2><a href="#browse" class="sec-link">Browse all →</a></div>
@@ -1258,6 +1167,21 @@ function applyFilters() {
   state.words = document.getElementById('wordsFilter').value;
   state.sort = document.getElementById('sortSelect').value;
   state.page = 1;
+  // Sync quick sort chips
+  document.querySelectorAll('.qf-chip').forEach(function(c) {
+    c.classList.toggle('active', c.dataset.sort === state.sort);
+  });
+  renderBooks();
+}
+
+// ─── QUICK SORT ───
+function quickSort(sortBy, el) {
+  state.sort = sortBy;
+  state.page = 1;
+  document.getElementById('sortSelect').value = sortBy;
+  document.querySelectorAll('.qf-chip').forEach(function(c) {
+    c.classList.toggle('active', c.dataset.sort === sortBy);
+  });
   renderBooks();
 }
 
@@ -1356,6 +1280,10 @@ function renderBooks() {
   if (state.words !== 'all') extras.push(state.words.replace('-','–') + 'k words');
   if (state.query) extras.push('"' + state.query + '"');
   document.getElementById('filterLabel').textContent = label + (extras.length ? ' · ' + extras.join(' · ') : '') + ' (' + total + ')';
+
+  // Update browse page label
+  var bpl = document.getElementById('browsePageLabel');
+  if (bpl) bpl.textContent = total + ' novels · Page ' + state.page + ' of ' + totalPages;
 
   // Pagination
   renderPagination(totalPages);

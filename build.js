@@ -462,21 +462,27 @@ a{color:inherit;text-decoration:none}
 .browse-filters{display:flex;gap:8px;flex-wrap:wrap}
 .browse-filter{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;padding:8px 12px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;outline:none;cursor:pointer}
 .browse-filter:focus{border-color:rgba(232,192,64,0.3)}
+/* Quick Sort Chips */
+.qf-wrap{max-width:100%;padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.qf-bar{display:flex;gap:8px;flex-wrap:wrap}
+.qf-chip{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.75rem;padding:7px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.qf-chip:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.qf-chip.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.3);font-weight:600}
 /* Active Filter Info */
 .browse-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 #filterLabel{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px}
 /* Pagination */
-.pagination{margin-top:32px;text-align:center}
-.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
-.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s}
-.pg-btn:hover:not(:disabled){color:#fff;border-color:rgba(255,255,255,0.2)}
-.pg-btn:disabled{opacity:0.3;cursor:not-allowed}
-.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim)}
-.pg-nums{display:flex;align-items:center;justify-content:center;gap:6px}
-.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
-.pg-num:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
-.pg-num.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.25)}
-.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim);padding:0 4px}
+.pagination{margin-top:40px;padding:24px 0;border-top:1px solid var(--border);text-align:center}
+.pg-inner{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px}
+.pg-btn{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;padding:10px 22px;border-radius:100px;border:1px solid rgba(232,192,64,0.25);background:var(--card);color:var(--gold);cursor:pointer;transition:all 0.2s;font-weight:600}
+.pg-btn:hover:not(:disabled){background:rgba(232,192,64,0.1);border-color:rgba(232,192,64,0.5);color:#fff;transform:translateY(-1px)}
+.pg-btn:disabled{opacity:0.25;cursor:not-allowed;border-color:rgba(255,255,255,0.06);color:var(--dim)}
+.pg-info{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim)}
+.pg-nums{display:flex;align-items:center;justify-content:center;gap:8px}
+.pg-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;min-width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.pg-num:hover{color:#fff;border-color:var(--gold);background:rgba(232,192,64,0.06)}
+.pg-num.active{background:rgba(232,192,64,0.15);color:var(--gold);border-color:rgba(232,192,64,0.4);font-weight:700;box-shadow:0 0 12px rgba(232,192,64,0.1)}
+.pg-ellipsis{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim);padding:0 6px}
 /* ═══════════════════════════════════════════
    RESPONSIVE — SIDEBAR + BROWSE
    ═══════════════════════════════════════════ */
@@ -499,7 +505,9 @@ a{color:inherit;text-decoration:none}
   .browse-filter{flex:1;font-size:0.62rem;padding:7px 8px}
   .cat-grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .cat-card{padding:12px}.cat-covers{display:none}.cat-card h3{font-size:0.68rem}.cat-card-top{margin-bottom:6px}
-  .pg-num{width:28px;height:28px;font-size:0.65rem}
+  .pg-num{min-width:28px;height:28px;font-size:0.65rem;border-radius:8px}
+  .pg-btn{font-size:0.68rem;padding:7px 14px}
+  .qf-chip{font-size:0.62rem;padding:5px 10px}
 }
 </style>
 </head>
@@ -599,7 +607,7 @@ const updateChNames = [
   'Chapter 56 — The Source Code Breaks', 'Chapter 42 — The Sword God\'s Legacy',
   'Chapter 38 — The Billionaire\'s Death Date', 'Chapter 11 — The First Harvest'
 ];
-const latestUpdates = sorted.map((b, i) => {
+const latestUpdates = sorted.slice(0, 8).map((b, i) => {
   const badge = i === 0 ? '<span class="upd-badge new">NEW</span>' : '';
   return `<a href="/read/${b.slug}/" class="upd-item">
     <div class="upd-cover"><img src="${b.cover}" alt="" loading="lazy"></div>
@@ -677,12 +685,9 @@ ${groupOrder.map(gk => {
 }).join('\n')}
 </div></div>
 
-<!-- ═══════ LATEST UPDATES ═══════ -->
-<div class="sec"><div class="sec-hd"><h2>Latest Updates</h2><a href="#browse" class="sec-link">All novels →</a></div>
-<div class="updates-list">${latestUpdates}</div></div>
-
 <!-- ═══════ BROWSE — SIDEBAR + MAIN GRID ═══════ -->
 <div id="browse"></div>
+<div class="sec"><div class="sec-hd"><h2>Browse Library</h2><span class="sec-link" id="browsePageLabel">${books.length} novels</span></div></div>
 <div class="browse-wrap">
   <!-- SIDEBAR -->
   <aside class="browse-sidebar" id="browseSidebar">
@@ -737,6 +742,14 @@ ${groupOrder.map(gk => {
 }).join('\n')}
     </div>
 
+    <!-- QUICK SORT CHIPS -->
+    <div class="qf-wrap"><div class="qf-bar">
+      <button class="qf-chip active" data-sort="rating" onclick="quickSort('rating',this)">⭐ Top Rated</button>
+      <button class="qf-chip" data-sort="chapters" onclick="quickSort('chapters',this)">📖 Most Chapters</button>
+      <button class="qf-chip" data-sort="newest" onclick="quickSort('newest',this)">🔥 Recently Updated</button>
+      <button class="qf-chip" data-sort="words" onclick="quickSort('words',this)">📚 Longest</button>
+    </div></div>
+
     <!-- SEARCH + FILTERS -->
     <div class="browse-toolbar">
       <div class="browse-search">
@@ -781,6 +794,10 @@ ${groupOrder.map(gk => {
     <div class="pagination" id="pagination"></div>
   </main>
 </div>
+
+<!-- ═══════ LATEST UPDATES ═══════ -->
+<div class="sec"><div class="sec-hd"><h2>Latest Updates</h2><a href="#browse" class="sec-link">All novels →</a></div>
+<div class="updates-list">${latestUpdates}</div></div>
 
 <!-- ═══════ EDITOR'S PICKS ═══════ -->
 <div class="sec"><div class="sec-hd"><h2>Editor's Picks</h2><a href="#browse" class="sec-link">Browse all →</a></div>
@@ -908,6 +925,21 @@ function applyFilters() {
   state.words = document.getElementById('wordsFilter').value;
   state.sort = document.getElementById('sortSelect').value;
   state.page = 1;
+  // Sync quick sort chips
+  document.querySelectorAll('.qf-chip').forEach(function(c) {
+    c.classList.toggle('active', c.dataset.sort === state.sort);
+  });
+  renderBooks();
+}
+
+// ─── QUICK SORT ───
+function quickSort(sortBy, el) {
+  state.sort = sortBy;
+  state.page = 1;
+  document.getElementById('sortSelect').value = sortBy;
+  document.querySelectorAll('.qf-chip').forEach(function(c) {
+    c.classList.toggle('active', c.dataset.sort === sortBy);
+  });
   renderBooks();
 }
 
@@ -1006,6 +1038,10 @@ function renderBooks() {
   if (state.words !== 'all') extras.push(state.words.replace('-','–') + 'k words');
   if (state.query) extras.push('"' + state.query + '"');
   document.getElementById('filterLabel').textContent = label + (extras.length ? ' · ' + extras.join(' · ') : '') + ' (' + total + ')';
+
+  // Update browse page label
+  var bpl = document.getElementById('browsePageLabel');
+  if (bpl) bpl.textContent = total + ' novels · Page ' + state.page + ' of ' + totalPages;
 
   // Pagination
   renderPagination(totalPages);
