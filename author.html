@@ -361,15 +361,45 @@ const GENRE_SLUG_TO_NAME = {}; for (var k in GENRE_MAP) GENRE_SLUG_TO_NAME[GENRE
 function checkAgreementScroll() {
   if (agreementScrolled) return;
   var box = document.getElementById('agreementBox');
-  if (box.scrollTop + box.clientHeight >= box.scrollHeight - 10) {
-    agreementScrolled = true;
-    var label = document.getElementById('agreeLabel');
-    var cb = document.getElementById('agreeTerms');
-    var btn = document.getElementById('btnRegister');
-    label.style.opacity = '1'; label.style.pointerEvents = 'auto';
-    cb.disabled = false;
-    btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; btn.disabled = false;
+  if (!box) return;
+
+  // Check: has the user scrolled to the bottom?
+  // Use 5px tolerance for rounding differences across devices
+  if (box.scrollTop + box.clientHeight >= box.scrollHeight - 5) {
+    activateAgreementCheckbox();
   }
+}
+
+// IntersectionObserver fallback: detects when "end of agreement" element is visible
+// Fixes the case where content fits without a scrollbar — scroll event never fires
+(function initAgreementObserver() {
+  var endEl = document.getElementById('agreementEnd');
+  if (!endEl) return;
+  var box = document.getElementById('agreementBox');
+  if ('IntersectionObserver' in window && box) {
+    new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting && !agreementScrolled) {
+        activateAgreementCheckbox();
+      }
+    }, { root: box, threshold: 0.5 }).observe(endEl);
+  } else {
+    // Fallback for older browsers: poll every 500ms
+    var t = setInterval(function() {
+      if (agreementScrolled) { clearInterval(t); return; }
+      checkAgreementScroll();
+    }, 500);
+  }
+})();
+
+function activateAgreementCheckbox() {
+  if (agreementScrolled) return;
+  agreementScrolled = true;
+  var label = document.getElementById('agreeLabel');
+  var cb = document.getElementById('agreeTerms');
+  var btn = document.getElementById('btnRegister');
+  if (label) { label.style.opacity = '1'; label.style.pointerEvents = 'auto'; }
+  if (cb) cb.disabled = false;
+  if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; btn.disabled = false; }
 }
 
 // ═══════════════ AUTH ═══════════════
