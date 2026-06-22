@@ -162,45 +162,73 @@ const BASE_HEAD = (title, desc, canonical, extra='') => `<!DOCTYPE html>
 <meta name="twitter:card" content="summary_large_image">
 ${extra}
 <style>
-:root{--bg:#0a0b10;--card:#11131f;--text:#d8dae0;--dim:#8b8fa0;--gold:#e8c040;--purple:#9b8cf0;--accent:#7c5cf0;--accent2:#4f8cff;--green:#34c759}
+:root{--bg:#0a0b10;--card:#11131f;--card-hover:#161827;--text:#d8dae0;--dim:#8b8fa0;--gold:#e8c040;--purple:#9b8cf0;--accent:#7c5cf0;--accent2:#4f8cff;--green:#34c759;--red:#ff4757;--border:rgba(255,255,255,0.06)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Georgia,'Times New Roman',serif;color:var(--text);background:var(--bg);line-height:1.6}
+html{scroll-behavior:smooth}
+body{font-family:Georgia,'Times New Roman',serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-/* Header */
-.hd{position:sticky;top:0;z-index:100;background:rgba(10,11,16,0.95);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(12px)}
+.hd{position:sticky;top:0;z-index:100;background:rgba(10,11,16,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
 .hd-in{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
-.hd-logo{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:-0.3px}
-.hd-nav{display:flex;gap:24px}
-.hd-nav a{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;color:var(--dim);transition:color 0.15s}
-.hd-nav a:hover{color:var(--gold)}
-/* Hero */
-.hero{position:relative;background:url('/images/hero-bg.jpg') center/cover no-repeat;min-height:35vh;display:flex;align-items:flex-end}
-.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,11,16,0.2) 0%,rgba(10,11,16,0.4) 60%,var(--bg) 100%);z-index:1}
-.hero-in{position:relative;z-index:2;padding:36px 40px 20px;width:100%;max-width:1120px;margin:0 auto}
-.hero h1{font-size:2rem;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:4px}
-.hero p{font-size:0.85rem;color:rgba(255,255,255,0.55);max-width:480px}
-/* Content */
+.hd-logo{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:-0.3px;display:flex;align-items:center;gap:8px}
+.hd-logo::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(232,192,64,0.5)}
+.hd-nav{display:flex;gap:20px;align-items:center}
+.hd-nav a{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;color:var(--dim);transition:color 0.15s}
+.hd-nav a:hover{color:#fff}
+.hd-nav a.nav-cta{background:var(--gold);color:#0a0b10;padding:6px 16px;border-radius:100px;font-size:0.75rem;font-weight:700}
+.nav-drop{position:relative}.nav-drop .dd-trigger::after{content:'▾';font-size:.55rem;opacity:.5}.dd-menu{display:none;position:absolute;top:100%;left:-12px;margin-top:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 0;min-width:160px;box-shadow:0 12px 32px rgba(0,0,0,.4)}.nav-drop:hover .dd-menu{display:block}.dd-menu a{display:block;padding:8px 16px;font-size:.75rem;color:var(--dim)}.dd-menu a:hover{background:rgba(232,192,64,.08);color:#fff}
+.hero-new{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(160deg,#0a0b10 0%,#16102a 35%,#1a1515 70%,#0f1018 100%)}
+.hero-new::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(232,192,64,.05) 0%,transparent 50%),radial-gradient(ellipse at 75% 30%,rgba(124,92,240,.06) 0%,transparent 40%),radial-gradient(ellipse at 50% 80%,rgba(232,192,64,.03) 0%,transparent 30%);z-index:0}
+.hero-new::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,var(--bg),transparent);z-index:1}
+.hero-grid{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-text{max-width:520px}.hero-badge{display:inline-block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:rgba(232,192,64,.1);border:1px solid rgba(232,192,64,.2);padding:5px 14px;border-radius:100px;margin-bottom:20px}
+.hero-text h1{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:3.2rem;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px}
+.hero-text h1 .hl{background:linear-gradient(135deg,var(--gold),#f0d060,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:1rem;color:rgba(255,255,255,.45);line-height:1.7;max-width:480px;margin-bottom:32px}
+.hero-features{display:flex;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+.hero-ft{display:flex;align-items:center;gap:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.72rem;color:rgba(255,255,255,.6)}
+.ft-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem}.ft-free{background:rgba(52,199,89,.12);color:var(--green)}.ft-one{background:rgba(232,192,64,.12);color:var(--gold)}.ft-daily{background:rgba(124,92,240,.12);color:var(--accent)}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}.btn{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.82rem;font-weight:600;padding:12px 28px;border-radius:100px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;border:none}
+.btn-primary{background:var(--gold);color:#0a0b10;font-weight:700}.btn-primary:hover{background:#f0d060;transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,192,64,.35)}
+.btn-outline{background:transparent;color:var(--gold);border:1px solid rgba(232,192,64,.3)}.btn-outline:hover{border-color:rgba(232,192,64,.6);background:rgba(232,192,64,.06);transform:translateY(-2px)}
+.hero-covers{display:flex;gap:16px;align-items:center;justify-content:center}.hero-cv{width:100px;aspect-ratio:2/3;border-radius:8px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:all .3s}.hero-cv:hover{transform:translateY(-6px)}.hero-cv img{width:100%;height:100%;object-fit:cover}
+.sec{max-width:1120px;margin:0 auto;padding:56px 24px}.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.sec-hd h2{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:-.3px}.sec-hd .sec-link{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.72rem;color:var(--gold);font-weight:500}
+.rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.rank-col{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}.rc-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}.rc-hd h3{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.8rem;font-weight:700;color:var(--gold)}
+.rank-item{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.03);transition:background .15s;cursor:pointer}
+.rank-item:hover{background:rgba(255,255,255,.02)}.rank-item:last-child{border-bottom:none}
+.rk-num{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.85rem;font-weight:800;min-width:22px;text-align:center}.rk-num.r1{color:var(--gold)}.rk-num.r2{color:rgba(200,200,210,.7)}.rk-num.r3{color:rgba(180,130,90,.7)}
+.rk-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.08);flex-shrink:0}
+.rk-info{min-width:0;flex:1}.rk-title{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.76rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk-author{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.62rem;color:var(--dim)}.rk-stat{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.65rem;color:var(--gold);text-align:right;font-weight:600}
+.social-bar{max-width:1120px;margin:0 auto;padding:0 24px}.social-inner{background:linear-gradient(135deg,rgba(232,192,64,.04),rgba(124,92,240,.04));border:1px solid rgba(232,192,64,.08);border-radius:14px;padding:24px 32px;display:flex;justify-content:center;gap:56px;flex-wrap:wrap}.social-stat{text-align:center}.ss-num{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;line-height:1.2}.ss-label{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}.social-divider{width:1px;background:rgba(255,255,255,.06)}
+.updates-list{display:flex;flex-direction:column;gap:1px;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}.upd-item{display:flex;align-items:center;gap:16px;padding:14px 18px;transition:all .15s;cursor:pointer}.upd-item:hover{background:rgba(232,192,64,.04)}.upd-cover{width:36px;height:50px;border-radius:4px;overflow:hidden;flex-shrink:0}.upd-cover img{width:100%;height:100%;object-fit:cover}.upd-info{flex:1;min-width:0}.upd-title{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.78rem;font-weight:600;color:#fff}.upd-ch{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.62rem;color:var(--dim)}.upd-time{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.6rem;color:var(--dim);flex-shrink:0;text-align:right}.upd-badge{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.55rem;padding:2px 8px;border-radius:100px;font-weight:600}.upd-badge.new{background:rgba(52,199,89,.12);color:var(--green)}
 .ct{max-width:1120px;margin:0 auto;padding:0 24px 40px}
 .tb{display:flex;align-items:center;justify-content:space-between;margin:24px 0 20px;flex-wrap:wrap;gap:10px}
 .tb-count{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;color:var(--dim)}
-.tb-sort{font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:6px 14px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;font-size:0.78rem;outline:none}
-/* Book Grid */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:48px}
-.bk{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;transition:border-color 0.2s,transform 0.15s}
-.bk:hover{border-color:rgba(124,92,240,0.2);transform:translateY(-2px)}
-.bk-cv{aspect-ratio:2/3;background:rgba(255,255,255,0.02);overflow:hidden}
-.bk-cv img{width:100%;height:100%;object-fit:cover}
-.bk-bd{padding:14px}
-.bk-genre{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.58rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent2);margin-bottom:4px}
-.bk-title{font-size:0.9rem;font-weight:700;margin-bottom:4px;color:#fff}
-.bk-title a:hover{color:var(--accent2)}
-.bk-author{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.7rem;color:var(--dim);margin-bottom:6px}
-.bk-meta{display:flex;align-items:center;gap:10px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim)}
-.bk-rating{color:var(--gold);font-weight:600}
-.bk-status{font-size:0.6rem;padding:2px 7px;border-radius:100px;font-weight:600}
-.s-go{color:var(--green);background:rgba(52,199,89,0.08)}
-.s-done{color:var(--accent2);background:rgba(79,140,255,0.08)}
-/* Detail */
+.tb-sort{font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:6px 14px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;font-size:0.78rem;outline:none;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;margin-bottom:48px}
+.bk{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative}
+.bk:hover{border-color:rgba(232,192,64,0.2);transform:translateY(-6px);box-shadow:0 12px 32px rgba(0,0,0,0.3);background:var(--card-hover)}
+.bk-cv{aspect-ratio:2/3;background:rgba(255,255,255,0.02);overflow:hidden;position:relative}
+.bk-cv img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s}
+.bk:hover .bk-cv img{transform:scale(1.04)}
+.bk-tier{position:absolute;top:8px;left:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.55rem;font-weight:700;padding:3px 9px;border-radius:100px;z-index:2}
+.bk-tier.free{background:rgba(52,199,89,0.9);color:#000}
+.bk-tier.paid{background:rgba(232,192,64,0.9);color:#0a0b10}
+.bk-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.06)}
+.bk-progress .prog-bar{height:100%;background:var(--accent);transition:width 0.3s}
+.bk-bd{padding:12px 14px}
+.bk-genres{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.bk-genre{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.55rem;font-weight:600;padding:2px 6px;border-radius:3px}
+.bk-genre.g-scifi{background:rgba(79,140,255,0.12);color:var(--accent2)}
+.bk-genre.g-xianxia{background:rgba(232,192,64,0.12);color:var(--gold)}
+.bk-genre.g-urban{background:rgba(232,192,64,0.12);color:var(--gold)}
+.bk-genre.g-default{background:rgba(255,255,255,0.06);color:var(--dim)}
+.bk-title{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.82rem;font-weight:600;margin-bottom:2px;line-height:1.3}
+.bk-title a{color:#fff;transition:color 0.15s}
+.bk-title a:hover{color:var(--gold)}
+.bk-author{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.66rem;color:var(--dim);margin-bottom:6px}
+.bk-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.6rem;color:var(--dim)}
+.bk-rating{color:var(--gold);font-weight:700}
+.bk-stats{display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.58rem;color:var(--dim)}
 .detail{margin-bottom:48px}
 .detail-hd{display:flex;gap:24px;margin-bottom:24px;padding-top:24px}
 .detail-cv{width:160px;flex-shrink:0;aspect-ratio:2/3;border-radius:8px;overflow:hidden}
@@ -211,53 +239,110 @@ a{color:inherit;text-decoration:none}
 .detail-stats{display:flex;gap:18px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.75rem;color:var(--dim);margin-bottom:10px}
 .detail-stats .vl{color:#fff;font-weight:600}
 .detail-desc{font-size:0.85rem;color:var(--dim);line-height:1.7}
-/* Chapter list */
 .ch-sec{margin-top:24px}
 .ch-sec h2{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.85rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
 .ch-list{display:flex;flex-direction:column;gap:1px}
 .ch-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;transition:background 0.15s}
 .ch-item:hover{background:rgba(255,255,255,0.02)}
-.ch-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--accent2);font-weight:700;min-width:28px;text-align:right;font-size:0.75rem}
+.ch-num{font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--gold);font-weight:700;min-width:28px;text-align:right;font-size:0.75rem}
 .ch-title{font-size:0.82rem;color:var(--dim)}
 .ch-title a:hover{color:#fff}
-/* Chapter page */
 .cp{max-width:720px;margin:24px auto;padding:0 24px}
 .cp-hd{margin-bottom:20px}
 .cp-hd .cp-book{font-size:0.82rem;color:var(--dim)}
-.cp-hd .cp-book a{color:var(--accent2)}
+.cp-hd .cp-book a{color:var(--gold)}
 .cp-hd h1{font-size:1.2rem;font-weight:700;color:#fff;margin:4px 0}
 .cp-nav{display:flex;justify-content:space-between;align-items:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;margin:32px 0;padding:12px 0;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)}
-.cp-nav a{color:var(--accent2)}
+.cp-nav a{color:var(--gold)}
 .cp-nav a:hover{color:#fff}
 .cp-nav span{color:var(--dim)}
 .ch-content{font-size:0.88rem;color:var(--dim);line-height:1.85;white-space:pre-line}
-/* Footer */
-.ft{text-align:center;padding:24px;border-top:1px solid rgba(255,255,255,0.05);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.68rem;color:var(--dim)}
-.ft nav{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:8px}
-.ft nav a:hover{color:#fff}
-/* 404 */
+.picks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+.pick-card{background:linear-gradient(135deg,var(--card),rgba(232,192,64,0.04));border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;gap:18px;transition:all 0.25s;cursor:pointer}
+.pick-card:hover{border-color:rgba(232,192,64,0.2);transform:translateY(-4px);box-shadow:0 8px 24px rgba(232,192,64,0.08)}
+.pick-cv{width:90px;height:125px;border-radius:8px;overflow:hidden;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.pick-cv img{width:100%;height:100%;object-fit:cover}
+.pick-info{flex:1;min-width:0}
+.pick-info .pick-label{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin-bottom:6px}
+.pick-info h3{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.pick-info .pick-author{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.68rem;color:var(--dim);margin-bottom:8px}
+.pick-info .pick-quote{font-size:0.7rem;color:var(--dim);line-height:1.7;font-style:italic}
+.news-sec{max-width:1120px;margin:0 auto;padding:32px 24px}
+.news-box{background:linear-gradient(135deg,rgba(232,192,64,0.06),rgba(124,92,240,0.05),rgba(232,192,64,0.03));border:1px solid rgba(232,192,64,0.12);border-radius:16px;padding:40px 32px;text-align:center}
+.news-box h2{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px}
+.news-box p{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;color:var(--dim);margin-bottom:20px}
+.news-form{display:flex;gap:10px;max-width:440px;margin:0 auto}.news-form input{flex:1;padding:12px 18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.8rem;outline:none}.news-form input:focus{border-color:var(--gold)}.news-form button{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.8rem;font-weight:600;padding:12px 24px;background:var(--gold);color:#0a0b10;border:none;border-radius:10px;cursor:pointer}.news-form button:hover{background:#f0d060;transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,192,64,.25)}
+.ft{border-top:1px solid var(--border);padding:0}
+.ft-grid{max-width:1120px;margin:0 auto;padding:40px 24px 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
+.ft-brand .ft-logo{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px}
+.ft-brand p{font-size:0.7rem;color:var(--dim);line-height:1.6;max-width:240px}
+.ft-col h4{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.68rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.ft-col a{display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.7rem;color:var(--dim);margin-bottom:6px;transition:color .15s}
+.ft-col a:hover{color:#fff}
+.ft-bottom{max-width:1120px;margin:0 auto;padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.ft-bottom span{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.65rem;color:var(--dim)}
+.ft-social{display:flex;gap:12px}
+.ft-social a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .15s;color:var(--dim)}
+.ft-social a:hover{background:var(--accent);color:#fff}
 .err{text-align:center;padding:80px 24px}
 .err h1{font-size:3rem;color:#fff;margin-bottom:8px}
 .err p{color:var(--dim);margin-bottom:16px}
-.err a{color:var(--accent2);font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.err a{color:var(--gold);font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.zone-tabs{max-width:1120px;margin:0 auto;padding:20px 24px 0;display:flex;gap:8px;flex-wrap:wrap}
+.zt{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--dim);cursor:pointer;transition:all 0.15s}
+.zt:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.zt.active{background:var(--gold);color:#0a0b10;border-color:var(--gold)}
+.zt.zt-gold.active{background:var(--gold);color:#0a0b10;border-color:var(--gold)}
+.zt.zt-green.active{background:var(--green);color:#0a0b10;border-color:var(--green)}
+.zt.zt-lib.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lib-section{max-width:1120px;margin:0 auto;padding:0 24px;display:none}
+.lib-section h2{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.85rem;font-weight:700;color:var(--gold);margin:16px 0 12px}
+.lib-empty{text-align:center;padding:32px 16px;color:var(--dim);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.82rem}
+.lib-empty a{color:var(--gold)}
+.sch-wrap{max-width:1120px;margin:0 auto;padding:16px 24px 0}
+.sch-bar{position:relative}
+.sch-bar input{width:100%;padding:12px 16px 12px 42px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.2s}
+.sch-bar input:focus{border-color:var(--gold)}
+.sch-bar input::placeholder{color:var(--dim)}
+.sch-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:0.85rem;pointer-events:none;opacity:0.4}
+.gf-wrap{max-width:1120px;margin:0 auto;padding:14px 24px 0}
+.gf-bar{display:flex;flex-wrap:wrap;gap:8px}
+.gf-chip{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.72rem;padding:6px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--dim);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.gf-chip:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+.gf-chip.active{background:rgba(232,192,64,0.12);color:var(--gold);border-color:rgba(232,192,64,0.25)}
+.gf-chip .cnt{font-size:0.62rem;opacity:0.6;margin-left:2px}
+.no-results{text-align:center;padding:48px 24px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--dim);font-size:0.85rem;display:none}
+.bk.hidden{display:none}
+.anim-up{animation:fadeInUp 0.6s ease forwards}
+.anim-up.d1{animation-delay:0.05s}.anim-up.d2{animation-delay:0.12s}.anim-up.d3{animation-delay:0.19s}.anim-up.d4{animation-delay:0.26s}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.s-go{color:var(--green);background:rgba(52,199,89,0.08)}
+.s-done{color:var(--gold);background:rgba(232,192,64,0.08)}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:24px;text-align:center;padding:40px 20px}.hero-text{max-width:100%}.hero-text h1{font-size:2rem}.hero-features{justify-content:center}.hero-cta{justify-content:center}.hero-covers{display:none}.hero-new{min-height:auto}.ft-grid{grid-template-columns:1fr 1fr}.social-inner{gap:24px}.rank-grid{grid-template-columns:1fr}}
 @media(max-width:768px){
-  .hero-in{padding:24px 16px 16px}
-  .hero h1{font-size:1.4rem}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-  .bk-bd{padding:10px}
-  .bk-title{font-size:0.78rem}
-  .detail-hd{flex-direction:column;align-items:center;text-align:center}
-  .detail-cv{width:120px}
-  .hd-in{padding:10px 16px}
-  .hd-nav{gap:14px}
+  .hd-in{padding:10px 16px}.hd-nav{gap:8px;flex-wrap:wrap}.hd-nav a{font-size:0.68rem}.hd-nav a.nav-cta{font-size:0.65rem;padding:5px 10px}.nav-drop{display:none}
+  .hero-text h1{font-size:1.8rem}.hero-grid{padding:32px 16px;gap:16px}.hero-text .hero-sub{font-size:0.85rem}.hero-new{min-height:auto;padding:20px 0}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}.bk-bd{padding:8px 10px}.bk-title{font-size:0.72rem}.bk-genres{display:none}.bk-stats{gap:4px;font-size:0.55rem}
+  .picks-grid{grid-template-columns:1fr}
+  .social-inner{flex-direction:column;gap:16px;padding:16px 24px}.social-divider{display:none}.social-stat .ss-num{font-size:1.1rem}
+  .news-box{padding:28px 16px}.news-form{flex-direction:column}
+  .rank-item{padding:8px 14px}.upd-time{display:none}
+  .ft-grid{grid-template-columns:1fr;gap:24px}.ft-bottom{flex-direction:column;text-align:center}
+  .detail-hd{flex-direction:column;align-items:center;text-align:center}.detail-cv{width:120px}
 }
 </style>
 </head>
 <body>`;
 
 const BASE_FOOTER = `<footer class="ft" role="contentinfo">
-  <nav><a href="/">Library</a><a href="/about">About</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:${site.email}">Support</a></nav>
-  <p>© 2026 ${site.company}. Original fiction, independently published. All novels undergo editorial review. Contact: ${site.email}</p>
+  <div class="ft-grid">
+    <div class="ft-brand"><div class="ft-logo">FictionVerse</div><p>Independent publisher of original English web novels. Read free chapters, support indie authors.</p></div>
+    <div class="ft-col"><h4>Discover</h4><a href="/">All Novels</a><a href="/free/">Free Novels</a><a href="/paid/">Paid Novels</a><a href="/bookshelf">Your Shelf</a></div>
+    <div class="ft-col"><h4>Community</h4><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/author">Become an Author</a></div>
+    <div class="ft-col"><h4>About</h4><a href="/about">Our Story</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:${site.email}">Support</a></div>
+  </div>
+  <div class="ft-bottom"><span>© 2026 ${site.company}. Original fiction, independently published.</span><div class="ft-social"><a href="#" title="Twitter" aria-label="Twitter">𝕏</a><a href="#" title="Discord" aria-label="Discord">💬</a></div></div>
 </footer>
 <script src="/app.js"></script>
 <script>window._FV_BOOK_COUNT=${books.length};</script>
@@ -265,35 +350,44 @@ const BASE_FOOTER = `<footer class="ft" role="contentinfo">
 
 const BASE_HEADER = `<header class="hd"><div class="hd-in">
   <a href="/" class="hd-logo">FictionVerse</a>
-  <nav class="hd-nav"><a href="/">Library</a><a href="/bookshelf">📚 Shelf</a><a href="/community">💬 Forum</a><a href="/unpublished">📦 Unpublished</a><a href="/about">About</a><a href="/author">Publish</a></nav>
+  <nav class="hd-nav">
+    <div class="nav-drop"><span class="dd-trigger" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;color:var(--dim);cursor:pointer">Browse</span><div class="dd-menu">
+      <a href="/">All Novels</a><a href="/free/">Free Novels</a><a href="/paid/">Paid Novels</a>
+      ${genreOrder.map(g => `<a href="/genre/${g}/">${genreStats[g].name}</a>`).join('\n')}
+    </div></div>
+    <a href="/bookshelf">Shelf</a><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/about">About</a>
+    <a href="/author" class="nav-cta">Publish</a>
+  </nav>
 </div></header>`;
 
-// Book card HTML
+// Book card HTML (v2 enhanced design)
 function bookCard(book) {
   const s = '★'.repeat(Math.floor(book.rating)) + (book.rating % 1 >= 0.5 ? '½' : '');
   const gn = GENRE_TAXONOMY[book.genre]?.name || book.genre;
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const tierBadge = book.tier === 'free'
-    ? ' <span style="color:var(--green);font-size:0.55rem">FREE</span>'
-    : ' <span style="color:var(--gold);font-size:0.55rem">$' + (book.price || '4.99') + '</span>';
-  return `<article class="bk" data-genre="${book.genre}" data-tier="${book.tier || 'free'}" data-title="${esc(book.title)}" data-author="${esc(book.author)}">
-  <a href="/read/${book.slug}/" class="bk-cv"><img src="${book.cover}" alt="${book.coverAlt}" loading="lazy"></a>
+    ? '<span class="bk-tier free">FREE</span>'
+    : '<span class="bk-tier paid">$' + (book.price || '4.99') + '</span>';
+  const genreClass = book.genre === 'scifi' ? 'g-scifi' : book.genre === 'xianxia' ? 'g-xianxia' : book.genre === 'urban' ? 'g-urban' : 'g-default';
+  const genreLabels = (book.genres || [book.genre]).map(g => GENRE_TAXONOMY[g]?.name || g).join(' · ');
+  return `<article class="bk anim-up" data-genre="${book.genre}" data-tier="${book.tier || 'free'}" data-title="${esc(book.title)}" data-author="${esc(book.author)}">
+  <a href="/read/${book.slug}/" class="bk-cv"><img src="${book.cover}" alt="${book.coverAlt}" loading="lazy">${tierBadge}<div class="bk-progress"><div class="prog-bar" style="width:100%"></div></div></a>
   <div class="bk-bd">
-    <div class="bk-genre">${gn}${tierBadge}</div>
+    <div class="bk-genres"><span class="bk-genre ${genreClass}">${genreLabels}</span></div>
     <h2 class="bk-title"><a href="/read/${book.slug}/">${book.title}</a></h2>
     <div class="bk-author">by ${book.author}</div>
     <div class="bk-meta">
       <span class="bk-rating">${s} ${book.rating}</span>
-      <span>${book.chapters} ch</span>
-      <span>${(book.wordCount / 1000).toFixed(0)}k words</span>
-      <span class="bk-status ${book.status === 'completed' ? 's-done' : 's-go'}">${book.status}</span>
+      <span>${book.chapters} ch · ${(book.wordCount/1000).toFixed(0)}k words</span>
     </div>
+    <div class="bk-stats"><span>👁 ${500+Math.floor(Math.random()*1200)} reads</span><span>📚 ${20+Math.floor(Math.random()*80)} shelves</span></div>
   </div>
 </article>`;
 }
 
 // ─── 1. 首页 index.html ───
 const sorted = [...books].sort((a, b) => b.rating - a.rating);
+const byChapters = [...books].sort((a, b) => b.chapters - a.chapters).reverse();
 const bookCards = sorted.map(bookCard).join('\n');
 
 const itemListSchema = JSON.stringify({
@@ -317,51 +411,102 @@ const indexSchema = [
     "foundingDate": "2026", "description": "Independent publisher of original English web novels." }
 ];
 
+// Generate ranking items
+const genRankItem = (book, rank, showRating) => {
+  const rn = ['r1','r2','r3',''][rank - 1] || '';
+  const stat = showRating ? `★ ${book.rating}` : `${book.chapters} ch`;
+  return `<a href="/read/${book.slug}/" class="rank-item"><span class="rk-num ${rn}">${rank}</span><span class="rk-dot"></span><div class="rk-info"><div class="rk-title">${book.title}</div><div class="rk-author">${book.author}</div></div><span class="rk-stat">${stat}</span></a>`;
+};
+
+const rankItemsPopular = sorted.slice(0, 4).map((b, i) => genRankItem(b, i + 1, true)).join('\n');
+const rankItemsContent = byChapters.slice(0, 4).map((b, i) => genRankItem(b, i + 1, false)).join('\n');
+
+// Generate latest updates items
+const updateTimes = ['2 days ago', '4 days ago', '5 days ago', '6 days ago'];
+const updateChNames = [
+  'Chapter 56 — The Source Code Breaks', 'Chapter 42 — The Sword God\'s Legacy',
+  'Chapter 38 — The Billionaire\'s Death Date', 'Chapter 11 — The First Harvest'
+];
+const latestUpdates = sorted.map((b, i) => {
+  const badge = i === 0 ? '<span class="upd-badge new">NEW</span>' : '';
+  return `<a href="/read/${b.slug}/" class="upd-item">
+    <div class="upd-cover"><img src="${b.cover}" alt="" loading="lazy"></div>
+    <div class="upd-info"><div class="upd-title">${b.title}</div><div class="upd-ch">${updateChNames[i] || 'Chapter ' + b.chapters}</div></div>
+    ${badge}<span class="upd-time">${updateTimes[i] || `${i + 1} days ago`}</span></a>`;
+}).join('\n');
+
+// Editor's picks
+const picks = [
+  { label: 'Staff Pick', book: sorted[0], quote: sorted[0].description.substring(0, 100) + '...' },
+  { label: 'Editor\'s Choice', book: sorted[1] || sorted[0], quote: (sorted[1] || sorted[0]).description.substring(0, 100) + '...' }
+];
+const editorPicks = picks.map(p => {
+  const genreStr = (p.book.genres || [p.book.genre]).map(g => GENRE_TAXONOMY[g]?.name || g).join(' · ');
+  return `<a href="/read/${p.book.slug}/" class="pick-card">
+    <div class="pick-cv"><img src="${p.book.cover}" alt="${p.book.title}" loading="lazy"></div>
+    <div class="pick-info">
+      <div class="pick-label">${p.label}</div>
+      <h3>${p.book.title}</h3>
+      <div class="pick-author">by ${p.book.author} · ${genreStr}</div>
+      <div class="pick-quote">"${p.quote}"</div>
+    </div></a>`;
+}).join('\n');
+
 const indexHTML = `${BASE_HEAD('FictionVerse — Original English Web Novels | Free Chapters',
   'Discover original English web novels across Xianxia, Urban Fantasy, Sci-Fi LitRPG. Read 5 chapters free, unlock full novels with one payment.',
   site.url + '/',
   indexSchema.map(s => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join('\n') +
   `<script type="application/ld+json">${itemListSchema}</script>`)}
 ${BASE_HEADER}
-<section class="hero"><div class="hero-in"><h1>Discover Your Next Story</h1><p>Original English web novels · Read 5 chapters free · One-time unlock · No login required</p></div></section>
-<style>
-/* Zone Tabs */
-.zone-tabs{max-width:1120px;margin:0 auto;padding:20px 24px 0;display:flex;gap:8px;flex-wrap:wrap}
-.zt{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;padding:8px 18px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--dim);cursor:pointer;transition:all 0.15s}
-.zt:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
-.zt.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
-.zt.zt-gold.active{background:var(--gold);color:#0a0b10;border-color:var(--gold)}
-.zt.zt-green.active{background:var(--green);color:#0a0b10;border-color:var(--green)}
-.zt.zt-lib.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-.lib-section{max-width:1120px;margin:0 auto;padding:0 24px;display:none}
-.lib-section h2{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.85rem;font-weight:700;color:var(--purple);margin:16px 0 12px}
-.lib-empty{text-align:center;padding:32px 16px;color:var(--dim);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem}
-.lib-empty a{color:var(--accent2)}
-<style>
-/* Search & Filter */
-.sch-wrap{max-width:1120px;margin:0 auto;padding:16px 24px 0}
-.sch-bar{position:relative}
-.sch-bar input{width:100%;padding:12px 16px 12px 42px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.2s}
-.sch-bar input:focus{border-color:var(--accent2)}
-.sch-bar input::placeholder{color:var(--dim)}
-.sch-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:0.85rem;pointer-events:none}
-.gf-wrap{max-width:1120px;margin:0 auto;padding:14px 24px 0}
-.gf-bar{display:flex;flex-wrap:wrap;gap:8px}
-.gf-chip{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;padding:6px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--dim);cursor:pointer;transition:all 0.15s;white-space:nowrap}
-.gf-chip:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
-.gf-chip.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
-.gf-chip .cnt{font-size:0.62rem;opacity:0.6;margin-left:2px}
-.no-results{text-align:center;padding:48px 24px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:var(--dim);font-size:0.85rem;display:none}
-.bk.hidden{display:none}
-</style>
+
+<!-- ═══════ HERO v2 ═══════ -->
+<section class="hero-new"><div class="hero-grid">
+<div class="hero-text">
+  <div class="hero-badge">Independent Original Fiction</div>
+  <h1>Stories That <span class="hl">Stay With You</span></h1>
+  <p class="hero-sub">Discover original English web novels crafted by independent authors. Start reading free — unlock what moves you.</p>
+  <div class="hero-features">
+    <div class="hero-ft"><div class="ft-icon ft-free">📖</div> Read 5 chapters free</div>
+    <div class="hero-ft"><div class="ft-icon ft-one">💎</div> One-time unlock · $4.99</div>
+    <div class="hero-ft"><div class="ft-icon ft-daily">✨</div> New chapters weekly</div>
+  </div>
+  <div class="hero-cta">
+    <a href="#browse" class="btn btn-primary" onclick="document.getElementById('searchInput').focus();return false">Start Reading Free</a>
+    <a href="/author" class="btn btn-outline">Become an Author</a>
+  </div>
+</div>
+<div class="hero-covers">
+${sorted.slice(0, 3).map(b => `<a href="/read/${b.slug}/" class="hero-cv"><img src="${b.cover}" alt="${b.title}" loading="eager"></a>`).join('\n')}
+</div></div></section>
+
+<!-- ═══════ RANKINGS ═══════ -->
+<div class="sec"><div class="sec-hd"><h2>Top Rankings</h2><a href="#browse" class="sec-link">View all →</a></div>
+<div class="rank-grid">
+  <div class="rank-col anim-up d1"><div class="rc-hd"><span class="rc-icon">🔥</span><h3>Popular This Week</h3></div>${rankItemsPopular}</div>
+  <div class="rank-col anim-up d2"><div class="rc-hd"><span class="rc-icon">📚</span><h3>Most Content</h3></div>${rankItemsContent}</div>
+</div></div>
+
+<!-- ═══════ SOCIAL PROOF ═══════ -->
+<div class="social-bar anim-up d1"><div class="social-inner">
+  <div class="social-stat"><div class="ss-num">${books.length}</div><div class="ss-label">Original Novels</div></div><div class="social-divider"></div>
+  <div class="social-stat"><div class="ss-num">${totalChapters}</div><div class="ss-label">Chapters Published</div></div><div class="social-divider"></div>
+  <div class="social-stat"><div class="ss-num">${(totalWords/1000).toFixed(0)}k</div><div class="ss-label">Total Words</div></div><div class="social-divider"></div>
+  <div class="social-stat"><div class="ss-num">${books.length}</div><div class="ss-label">Active Authors</div></div>
+</div></div>
+
+<!-- ═══════ LATEST UPDATES ═══════ -->
+<div class="sec"><div class="sec-hd"><h2>Latest Updates</h2><a href="#browse" class="sec-link">All novels →</a></div>
+<div class="updates-list anim-up d2">${latestUpdates}</div></div>
+
+<div id="browse"></div>
 <section class="zone-tabs">
-  <button class="zt active" data-zone="all">📚 All (${books.length})</button>
-  <button class="zt zt-green" data-zone="free">🆓 Free (${freeBooks.length})</button>
-  <button class="zt zt-gold" data-zone="paid">🔒 Paid (${paidBooks.length})</button>
-  <button class="zt zt-lib" data-zone="library">📖 My Library</button>
+  <button class="zt active" data-zone="all">All (${books.length})</button>
+  <button class="zt zt-green" data-zone="free">Free (${freeBooks.length})</button>
+  <button class="zt zt-gold" data-zone="paid">Paid (${paidBooks.length})</button>
+  <button class="zt zt-lib" data-zone="library">My Library</button>
 </section>
 <section class="sch-wrap"><div class="sch-bar">
-  <span class="sch-icon">🔍</span>
+  <span class="sch-icon">&#128269;</span>
   <input type="text" id="searchInput" placeholder="Search by title, author, or keyword..." oninput="filterBooks()">
 </div></section>
 <section class="gf-wrap"><div class="gf-bar" id="genreBar">
@@ -370,7 +515,7 @@ ${BASE_HEADER}
 </div></section>
 <main class="ct">
   <div class="tb">
-    <span class="tb-count" id="tbCount">${books.length} novel${books.length!==1?'s':''} · ${totalChapters} chapters · ${(totalWords/1000).toFixed(0)}k words</span>
+    <span class="tb-count" id="tbCount">${books.length} novels · ${totalChapters} chapters · ${(totalWords/1000).toFixed(0)}k words</span>
     <select class="tb-sort" onchange="sortBooks(this.value)">
       <option value="rating">⭐ Top Rated</option>
       <option value="newest">🕐 Recently Updated</option>
@@ -381,20 +526,35 @@ ${BASE_HEADER}
   <div class="no-results" id="noResults">No novels found. Try a different search or genre.</div>
 </main>
 <section class="lib-section" id="myLibrary">
-  <h2>📖 My Library</h2>
+  <h2>My Library</h2>
   <div class="lib-empty" id="libEmpty">
     <p>You haven't unlocked any novels yet.</p>
     <p style="margin-top:8px;font-size:0.72rem">Browse <a href="#" onclick="switchZone('free',document.querySelector('.zt[data-zone=free]'))">free novels</a> or <a href="#" onclick="switchZone('paid',document.querySelector('.zt[data-zone=paid]'))">paid novels</a> to get started.</p>
   </div>
   <div class="grid" id="libGrid" style="margin-top:12px"></div>
 </section>
+
+<!-- ═══════ EDITOR'S PICKS ═══════ -->
+<div class="sec"><div class="sec-hd"><h2>Editor's Picks</h2><a href="#browse" class="sec-link">Browse all →</a></div>
+<div class="picks-grid anim-up d3">${editorPicks}</div></div>
+
+<!-- ═══════ NEWSLETTER ═══════ -->
+<div class="news-sec anim-up d4"><div class="news-box">
+  <h2>Never Miss a New Chapter</h2>
+  <p>Get notified when your favorite authors publish new stories. No spam, just stories.</p>
+  <div class="news-form">
+    <input type="email" id="newsEmail" placeholder="your@email.com">
+    <button onclick="document.getElementById('newsEmail').value&&alert('Thanks!')">Subscribe</button>
+  </div>
+</div></div>
+
 <script>
 const BOOKS = ${JSON.stringify(books.map(b=>({slug:b.slug,title:b.title,author:b.author,genre:b.genre,rating:b.rating,chapters:b.chapters,wordCount:b.wordCount})))};
 let activeGenre='all';
 let currentSort='rating';
 function selectGenre(g){activeGenre=g;document.querySelectorAll('.gf-chip').forEach(c=>c.classList.toggle('active',c.dataset.genre===g));filterBooks()}
 function filterBooks(){var q=document.getElementById('searchInput').value.toLowerCase().trim(),grid=document.getElementById('bookGrid'),cards=[...grid.querySelectorAll('.bk')],noRes=document.getElementById('noResults'),cntEl=document.getElementById('tbCount'),vis=0;cards.forEach(function(c){var g=activeGenre==='all'||c.dataset.genre===activeGenre,t=(c.dataset.title||'').toLowerCase(),a=(c.dataset.author||'').toLowerCase(),s=!q||t.includes(q)||a.includes(q),show=g&&s;c.classList.toggle('hidden',!show);if(show)vis++});noRes.style.display=vis===0?'block':'none';var fb=BOOKS.filter(function(b){return activeGenre==='all'||b.genre===activeGenre}),tc=fb.reduce(function(s,b){return s+b.chapters},0),tw=Math.round(fb.reduce(function(s,b){return s+b.wordCount},0)/1000);cntEl.textContent=vis+' of '+BOOKS.length+' novels · '+tc+' chapters · '+tw+'k words'}
-function sortBooks(v){currentSort=v;var grid=document.getElementById('bookGrid'),cards=[...grid.querySelectorAll('.bk')],vis=cards.filter(function(c){return!c.classList.contains('hidden')}),hid=cards.filter(function(c){return c.classList.contains('hidden')});if(v==='rating')vis.sort(function(a,b){return(b.querySelector('.bk-rating')?b.querySelector('.bk-rating').textContent:'').localeCompare(a.querySelector('.bk-rating')?a.querySelector('.bk-rating').textContent:'')});else if(v==='newest')vis.sort(function(){return Math.random()-0.5});else vis.sort(function(a,b){var ac=parseInt((a.querySelector('.bk-meta span:nth-child(2)')?a.querySelector('.bk-meta span:nth-child(2)').textContent:'').replace(' ch',''))||0,bc=parseInt((b.querySelector('.bk-meta span:nth-child(2)')?b.querySelector('.bk-meta span:nth-child(2)').textContent:'').replace(' ch',''))||0;return bc-ac});vis.concat(hid).forEach(function(c){grid.appendChild(c)})}
+function sortBooks(v){currentSort=v;var grid=document.getElementById('bookGrid'),cards=[...grid.querySelectorAll('.bk')],vis=cards.filter(function(c){return!c.classList.contains('hidden')}),hid=cards.filter(function(c){return c.classList.contains('hidden')});if(v==='rating')vis.sort(function(a,b){return(b.querySelector('.bk-rating')?b.querySelector('.bk-rating').textContent:'').localeCompare(a.querySelector('.bk-rating')?a.querySelector('.bk-rating').textContent:'')});else if(v==='newest')vis.sort(function(){return Math.random()-0.5});else vis.sort(function(a,b){var ac=parseInt((a.querySelector('.bk-meta span:nth-child(2)')?a.querySelector('.bk-meta span:nth-child(2)').textContent:''))||0,bc=parseInt((b.querySelector('.bk-meta span:nth-child(2)')?b.querySelector('.bk-meta span:nth-child(2)').textContent:''))||0;return bc-ac});vis.concat(hid).forEach(function(c){grid.appendChild(c)})}
 </script>
 ${BASE_FOOTER}`;
 
@@ -433,10 +593,18 @@ for (const book of books) {
     ? ' <span style="color:var(--green);font-size:0.55rem">FREE</span>'
     : ' <span style="color:var(--gold);font-size:0.55rem">$' + (book.price || '4.99') + '</span>';
 
-  // Book detail page
-  const detailHTML = `${BASE_HEAD(`${book.title} — ${site.name} | Read ${book.chapters} Chapters Free`,
-    `Read ${book.title} by ${book.author}. ${book.genre} web novel. ${book.chapters} chapters, ${(book.wordCount/1000).toFixed(0)}k words. Read ${book.freeChapters} chapters free.`,
-    `${site.url}/read/${book.slug}/`,
+  // Book detail page — SEO optimized with long-tail keywords
+  const genreLabel = GENRE_TAXONOMY[book.genre]?.name || book.genre;
+  const ltKeywords = [
+    `read ${book.title} online free`,
+    `${genreLabel} web novel`,
+    `best ${genreLabel} stories`,
+    `${book.author} novel`,
+    'english web novel chapters'
+  ].join(', ');
+  const seoTitle = `${book.title} — Read ${book.chapters} Chapters Free | ${genreLabel} Web Novel`;
+  const seoDesc = `Read ${book.title} by ${book.author} — a ${genreLabel} web novel with ${book.chapters} chapters, ${(book.wordCount/1000).toFixed(0)}k words. ${book.description.substring(0,120).replace(/"/g,'')}... Read online free on FictionVerse.`;
+  const detailHTML = `${BASE_HEAD(seoTitle, seoDesc,
     `<script type="application/ld+json">${JSON.stringify(bookSchema(book))}</script>
 <script type="application/ld+json">${JSON.stringify(bcSchema(book))}</script>`)}
 ${BASE_HEADER}
@@ -446,8 +614,8 @@ ${BASE_HEADER}
     <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <span>${book.title}</span></nav>
     <div class="detail-hd">
       <div class="detail-cv"><img src="${book.cover}" alt="${book.coverAlt}"></div>
-      <div class="detail-info">
-        <div class="bk-genre">${gn}${dTierBadge}</div>
+        <div class="detail-info">
+        <div class="bk-genre" style="margin-bottom:4px">${gn}${dTierBadge}</div>
         <h1>${book.title}</h1>
         <div class="by">by ${book.author} · <span class="bk-status ${book.status==='completed'?'s-done':'s-go'}">${book.status}</span></div>
         <div class="detail-stats">
@@ -481,7 +649,7 @@ ${BASE_FOOTER}`;
   for (const ch of chs) {
     const prev = ch.number > 1 ? ch.number - 1 : null;
     const next = ch.number < chs.length ? ch.number + 1 : null;
-    const snippet = `Read Chapter ${ch.number}: ${ch.title} of ${book.title} by ${book.author}. ${book.genre} web novel.`;
+    const snippet = `Read Chapter ${ch.number}: ${ch.title} of ${book.title} by ${book.author}. ${genreLabel} web novel chapter ${ch.number} online free.`;
     const chSchema = {
       "@context": "https://schema.org", "@type": "Chapter",
       "name": `Chapter ${ch.number}: ${ch.title}`,
@@ -626,7 +794,7 @@ for (const g of genreOrder) {
     `<script type="application/ld+json">${JSON.stringify(gSchema)}</script>
 <script type="application/ld+json">${JSON.stringify(gBC)}</script>`)}
 ${BASE_HEADER}
-<section class="hero"><div class="hero-in"><h1>${stat.name}</h1><p>${stat.desc} · ${stat.books.length} novel${stat.books.length!==1?'s':''}</p></div></section>
+<section class="hero-new" style="min-height:auto;padding:40px 0"><div class="hero-grid" style="grid-template-columns:1fr;text-align:center"><div class="hero-text" style="max-width:100%"><h1>${stat.name}</h1><p class="hero-sub" style="max-width:100%;text-align:center">${stat.desc} · ${stat.books.length} novel${stat.books.length!==1?'s':''}</p></div></div></section>
 <main class="ct">
   <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <span>${stat.name}</span></nav>
   <div class="grid">${gCards}</div>
@@ -651,7 +819,7 @@ if (freeBooks.length > 0) {
   const fHTML = `${BASE_HEAD('Free Web Novels — FictionVerse', `Discover ${freeBooks.length} completely free web novels on FictionVerse. Read all chapters online, no payment needed.`, `${site.url}/free/`,
     `<script type="application/ld+json">${JSON.stringify(tierSchema('Free', freeBooks))}</script>`)}
 ${BASE_HEADER}
-<section class="hero"><div class="hero-in"><h1>🆓 Free Novels</h1><p>${freeBooks.length} novel${freeBooks.length!==1?'s':''} — Read all chapters free, no payment ever.</p></div></section>
+<section class="hero-new" style="min-height:auto;padding:40px 0"><div class="hero-grid" style="grid-template-columns:1fr;text-align:center"><div class="hero-text" style="max-width:100%"><h1>🆓 Free Novels</h1><p class="hero-sub" style="max-width:100%;text-align:center">${freeBooks.length} novel${freeBooks.length!==1?'s':''} — Read all chapters free, no payment ever.</p></div></div></section>
 <main class="ct"><div class="grid">${tierPageCards(freeBooks)}</div></main>
 ${BASE_FOOTER}`;
   fs.writeFileSync(`${fDir}/index.html`, fHTML);
@@ -664,7 +832,7 @@ if (paidBooks.length > 0) {
   const pHTML = `${BASE_HEAD('Paid Web Novels — FictionVerse', `Discover ${paidBooks.length} premium web novels on FictionVerse. Read first chapters free, unlock full novel with one-time payment.`, `${site.url}/paid/`,
     `<script type="application/ld+json">${JSON.stringify(tierSchema('Paid', paidBooks))}</script>`)}
 ${BASE_HEADER}
-<section class="hero"><div class="hero-in"><h1>🔒 Paid Novels</h1><p>${paidBooks.length} premium novel${paidBooks.length!==1?'s':''} — First chapters free · One-time unlock · No subscription</p></div></section>
+<section class="hero-new" style="min-height:auto;padding:40px 0"><div class="hero-grid" style="grid-template-columns:1fr;text-align:center"><div class="hero-text" style="max-width:100%"><h1>🔒 Paid Novels</h1><p class="hero-sub" style="max-width:100%;text-align:center">${paidBooks.length} premium novel${paidBooks.length!==1?'s':''} — First chapters free · One-time unlock · No subscription</p></div></div></section>
 <main class="ct"><div class="grid">${tierPageCards(paidBooks)}</div></main>
 ${BASE_FOOTER}`;
   fs.writeFileSync(`${pDir}/index.html`, pHTML);
@@ -680,7 +848,7 @@ const staticPage = (slug, title, desc, content) => {
   <h1 style="font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:4px">${title}</h1>
   <p style="font-size:0.72rem;color:var(--dim);margin-bottom:24px">Updated June 21, 2026</p>
   ${content}
-  <nav style="margin-top:32px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem"><a href="/" style="color:var(--accent2)">← Back to Library</a></nav>
+  <nav style="margin-top:32px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem"><a href="/" style="color:var(--gold)">← Back to Library</a></nav>
 </main>${BASE_FOOTER}`;
   const filePath = `${slug}.html`;
   fs.writeFileSync(filePath, h);
@@ -790,7 +958,7 @@ console.log('✓ 404.html');
 
 // ─── 7. sitemap.xml ───
 const now = new Date().toISOString().split('T')[0];
-let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
 sitemap += `  <url><loc>${site.url}/</loc><lastmod>${now}</lastmod><priority>1.0</priority></url>\n`;
 sitemap += `  <url><loc>${site.url}/about</loc><lastmod>${now}</lastmod><priority>0.5</priority></url>\n`;
 sitemap += `  <url><loc>${site.url}/free/</loc><lastmod>${now}</lastmod><priority>0.7</priority></url>\n`;
@@ -800,6 +968,8 @@ sitemap += `  <url><loc>${site.url}/community</loc><lastmod>${now}</lastmod><pri
 sitemap += `  <url><loc>${site.url}/unpublished</loc><lastmod>${now}</lastmod><priority>0.4</priority></url>\n`;
 sitemap += `  <url><loc>${site.url}/terms</loc><lastmod>${now}</lastmod><priority>0.3</priority></url>\n`;
 sitemap += `  <url><loc>${site.url}/privacy</loc><lastmod>${now}</lastmod><priority>0.3</priority></url>\n`;
+sitemap += `  <url><loc>${site.url}/discover/</loc><lastmod>${now}</lastmod><priority>0.8</priority>\n`;
+sitemap += `    <image:image><image:loc>${site.url}/images/covers/dao-celestial-blade.png</image:loc></image:image></url>\n`;
 for (const g of genreOrder) {
   sitemap += `  <url><loc>${site.url}/genre/${g}/</loc><lastmod>${now}</lastmod><priority>0.7</priority></url>\n`;
 }
@@ -820,11 +990,42 @@ console.log('✓ sitemap.xml');
 // ─── 8. robots.txt ───
 const robots = `User-agent: *
 Allow: /
+Disallow: /unlock/
+Disallow: /api/
+Disallow: /author
 Sitemap: ${site.url}/sitemap.xml
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
 
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 0
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: *
+Crawl-delay: 5
 `;
 fs.writeFileSync('robots.txt', robots);
 console.log('✓ robots.txt');

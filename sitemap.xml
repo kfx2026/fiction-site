@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>https://fiction.aichatmail.one/</loc><lastmod>2026-06-22</lastmod><priority>1.0</priority></url>
   <url><loc>https://fiction.aichatmail.one/about</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
   <url><loc>https://fiction.aichatmail.one/free/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
@@ -9,6 +9,8 @@
   <url><loc>https://fiction.aichatmail.one/unpublished</loc><lastmod>2026-06-22</lastmod><priority>0.4</priority></url>
   <url><loc>https://fiction.aichatmail.one/terms</loc><lastmod>2026-06-22</lastmod><priority>0.3</priority></url>
   <url><loc>https://fiction.aichatmail.one/privacy</loc><lastmod>2026-06-22</lastmod><priority>0.3</priority></url>
+  <url><loc>https://fiction.aichatmail.one/discover/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority>
+    <image:image><image:loc>https://fiction.aichatmail.one/images/covers/dao-celestial-blade.png</image:loc></image:image></url>
   <url><loc>https://fiction.aichatmail.one/genre/xianxia/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
   <url><loc>https://fiction.aichatmail.one/genre/urban/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
   <url><loc>https://fiction.aichatmail.one/genre/scifi/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
@@ -165,21 +167,81 @@
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/29</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/60</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/61</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/12</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/13</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/14</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/15</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/16</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/17</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/18</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/19</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/20</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/unlock/abyss-rancher/</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/1</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/2</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/3</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/4</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/5</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/6</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/7</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/8</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/9</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/10</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/11</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/12</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/13</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/14</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/15</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/16</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/17</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/18</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/19</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/20</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/unlock/system-architect-dao/</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/1</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/2</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/3</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/4</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/5</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/6</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/7</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/8</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/9</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/10</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/11</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/12</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/13</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/14</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/15</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/16</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/17</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/18</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/19</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/last-alchemist-chengdu/chapters/20</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/unlock/last-alchemist-chengdu/</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/1</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/2</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/3</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/4</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/5</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/6</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/7</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/8</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/9</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/10</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/11</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/12</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/13</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/14</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/15</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/16</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/17</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/18</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/19</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/reborn-demon-empress/chapters/20</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/unlock/reborn-demon-empress/</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/infinite-earth-five-elements/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/infinite-earth-five-elements/chapters/1</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
