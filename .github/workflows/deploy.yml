@@ -17,11 +17,6 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Fetch data from Worker API
-        run: node fetch-data.js
-        env:
-          WORKER_API_URL: ${{ secrets.WORKER_API_URL }}
-
       - name: Build static site
         run: node build.js
 
