@@ -28,6 +28,7 @@ a{color:inherit;text-decoration:none}
 .hd-nav a{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;color:var(--dim);transition:color 0.15s}
 .hd-nav a:hover{color:#fff}
 .hd-nav a.nav-cta{background:var(--gold);color:#0a0b10;padding:6px 16px;border-radius:100px;font-size:0.75rem;font-weight:700}
+.hd-icon-btn{font-size:1.1rem!important;padding:4px 8px!important;color:var(--dim)!important;border-radius:6px;line-height:1;transition:all 0.15s}.hd-icon-btn:hover{color:#fff!important;background:rgba(255,255,255,0.06)}
 .nav-drop{position:relative}.nav-drop .dd-trigger::after{content:'▾';font-size:.55rem;opacity:.5}.dd-menu{display:none;position:absolute;top:100%;left:-12px;margin-top:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 0;min-width:160px;box-shadow:0 12px 32px rgba(0,0,0,.4)}.nav-drop:hover .dd-menu{display:block}.dd-menu a{display:block;padding:8px 16px;font-size:.75rem;color:var(--dim)}.dd-menu a:hover{background:rgba(232,192,64,.08);color:#fff}
 .hero-new{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(160deg,#0a0b10 0%,#16102a 35%,#1a1515 70%,#0f1018 100%)}
 .hero-new::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(232,192,64,.05) 0%,transparent 50%),radial-gradient(ellipse at 75% 30%,rgba(124,92,240,.06) 0%,transparent 40%),radial-gradient(ellipse at 50% 80%,rgba(232,192,64,.03) 0%,transparent 30%);z-index:0}
@@ -227,6 +228,8 @@ a{color:inherit;text-decoration:none}
 <header class="hd"><div class="hd-in">
   <a href="/" class="hd-logo">FictionVerse</a>
   <nav class="hd-nav">
+    <a href="javascript:history.back()" class="hd-icon-btn" title="Back">←</a>
+    <a href="javascript:location.reload()" class="hd-icon-btn" title="Refresh">↻</a>
     <div class="nav-drop"><span class="dd-trigger" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;color:var(--dim);cursor:pointer">Browse</span><div class="dd-menu">
       <a href="/">All Novels</a><a href="/free/">Free Novels</a><a href="/paid/">Paid Novels</a>
       <a href="/genre/xianxia/">Xianxia / Cultivation</a>
