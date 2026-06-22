@@ -246,70 +246,69 @@ a{color:inherit;text-decoration:none}
 </div></header>
 <script>document.body.dataset.bookSlug='dao-celestial-blade';document.body.dataset.chapterNum='3';document.body.dataset.chapterTitle='First Sword Form';document.body.dataset.totalChapters='42';document.body.dataset.bookTier='free';document.body.dataset.freeChapters='0';document.body.dataset.prevChapter='/read/dao-celestial-blade/chapters/2';document.body.dataset.nextChapter='/read/dao-celestial-blade/chapters/4';</script>
 
-<!-- Reader Toolbar -->
-<div id="reader-toolbar" style="position:sticky;top:48px;z-index:50;background:rgba(10,11,16,0.95);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(10px);padding:8px 0">
-  <div style="max-width:720px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:4px">
-    <div style="display:flex;align-items:center;gap:2px">
-      <button onclick="readerFontDown()" title="Smaller text" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">A−</button>
-      <span id="reader-fs-val" style="font-size:0.65rem;color:var(--dim);min-width:36px;text-align:center">18px</span>
-      <button onclick="readerFontUp()" title="Larger text" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">A+</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:2px">
-      <button id="reader-theme-btn" onclick="readerToggleTheme()" title="Toggle theme" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">🌙</button>
-      <button id="reader-mode-btn" onclick="readerToggleMode()" title="Page / Scroll mode" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">📜</button>
-      <button id="reader-bm-btn" onclick="toggleBookmark()" title="Bookmark" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">🔖</button>
-      <button onclick="readerToggleChapter()" title="Chapter list" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">☰</button>
-    </div>
+<!-- Progress Bar -->
+<div id="reader-pb" style="position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.04);z-index:300">
+  <div id="fv-progress-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;border-radius:0 2px 2px 0"></div>
+</div>
+
+<!-- Mini Header (hidden, tap to show) -->
+<header id="reader-mini-hd" style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,11,16,0.96);border-bottom:1px solid rgba(255,255,255,0.06);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(10px);transform:translateY(-100%);transition:transform 0.25s;opacity:0">
+  <a href="/read/dao-celestial-blade/" style="font-size:0.8rem;color:var(--gold);text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,sans-serif">← Dao of the Celestial Blade</a>
+  <span style="font-size:0.7rem;color:var(--dim);font-family:-apple-system,BlinkMacSystemFont,sans-serif">Chapter 3 / 42</span>
+  <button id="fv-fav-btn" style="padding:4px 8px;border:none;background:transparent;font-size:1rem;cursor:pointer">🤍</button>
+</header>
+
+<!-- Toggle Tip -->
+<div id="reader-tip" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;color:rgba(255,255,255,0.2);font-size:2rem;pointer-events:none;opacity:0;transition:opacity 0.6s">👆</div>
+
+<!-- Reader Content -->
+<main style="max-width:800px;margin:0 auto;padding:24px 16px 100px;min-height:100vh;cursor:default" onclick="toggleUI()">
+  <div class="cp-hd" style="margin-bottom:24px">
+    <h1 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px">Chapter 3: First Sword Form</h1>
+    <p style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim)">~2.3k words · 2026-06-21</p>
+  </div>
+  <div id="reader-content" style="font-size:18px;line-height:1.8;color:var(--text);min-height:60vh">The outer disciple training yard was empty when Lin Feng arrived, still an hour before sunrise. The mist was thicker than usual, swirling around his ankles like ghost-silk. Perfect.<br><br>"Hold out your hand," the Sword God commanded.<br><br>Lin Feng obeyed. Knowledge flooded into his mind — not words, but muscle memory. The exact angle of a wrist. The distribution of weight across the balls of the feet. The precise path a blade must trace through the air to part qi rather than cut flesh.<br><br>"This is the First Form of the Celestial Blade: Dawn Pierces Mist. If you cannot master this, you will never master anything."<br><br>Lin Feng grabbed a wooden practice sword. It was heavier than the ones he usually used — a training weapon for inner disciples, reinforced with spirit iron. Normally, he couldn't even lift it. Today, it felt like a feather.<br><br>He raised the sword. The movement was not his own — his body was being guided by the implanted memory, a ghost's hands on his shoulders. The blade cut upward at a forty-five degree angle, then swept left in a crescent arc.<br><br>"Again. Your right shoulder is too tense."<br><br>He tried again. The sword traced the same path, but this time a faint shiver ran through the blade. It wasn't qi. It wasn't anything Lin Feng recognized. But it was something.<br><br>"Better. That is the secret of the Celestial Blade — you do not project qi outward like other techniques. You channel it inward, compressing it into the blade itself. Every strike contains the force of your entire body, concentrated into a single edge."<br><br>Lin Feng swung again. And again. Time lost meaning. The sun rose, painting the eastern peaks gold. Other disciples trickled into the yard, but he didn't hear their whispers. He was somewhere else entirely — deep inside himself, where the only things that existed were the sword and the voice.<br><br>"Stop."<br><br>Lin Feng froze mid-swing. The wooden sword in his hands was... different. A hairline crack ran from hilt to tip, glowing faintly with silver light.<br><br>"You channeled too much. The spirit iron couldn't handle your output. That is... unexpected."<br><br>The crack widened. The sword was coming apart from the inside. Lin Feng hurled it away. It spun through the air and embedded itself in the stone wall of the training yard, sinking a full foot into solid rock.<br><br>The other disciples stared.<br><br>"Hey! Lin Feng!" Zhao Wei was striding across the yard, his face twisted with confusion. "What trick is this? Did you bribe a talisman master?"<br><br>"I didn't—"<br><br>"Don't lie to me, trash!" Zhao Wei grabbed him by the collar. "I've known you for two years. You couldn't cut a blade of grass without crying. What did you do?"<br><br>The Sword God's voice came as a cold whisper: "Kill him."<br><br>Lin Feng's blood ran cold. "No!"<br><br>"He is an obstacle. A bully. He will never stop unless you make him stop."<br><br>"No!" Lin Feng said aloud, to Zhao Wei, to himself, to the cultivation world that demanded blood for every step forward.<br><br>The Sword God's consciousness pressed against his will like a mountain. But Lin Feng had spent two years being crushed by mountains. He knew how to bend without breaking.<br><br>The pressure released. When the Sword God spoke again, his voice held something new. Respect.<br><br>"Interesting. Perhaps you are not as weak as I thought."<br><br>Zhao Wei, oblivious to the battle that had just taken place inside Lin Feng's head, shoved him backward. "Whatever trick you're using, it won't last. Tricks never do."<br><br>He spat on the ground and walked away.<br><br>Lin Feng stood in the training yard, breathing hard, surrounded by staring disciples and a wooden sword embedded in stone.<br><br>"Well done," the Sword God said quietly. "You passed the first test — and it wasn't the sword form. Now come. We have much more work to do."</div>
+  <nav class="cp-nav" style="margin:32px 0 16px;display:flex;justify-content:space-between;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;padding:14px 0;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <span><a href="/read/dao-celestial-blade/chapters/2" style="color:var(--gold);text-decoration:none">← Prev</a></span>
+    <span style="color:var(--dim);font-size:0.7rem">3/42</span>
+    <span><a href="/read/dao-celestial-blade/chapters/4" style="color:var(--gold);text-decoration:none">Next →</a></span>
+  </nav>
+</main>
+
+<!-- Bottom Toolbar -->
+<div id="reader-tb" style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,11,16,0.96);border-top:1px solid rgba(255,255,255,0.06);padding:8px 0;padding-bottom:max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(10px);transition:opacity 0.3s,transform 0.3s;opacity:0.9;transform:translateY(0)">
+  <div style="max-width:600px;margin:0 auto;padding:0 12px;display:flex;align-items:center;justify-content:space-between">
+    <button onclick="event.stopPropagation();fvFontDown()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A−</button>
+    <span id="fv-font-val" style="font-size:0.62rem;color:var(--dim);min-width:30px;text-align:center">18</span>
+    <button onclick="event.stopPropagation();fvFontUp()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A+</button>
+    <div style="width:1px;height:20px;background:rgba(255,255,255,0.06)"></div>
+    <button id="fv-theme-btn" onclick="event.stopPropagation();fvToggleTheme()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">🌙</button>
+    <button id="fv-mode-btn" onclick="event.stopPropagation();fvToggleMode()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">📃</button>
+    <button id="fv-bm-btn" onclick="event.stopPropagation();fvToggleBM()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit;opacity:0.5">🏷</button>
+    <button onclick="event.stopPropagation();fvToggleDrawer()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">☰</button>
   </div>
 </div>
 
-<!-- Page Navigation (visible only in page mode) -->
-<div id="reader-page-nav" style="display:none;max-width:720px;margin:0 auto;padding:4px 16px;text-align:center">
-  <span style="display:inline-flex;align-items:center;gap:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
-    <button onclick="prevPage()" id="reader-page-prev" style="padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.72rem;font-family:inherit">◀</button>
-    <span id="reader-page-ofs" style="font-size:0.7rem;color:var(--dim)">1/1</span>
-    <button onclick="nextPage()" id="reader-page-next" style="padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.72rem;font-family:inherit">▶</button>
+<!-- Page Nav -->
+<div id="fv-page-nav" style="display:none;max-width:800px;margin:0 auto;padding:0 16px 8px;text-align:center">
+  <span style="display:inline-flex;align-items:center;gap:16px">
+    <button onclick="event.stopPropagation();fvPrevPage()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">◀ Prev</button>
+    <span id="fv-page-ofs" style="font-size:0.7rem;color:var(--dim)">1/1</span>
+    <button onclick="event.stopPropagation();fvNextPage()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">Next ▶</button>
   </span>
 </div>
 
 <!-- Chapter Drawer -->
-<div id="reader-drawer" style="position:fixed;top:0;right:0;bottom:0;width:300px;max-width:80vw;background:var(--card);z-index:200;transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 24px rgba(0,0,0,0.3);overflow-y:auto">
+<div id="reader-drawer" style="position:fixed;top:0;right:0;bottom:0;width:300px;max-width:80vw;background:var(--card);z-index:400;transform:translateX(100%);transition:transform 0.25s;box-shadow:-4px 0 24px rgba(0,0,0,0.3);overflow-y:auto">
   <div id="reader-ch-list"></div>
 </div>
-<div id="reader-drawer-overlay" onclick="toggleChapterDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:199"></div>
-<script>
-(function(){
-  var d=document.getElementById('reader-drawer');
-  var ov=document.getElementById('reader-drawer-overlay');
-  document.addEventListener('click',function(e){
-    if(e.target.closest('#reader-drawer')||e.target.closest('[onclick*="readerToggleChapter"]'))return;
-    if(d.classList.contains('open')){d.classList.remove('open');ov.style.display='none';}
-  });
-  var obs=new MutationObserver(function(){
-    var isOpen=d.classList.contains('open');
-    d.style.transform=isOpen?'translateX(0)':'translateX(100%)';
-    ov.style.display=isOpen?'block':'none';
-  });
-  obs.observe(d,{attributes:true,attributeFilter:['class']});
-})();
-</script>
+<div id="reader-ov" onclick="fvToggleDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399"></div>
 
-<main class="cp">
-  <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <a href="/read/dao-celestial-blade/">Dao of the Celestial Blade</a> / <span>Chapter 3</span></nav>
-  <div class="cp-hd">
-    <p class="cp-book">📖 <a href="/read/dao-celestial-blade/">Dao of the Celestial Blade</a> by Azure Ink</p>
-    <h1>Chapter 3: First Sword Form</h1>
-    <p style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.68rem;color:var(--dim);margin-top:4px">~2.3k words · Updated 2026-06-21</p>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:16px">
-    <button class="fv-fav-btn" style="font-family:inherit;padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:var(--dim);cursor:pointer;font-size:0.78rem;transition:all 0.2s">🤍 Save</button>
-  </div>
-  <div id="reader-content" class="ch-content">The outer disciple training yard was empty when Lin Feng arrived, still an hour before sunrise. The mist was thicker than usual, swirling around his ankles like ghost-silk. Perfect.<br><br>"Hold out your hand," the Sword God commanded.<br><br>Lin Feng obeyed. Knowledge flooded into his mind — not words, but muscle memory. The exact angle of a wrist. The distribution of weight across the balls of the feet. The precise path a blade must trace through the air to part qi rather than cut flesh.<br><br>"This is the First Form of the Celestial Blade: Dawn Pierces Mist. If you cannot master this, you will never master anything."<br><br>Lin Feng grabbed a wooden practice sword. It was heavier than the ones he usually used — a training weapon for inner disciples, reinforced with spirit iron. Normally, he couldn't even lift it. Today, it felt like a feather.<br><br>He raised the sword. The movement was not his own — his body was being guided by the implanted memory, a ghost's hands on his shoulders. The blade cut upward at a forty-five degree angle, then swept left in a crescent arc.<br><br>"Again. Your right shoulder is too tense."<br><br>He tried again. The sword traced the same path, but this time a faint shiver ran through the blade. It wasn't qi. It wasn't anything Lin Feng recognized. But it was something.<br><br>"Better. That is the secret of the Celestial Blade — you do not project qi outward like other techniques. You channel it inward, compressing it into the blade itself. Every strike contains the force of your entire body, concentrated into a single edge."<br><br>Lin Feng swung again. And again. Time lost meaning. The sun rose, painting the eastern peaks gold. Other disciples trickled into the yard, but he didn't hear their whispers. He was somewhere else entirely — deep inside himself, where the only things that existed were the sword and the voice.<br><br>"Stop."<br><br>Lin Feng froze mid-swing. The wooden sword in his hands was... different. A hairline crack ran from hilt to tip, glowing faintly with silver light.<br><br>"You channeled too much. The spirit iron couldn't handle your output. That is... unexpected."<br><br>The crack widened. The sword was coming apart from the inside. Lin Feng hurled it away. It spun through the air and embedded itself in the stone wall of the training yard, sinking a full foot into solid rock.<br><br>The other disciples stared.<br><br>"Hey! Lin Feng!" Zhao Wei was striding across the yard, his face twisted with confusion. "What trick is this? Did you bribe a talisman master?"<br><br>"I didn't—"<br><br>"Don't lie to me, trash!" Zhao Wei grabbed him by the collar. "I've known you for two years. You couldn't cut a blade of grass without crying. What did you do?"<br><br>The Sword God's voice came as a cold whisper: "Kill him."<br><br>Lin Feng's blood ran cold. "No!"<br><br>"He is an obstacle. A bully. He will never stop unless you make him stop."<br><br>"No!" Lin Feng said aloud, to Zhao Wei, to himself, to the cultivation world that demanded blood for every step forward.<br><br>The Sword God's consciousness pressed against his will like a mountain. But Lin Feng had spent two years being crushed by mountains. He knew how to bend without breaking.<br><br>The pressure released. When the Sword God spoke again, his voice held something new. Respect.<br><br>"Interesting. Perhaps you are not as weak as I thought."<br><br>Zhao Wei, oblivious to the battle that had just taken place inside Lin Feng's head, shoved him backward. "Whatever trick you're using, it won't last. Tricks never do."<br><br>He spat on the ground and walked away.<br><br>Lin Feng stood in the training yard, breathing hard, surrounded by staring disciples and a wooden sword embedded in stone.<br><br>"Well done," the Sword God said quietly. "You passed the first test — and it wasn't the sword form. Now come. We have much more work to do."</div>
-  <nav class="cp-nav">
-    <span><a href="/read/dao-celestial-blade/chapters/2">← Chapter 2</a></span>
-    <span>3 / 42</span>
-    <span><a href="/read/dao-celestial-blade/chapters/4">Chapter 4 →</a></span>
-  </nav>
+<style>
+#reader-mini-hd.on,#reader-tb.on{transform:translateY(0)!important;opacity:1!important}
+#reader-pb.on{top:43px}
+#fv-fav-btn.on{filter:none}
+</style>
   <section id="fv-reviews" class="fv-reviews-section" style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06)">
     <h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Reviews <span id="fv-review-count" style="font-size:0.72rem;color:var(--dim)"></span></h3>
     <div id="fv-avg-rating" style="font-size:1.2rem;color:var(--gold);margin-bottom:12px"></div>

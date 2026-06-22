@@ -246,71 +246,70 @@ a{color:inherit;text-decoration:none}
 </div></header>
 <script>document.body.dataset.bookSlug='dao-celestial-blade';document.body.dataset.chapterNum='9';document.body.dataset.chapterTitle='Sect Tournament Begins';document.body.dataset.totalChapters='42';document.body.dataset.bookTier='free';document.body.dataset.freeChapters='0';document.body.dataset.prevChapter='/read/dao-celestial-blade/chapters/8';document.body.dataset.nextChapter='/read/dao-celestial-blade/chapters/10';</script>
 
-<!-- Reader Toolbar -->
-<div id="reader-toolbar" style="position:sticky;top:48px;z-index:50;background:rgba(10,11,16,0.95);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(10px);padding:8px 0">
-  <div style="max-width:720px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:4px">
-    <div style="display:flex;align-items:center;gap:2px">
-      <button onclick="readerFontDown()" title="Smaller text" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">A−</button>
-      <span id="reader-fs-val" style="font-size:0.65rem;color:var(--dim);min-width:36px;text-align:center">18px</span>
-      <button onclick="readerFontUp()" title="Larger text" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">A+</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:2px">
-      <button id="reader-theme-btn" onclick="readerToggleTheme()" title="Toggle theme" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">🌙</button>
-      <button id="reader-mode-btn" onclick="readerToggleMode()" title="Page / Scroll mode" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">📜</button>
-      <button id="reader-bm-btn" onclick="toggleBookmark()" title="Bookmark" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">🔖</button>
-      <button onclick="readerToggleChapter()" title="Chapter list" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">☰</button>
-    </div>
+<!-- Progress Bar -->
+<div id="reader-pb" style="position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.04);z-index:300">
+  <div id="fv-progress-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;border-radius:0 2px 2px 0"></div>
+</div>
+
+<!-- Mini Header (hidden, tap to show) -->
+<header id="reader-mini-hd" style="position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,11,16,0.96);border-bottom:1px solid rgba(255,255,255,0.06);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(10px);transform:translateY(-100%);transition:transform 0.25s;opacity:0">
+  <a href="/read/dao-celestial-blade/" style="font-size:0.8rem;color:var(--gold);text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,sans-serif">← Dao of the Celestial Blade</a>
+  <span style="font-size:0.7rem;color:var(--dim);font-family:-apple-system,BlinkMacSystemFont,sans-serif">Chapter 9 / 42</span>
+  <button id="fv-fav-btn" style="padding:4px 8px;border:none;background:transparent;font-size:1rem;cursor:pointer">🤍</button>
+</header>
+
+<!-- Toggle Tip -->
+<div id="reader-tip" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;color:rgba(255,255,255,0.2);font-size:2rem;pointer-events:none;opacity:0;transition:opacity 0.6s">👆</div>
+
+<!-- Reader Content -->
+<main style="max-width:800px;margin:0 auto;padding:24px 16px 100px;min-height:100vh;cursor:default" onclick="toggleUI()">
+  <div class="cp-hd" style="margin-bottom:24px">
+    <h1 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px">Chapter 9: Sect Tournament Begins</h1>
+    <p style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim)">~2.1k words · 2026-06-21</p>
+  </div>
+  <div id="reader-content" style="font-size:18px;line-height:1.8;color:var(--text);min-height:60vh"><p style="color:var(--dim);font-style:italic">[Content not yet available for Chapter 9: Sect Tournament Begins]</p>
+<p>The story continues to unfold as Azure Ink builds the world of Dao of the Celestial Blade, taking readers deeper into this xianxia narrative.</p></div>
+  <nav class="cp-nav" style="margin:32px 0 16px;display:flex;justify-content:space-between;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;padding:14px 0;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <span><a href="/read/dao-celestial-blade/chapters/8" style="color:var(--gold);text-decoration:none">← Prev</a></span>
+    <span style="color:var(--dim);font-size:0.7rem">9/42</span>
+    <span><a href="/read/dao-celestial-blade/chapters/10" style="color:var(--gold);text-decoration:none">Next →</a></span>
+  </nav>
+</main>
+
+<!-- Bottom Toolbar -->
+<div id="reader-tb" style="position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,11,16,0.96);border-top:1px solid rgba(255,255,255,0.06);padding:8px 0;padding-bottom:max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(10px);transition:opacity 0.3s,transform 0.3s;opacity:0.9;transform:translateY(0)">
+  <div style="max-width:600px;margin:0 auto;padding:0 12px;display:flex;align-items:center;justify-content:space-between">
+    <button onclick="event.stopPropagation();fvFontDown()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A−</button>
+    <span id="fv-font-val" style="font-size:0.62rem;color:var(--dim);min-width:30px;text-align:center">18</span>
+    <button onclick="event.stopPropagation();fvFontUp()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:0.8rem;font-family:inherit">A+</button>
+    <div style="width:1px;height:20px;background:rgba(255,255,255,0.06)"></div>
+    <button id="fv-theme-btn" onclick="event.stopPropagation();fvToggleTheme()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">🌙</button>
+    <button id="fv-mode-btn" onclick="event.stopPropagation();fvToggleMode()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">📃</button>
+    <button id="fv-bm-btn" onclick="event.stopPropagation();fvToggleBM()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit;opacity:0.5">🏷</button>
+    <button onclick="event.stopPropagation();fvToggleDrawer()" style="padding:8px 10px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-size:1rem;font-family:inherit">☰</button>
   </div>
 </div>
 
-<!-- Page Navigation (visible only in page mode) -->
-<div id="reader-page-nav" style="display:none;max-width:720px;margin:0 auto;padding:4px 16px;text-align:center">
-  <span style="display:inline-flex;align-items:center;gap:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
-    <button onclick="prevPage()" id="reader-page-prev" style="padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.72rem;font-family:inherit">◀</button>
-    <span id="reader-page-ofs" style="font-size:0.7rem;color:var(--dim)">1/1</span>
-    <button onclick="nextPage()" id="reader-page-next" style="padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.72rem;font-family:inherit">▶</button>
+<!-- Page Nav -->
+<div id="fv-page-nav" style="display:none;max-width:800px;margin:0 auto;padding:0 16px 8px;text-align:center">
+  <span style="display:inline-flex;align-items:center;gap:16px">
+    <button onclick="event.stopPropagation();fvPrevPage()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">◀ Prev</button>
+    <span id="fv-page-ofs" style="font-size:0.7rem;color:var(--dim)">1/1</span>
+    <button onclick="event.stopPropagation();fvNextPage()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">Next ▶</button>
   </span>
 </div>
 
 <!-- Chapter Drawer -->
-<div id="reader-drawer" style="position:fixed;top:0;right:0;bottom:0;width:300px;max-width:80vw;background:var(--card);z-index:200;transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 24px rgba(0,0,0,0.3);overflow-y:auto">
+<div id="reader-drawer" style="position:fixed;top:0;right:0;bottom:0;width:300px;max-width:80vw;background:var(--card);z-index:400;transform:translateX(100%);transition:transform 0.25s;box-shadow:-4px 0 24px rgba(0,0,0,0.3);overflow-y:auto">
   <div id="reader-ch-list"></div>
 </div>
-<div id="reader-drawer-overlay" onclick="toggleChapterDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:199"></div>
-<script>
-(function(){
-  var d=document.getElementById('reader-drawer');
-  var ov=document.getElementById('reader-drawer-overlay');
-  document.addEventListener('click',function(e){
-    if(e.target.closest('#reader-drawer')||e.target.closest('[onclick*="readerToggleChapter"]'))return;
-    if(d.classList.contains('open')){d.classList.remove('open');ov.style.display='none';}
-  });
-  var obs=new MutationObserver(function(){
-    var isOpen=d.classList.contains('open');
-    d.style.transform=isOpen?'translateX(0)':'translateX(100%)';
-    ov.style.display=isOpen?'block':'none';
-  });
-  obs.observe(d,{attributes:true,attributeFilter:['class']});
-})();
-</script>
+<div id="reader-ov" onclick="fvToggleDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399"></div>
 
-<main class="cp">
-  <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <a href="/read/dao-celestial-blade/">Dao of the Celestial Blade</a> / <span>Chapter 9</span></nav>
-  <div class="cp-hd">
-    <p class="cp-book">📖 <a href="/read/dao-celestial-blade/">Dao of the Celestial Blade</a> by Azure Ink</p>
-    <h1>Chapter 9: Sect Tournament Begins</h1>
-    <p style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.68rem;color:var(--dim);margin-top:4px">~2.1k words · Updated 2026-06-21</p>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:16px">
-    <button class="fv-fav-btn" style="font-family:inherit;padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:var(--dim);cursor:pointer;font-size:0.78rem;transition:all 0.2s">🤍 Save</button>
-  </div>
-  <div id="reader-content" class="ch-content"><p style="color:var(--dim);font-style:italic">[Content not yet available for Chapter 9: Sect Tournament Begins]</p>
-<p>The story continues to unfold as Azure Ink builds the world of Dao of the Celestial Blade, taking readers deeper into this xianxia narrative.</p></div>
-  <nav class="cp-nav">
-    <span><a href="/read/dao-celestial-blade/chapters/8">← Chapter 8</a></span>
-    <span>9 / 42</span>
-    <span><a href="/read/dao-celestial-blade/chapters/10">Chapter 10 →</a></span>
-  </nav>
+<style>
+#reader-mini-hd.on,#reader-tb.on{transform:translateY(0)!important;opacity:1!important}
+#reader-pb.on{top:43px}
+#fv-fav-btn.on{filter:none}
+</style>
   <section id="fv-reviews" class="fv-reviews-section" style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06)">
     <h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Reviews <span id="fv-review-count" style="font-size:0.72rem;color:var(--dim)"></span></h3>
     <div id="fv-avg-rating" style="font-size:1.2rem;color:var(--gold);margin-bottom:12px"></div>

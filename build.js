@@ -753,7 +753,7 @@ ${BASE_HEADER}
     <h1 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px">Chapter ${ch.number}: ${ch.title}</h1>
     <p style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.65rem;color:var(--dim)">~${(ch.wordCount/1000).toFixed(1)}k words · ${ch.updated}</p>
   </div>
-  <div id="reader-content" style="font-size:${RS.fontSize||18}px;line-height:${RS.lineHeight||1.8};color:var(--rt,var(--text));min-height:60vh">${text}</div>
+  <div id="reader-content" style="font-size:18px;line-height:1.8;color:var(--text);min-height:60vh">${text}</div>
   <nav class="cp-nav" style="margin:32px 0 16px;display:flex;justify-content:space-between;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;padding:14px 0;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)">
     <span>${prev ? `<a href="/read/${book.slug}/chapters/${prev}" style="color:var(--gold);text-decoration:none">← Prev</a>` : '<span style="color:var(--dim)">← Start</span>'}</span>
     <span style="color:var(--dim);font-size:0.7rem">${ch.number}/${chs.length}</span>
