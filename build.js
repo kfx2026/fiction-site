@@ -605,6 +605,7 @@ for (const book of books) {
   const seoTitle = `${book.title} — Read ${book.chapters} Chapters Free | ${genreLabel} Web Novel`;
   const seoDesc = `Read ${book.title} by ${book.author} — a ${genreLabel} web novel with ${book.chapters} chapters, ${(book.wordCount/1000).toFixed(0)}k words. ${book.description.substring(0,120).replace(/"/g,'')}... Read online free on FictionVerse.`;
   const detailHTML = `${BASE_HEAD(seoTitle, seoDesc,
+    `${site.url}/read/${book.slug}/`,
     `<script type="application/ld+json">${JSON.stringify(bookSchema(book))}</script>
 <script type="application/ld+json">${JSON.stringify(bcSchema(book))}</script>`)}
 ${BASE_HEADER}
@@ -645,6 +646,14 @@ ${BASE_FOOTER}`;
   fs.writeFileSync(`${dir}/index.html`, detailHTML);
   console.log(`  read/${book.slug}/index.html`);
 
+  // Load real chapter content from _content.json
+  const contentPath = `data/chapters/${book.slug}_content.json`;
+  let contentMap = {};
+  if (fs.existsSync(contentPath)) {
+    const contentData = JSON.parse(fs.readFileSync(contentPath, 'utf-8'));
+    contentData.forEach(c => { contentMap[c.number] = c.content; });
+  }
+
   // Chapter pages
   for (const ch of chs) {
     const prev = ch.number > 1 ? ch.number - 1 : null;
@@ -665,16 +674,12 @@ ${BASE_FOOTER}`;
       ]
     };
 
-    // Readable content snippet (placeholder for now)
-    const text = `[Content preview for Chapter ${ch.number}: ${ch.title}]
-
-This is the opening of "${ch.title}" — Chapter ${ch.number} of ${book.title} by ${book.author}.
-
-Full chapter content will be available here. This chapter contains approximately ${ch.wordCount.toLocaleString()} words.
-
-The story continues to unfold as ${book.author} builds the world of ${book.title}, taking readers deeper into this ${book.genre} narrative. Each chapter advances the plot, develops characters, and reveals new layers of the story.
-
-Readers can access the first ${book.freeChapters} chapters for free. To unlock the complete novel, a one-time payment is required — no subscription, ever.`;
+    // Use real content from _content.json, fallback to placeholder
+    const rawContent = contentMap[ch.number];
+    const text = rawContent
+      ? rawContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')
+      : `<p style="color:var(--dim);font-style:italic">[Content not yet available for Chapter ${ch.number}: ${ch.title}]</p>
+<p>The story continues to unfold as ${book.author} builds the world of ${book.title}, taking readers deeper into this ${book.genre} narrative.</p>`;
 
     const chapterHTML = `${BASE_HEAD(`Chapter ${ch.number}: ${ch.title} — ${book.title}`,
       snippet, `${site.url}/read/${book.slug}/chapters/${ch.number}`,
