@@ -508,7 +508,7 @@ a{color:inherit;text-decoration:none}
 const BASE_FOOTER = `<footer class="ft" role="contentinfo">
   <div class="ft-grid">
     <div class="ft-brand"><div class="ft-logo">FictionVerse</div><p>Independent publisher of original English web novels. Read free chapters, support indie authors.</p></div>
-    <div class="ft-col"><h4>Discover</h4><a href="/">All Novels</a><a href="/free/">Free Novels</a><a href="/paid/">Paid Novels</a><a href="/bookshelf">Your Shelf</a></div>
+    <div class="ft-col"><h4>Discover</h4><a href="/">All Novels</a><a href="/bookshelf">Your Shelf</a></div>
     <div class="ft-col"><h4>Community</h4><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/author">Become an Author</a></div>
     <div class="ft-col"><h4>About</h4><a href="/about">Our Story</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:${site.email}">Support</a></div>
   </div>
@@ -524,7 +524,7 @@ const BASE_HEADER = `<header class="hd"><div class="hd-in">
     <a href="javascript:history.back()" class="hd-icon-btn" title="Back">←</a>
     <a href="javascript:location.reload()" class="hd-icon-btn" title="Refresh">↻</a>
     <div class="nav-drop"><span class="dd-trigger" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:0.78rem;color:var(--dim);cursor:pointer">Browse</span><div class="dd-menu">
-      <a href="/">All Novels</a><a href="/free/">Free Novels</a><a href="/paid/">Paid Novels</a>
+      <a href="/">All Novels</a>
       ${genreOrder.map(g => `<a href="/genre/${g}/">${genreStats[g].name}</a>`).join('\n')}
     </div></div>
     <a href="/bookshelf">Shelf</a><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/about">About</a>
