@@ -111,6 +111,10 @@ a{color:inherit;text-decoration:none}
 .cp-nav a:hover{color:#fff}
 .cp-nav span{color:var(--dim)}
 .ch-content{font-size:0.88rem;color:var(--dim);line-height:1.85;white-space:pre-line}
+#reader-content p{margin-bottom:0.8em}
+#reader-toolbar button:hover{background:rgba(255,255,255,0.06)!important;color:#fff!important}
+#reader-drawer::-webkit-scrollbar{width:4px}
+#reader-drawer::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
 .picks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
 .pick-card{background:linear-gradient(135deg,var(--card),rgba(232,192,64,0.04));border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;gap:18px;transition:all 0.25s;cursor:pointer}
 .pick-card:hover{border-color:rgba(232,192,64,0.2);transform:translateY(-4px);box-shadow:0 8px 24px rgba(232,192,64,0.08)}
@@ -240,7 +244,56 @@ a{color:inherit;text-decoration:none}
     <a href="/author" class="nav-cta">Publish</a>
   </nav>
 </div></header>
-<script>document.body.dataset.bookSlug='system-crash-reboot';document.body.dataset.chapterNum='16';document.body.dataset.chapterTitle='Server Core';document.body.dataset.bookTier='free';document.body.dataset.freeChapters='0';</script>
+<script>document.body.dataset.bookSlug='system-crash-reboot';document.body.dataset.chapterNum='16';document.body.dataset.chapterTitle='Server Core';document.body.dataset.totalChapters='56';document.body.dataset.bookTier='free';document.body.dataset.freeChapters='0';document.body.dataset.prevChapter='/read/system-crash-reboot/chapters/15';document.body.dataset.nextChapter='/read/system-crash-reboot/chapters/17';</script>
+
+<!-- Reader Toolbar -->
+<div id="reader-toolbar" style="position:sticky;top:48px;z-index:50;background:rgba(10,11,16,0.95);border-bottom:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(10px);padding:8px 0">
+  <div style="max-width:720px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:4px">
+    <div style="display:flex;align-items:center;gap:2px">
+      <button onclick="readerFontDown()" title="Smaller text" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">A−</button>
+      <span id="reader-fs-val" style="font-size:0.65rem;color:var(--dim);min-width:36px;text-align:center">18px</span>
+      <button onclick="readerFontUp()" title="Larger text" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.75rem;font-family:inherit">A+</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:2px">
+      <button id="reader-theme-btn" onclick="readerToggleTheme()" title="Toggle theme" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">🌙</button>
+      <button id="reader-mode-btn" onclick="readerToggleMode()" title="Page / Scroll mode" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">📜</button>
+      <button id="reader-bm-btn" onclick="toggleBookmark()" title="Bookmark" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">🔖</button>
+      <button onclick="readerToggleChapter()" title="Chapter list" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.9rem;font-family:inherit">☰</button>
+    </div>
+  </div>
+</div>
+
+<!-- Page Navigation (visible only in page mode) -->
+<div id="reader-page-nav" style="display:none;max-width:720px;margin:0 auto;padding:4px 16px;text-align:center">
+  <span style="display:inline-flex;align-items:center;gap:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
+    <button onclick="prevPage()" id="reader-page-prev" style="padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.72rem;font-family:inherit">◀</button>
+    <span id="reader-page-ofs" style="font-size:0.7rem;color:var(--dim)">1/1</span>
+    <button onclick="nextPage()" id="reader-page-next" style="padding:4px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--dim);cursor:pointer;font-size:0.72rem;font-family:inherit">▶</button>
+  </span>
+</div>
+
+<!-- Chapter Drawer -->
+<div id="reader-drawer" style="position:fixed;top:0;right:0;bottom:0;width:300px;max-width:80vw;background:var(--card);z-index:200;transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 24px rgba(0,0,0,0.3);overflow-y:auto">
+  <div id="reader-ch-list"></div>
+</div>
+<div id="reader-drawer-overlay" onclick="toggleChapterDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:199"></div>
+<script>
+(function(){
+  var d=document.getElementById('reader-drawer');
+  var ov=document.getElementById('reader-drawer-overlay');
+  document.addEventListener('click',function(e){
+    if(e.target.closest('#reader-drawer')||e.target.closest('[onclick*="readerToggleChapter"]'))return;
+    if(d.classList.contains('open')){d.classList.remove('open');ov.style.display='none';}
+  });
+  var obs=new MutationObserver(function(){
+    var isOpen=d.classList.contains('open');
+    d.style.transform=isOpen?'translateX(0)':'translateX(100%)';
+    ov.style.display=isOpen?'block':'none';
+  });
+  obs.observe(d,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+
 <main class="cp">
   <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <a href="/read/system-crash-reboot/">System Crash: Reboot Protocol</a> / <span>Chapter 16</span></nav>
   <div class="cp-hd">
@@ -251,7 +304,7 @@ a{color:inherit;text-decoration:none}
   <div style="display:flex;gap:8px;margin-bottom:16px">
     <button class="fv-fav-btn" style="font-family:inherit;padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:var(--dim);cursor:pointer;font-size:0.78rem;transition:all 0.2s">🤍 Save</button>
   </div>
-  <div class="ch-content"><p style="color:var(--dim);font-style:italic">[Content not yet available for Chapter 16: Server Core]</p>
+  <div id="reader-content" class="ch-content"><p style="color:var(--dim);font-style:italic">[Content not yet available for Chapter 16: Server Core]</p>
 <p>The story continues to unfold as Zero Day builds the world of System Crash: Reboot Protocol, taking readers deeper into this scifi narrative.</p></div>
   <nav class="cp-nav">
     <span><a href="/read/system-crash-reboot/chapters/15">← Chapter 15</a></span>
