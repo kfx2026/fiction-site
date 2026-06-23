@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://fiction.aichatmail.one/</loc><lastmod>2026-06-22</lastmod><priority>1.0</priority></url>
-  <url><loc>https://fiction.aichatmail.one/about</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
-  <url><loc>https://fiction.aichatmail.one/free/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fiction.aichatmail.one/paid/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fiction.aichatmail.one/bookshelf</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
-  <url><loc>https://fiction.aichatmail.one/community</loc><lastmod>2026-06-22</lastmod><priority>0.5</priority></url>
-  <url><loc>https://fiction.aichatmail.one/unpublished</loc><lastmod>2026-06-22</lastmod><priority>0.4</priority></url>
-  <url><loc>https://fiction.aichatmail.one/terms</loc><lastmod>2026-06-22</lastmod><priority>0.3</priority></url>
-  <url><loc>https://fiction.aichatmail.one/privacy</loc><lastmod>2026-06-22</lastmod><priority>0.3</priority></url>
-  <url><loc>https://fiction.aichatmail.one/discover/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority>
+  <url><loc>https://fiction.aichatmail.one/</loc><lastmod>2026-06-23</lastmod><priority>1.0</priority></url>
+  <url><loc>https://fiction.aichatmail.one/about</loc><lastmod>2026-06-23</lastmod><priority>0.5</priority></url>
+  <url><loc>https://fiction.aichatmail.one/free/</loc><lastmod>2026-06-23</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fiction.aichatmail.one/paid/</loc><lastmod>2026-06-23</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fiction.aichatmail.one/bookshelf</loc><lastmod>2026-06-23</lastmod><priority>0.5</priority></url>
+  <url><loc>https://fiction.aichatmail.one/community</loc><lastmod>2026-06-23</lastmod><priority>0.5</priority></url>
+  <url><loc>https://fiction.aichatmail.one/unpublished</loc><lastmod>2026-06-23</lastmod><priority>0.4</priority></url>
+  <url><loc>https://fiction.aichatmail.one/terms</loc><lastmod>2026-06-23</lastmod><priority>0.3</priority></url>
+  <url><loc>https://fiction.aichatmail.one/privacy</loc><lastmod>2026-06-23</lastmod><priority>0.3</priority></url>
+  <url><loc>https://fiction.aichatmail.one/discover/</loc><lastmod>2026-06-23</lastmod><priority>0.8</priority>
     <image:image><image:loc>https://fiction.aichatmail.one/images/covers/dao-celestial-blade.png</image:loc></image:image></url>
-  <url><loc>https://fiction.aichatmail.one/genre/xianxia/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fiction.aichatmail.one/genre/urban/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fiction.aichatmail.one/genre/scifi/</loc><lastmod>2026-06-22</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fiction.aichatmail.one/genre/xianxia/</loc><lastmod>2026-06-23</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fiction.aichatmail.one/genre/urban/</loc><lastmod>2026-06-23</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fiction.aichatmail.one/genre/scifi/</loc><lastmod>2026-06-23</lastmod><priority>0.7</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/dao-celestial-blade/</loc><lastmod>2026-06-21</lastmod><priority>0.8</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/dao-celestial-blade/chapters/1</loc><lastmod>2026-06-21</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/dao-celestial-blade/chapters/2</loc><lastmod>2026-06-21</lastmod><priority>0.6</priority></url>
@@ -158,13 +158,6 @@
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/2</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/4</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/11</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/19</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/20</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/22</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/26</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/29</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/60</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/61</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/12</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/13</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/14</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
@@ -172,8 +165,11 @@
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/16</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/17</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/18</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/19</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/20</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/19</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/20</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/22</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/26</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
+  <url><loc>https://fiction.aichatmail.one/read/abyss-rancher/chapters/29</loc><lastmod>undefined</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/</loc><lastmod>2026-06-22</lastmod><priority>0.8</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/1</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>
   <url><loc>https://fiction.aichatmail.one/read/system-architect-dao/chapters/2</loc><lastmod>2026-06-22</lastmod><priority>0.6</priority></url>

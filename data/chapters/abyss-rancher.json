@@ -52,6 +52,48 @@
     "bookSlug": "abyss-rancher"
   },
   {
+    "number": 12,
+    "title": "Chapter 12",
+    "wordCount": 1461,
+    "updated": "2026-06-22"
+  },
+  {
+    "number": 13,
+    "title": "Chapter 13",
+    "wordCount": 1866,
+    "updated": "2026-06-22"
+  },
+  {
+    "number": 14,
+    "title": "Chapter 14",
+    "wordCount": 1493,
+    "updated": "2026-06-22"
+  },
+  {
+    "number": 15,
+    "title": "Chapter 15",
+    "wordCount": 1668,
+    "updated": "2026-06-22"
+  },
+  {
+    "number": 16,
+    "title": "The Vine That Remembers",
+    "wordCount": 1817,
+    "updated": "2026-06-22"
+  },
+  {
+    "number": 17,
+    "title": "Chapter 17",
+    "wordCount": 1730,
+    "updated": "2026-06-22"
+  },
+  {
+    "number": 18,
+    "title": "Chapter 18",
+    "wordCount": 1819,
+    "updated": "2026-06-22"
+  },
+  {
     "id": 13,
     "number": 19,
     "title": "Chapter 19: Three Days in the Dark",
@@ -115,85 +157,5 @@
     "publish_status": "published",
     "wordCount": 3328,
     "bookSlug": "abyss-rancher"
-  },
-  {
-    "id": 18,
-    "number": 60,
-    "title": "ISO schedule test",
-    "content": "Testing ISO 8601 format scheduled_at.",
-    "scheduled_at": null,
-    "published": 0,
-    "created_at": "2026-06-21 16:59:23",
-    "updated_at": "2026-06-21 16:59:23",
-    "publish_status": "published",
-    "wordCount": 5,
-    "bookSlug": "abyss-rancher"
-  },
-  {
-    "id": 19,
-    "number": 61,
-    "title": "TS schedule test",
-    "content": "Testing timestamp scheduled_at.",
-    "scheduled_at": null,
-    "published": 0,
-    "created_at": "2026-06-21 16:59:31",
-    "updated_at": "2026-06-21 16:59:31",
-    "publish_status": "published",
-    "wordCount": 3,
-    "bookSlug": "abyss-rancher"
-  },
-  {
-    "number": 12,
-    "title": "Chapter 12",
-    "wordCount": 1461,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 13,
-    "title": "Chapter 13",
-    "wordCount": 1866,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 14,
-    "title": "Chapter 14",
-    "wordCount": 1493,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 15,
-    "title": "Chapter 15",
-    "wordCount": 1668,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 16,
-    "title": "The Vine That Remembers",
-    "wordCount": 1817,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 17,
-    "title": "Chapter 17",
-    "wordCount": 1730,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 18,
-    "title": "Chapter 18",
-    "wordCount": 1819,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 19,
-    "title": "The Price of Growth",
-    "wordCount": 1907,
-    "updated": "2026-06-22"
-  },
-  {
-    "number": 20,
-    "title": "The Weight of a God's Secret",
-    "wordCount": 1815,
-    "updated": "2026-06-22"
   }
 ]

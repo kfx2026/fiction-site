@@ -350,9 +350,22 @@ a{color:inherit;text-decoration:none}
   </nav>
 </div></header>
 <section class="hero-new" style="min-height:auto;padding:40px 0"><div class="hero-grid" style="grid-template-columns:1fr;text-align:center"><div class="hero-text" style="max-width:100%"><h1>Sci-Fi</h1><p class="hero-sub" style="max-width:100%;text-align:center">Futuristic technology, space exploration, digital realities · 2 novels</p></div></div></section>
-<main class="ct">
+<main class="ct" data-genre="scifi">
   <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <span>Sci-Fi</span></nav>
-  <div class="grid"><article class="bk anim-up" data-slug="system-crash-reboot" data-genre="scifi" data-tier="free" data-title="System Crash: Reboot Protocol" data-author="Zero Day" data-status="ongoing" data-words="130505">
+  <div class="tb">
+    <span class="tb-count" id="genreCount">2 novels</span>
+    <select class="tb-sort" id="genreSort" onchange="sortGenre()">
+      <option value="rating">⭐ Top Rated</option>
+      <option value="chapters">📖 Most Chapters</option>
+      <option value="recent">🔥 Recently Updated</option>
+      <option value="words">📚 Longest</option>
+    </select>
+  </div>
+  <div class="browse-filters" style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px"><button class="qf-chip active" onclick="filterBySubGenre('all')">All (2)</button><button class="qf-chip" onclick="filterBySubGenre('LitRPG')">LitRPG (2)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Sci-Fi')">Sci-Fi (1)</button>
+<button class="qf-chip" onclick="filterBySubGenre('System Apocalypse')">System Apocalypse (1)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Wuxia')">Wuxia (1)</button></div>
+  <div class="grid" id="genreGrid"><article class="bk anim-up" data-slug="system-crash-reboot" data-genre="scifi" data-tier="free" data-title="System Crash: Reboot Protocol" data-author="Zero Day" data-status="ongoing" data-words="130505">
   <a href="/read/system-crash-reboot/" class="bk-cv"><img src="/images/covers/system-crash-reboot.png" alt="System Crash Reboot Protocol novel cover — a VR headset glowing with corrupted code in a dark room" loading="lazy"><span class="bk-tier free">FREE</span><div class="bk-progress"><div class="prog-bar" style="width:100%"></div></div></a>
   <div class="bk-bd">
     <div class="bk-genres"><span class="bk-genre g-scifi">Sci-Fi · LitRPG</span></div>
@@ -362,7 +375,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.9</span>
       <span>56 ch · 131k words</span>
     </div>
-    <div class="bk-stats"><span>👁 857 reads</span><span>📚 94 shelves</span></div>
+    <div class="bk-stats"><span>👁 1061 reads</span><span>📚 61 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="infinite-earth-five-elements" data-genre="scifi" data-tier="free" data-title="Infinite Earth: The Five Element Lord" data-author="Zero Day" data-status="ongoing" data-words="35354">
@@ -375,10 +388,71 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.5</span>
       <span>20 ch · 35k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1108 reads</span><span>📚 99 shelves</span></div>
+    <div class="bk-stats"><span>👁 1577 reads</span><span>📚 44 shelves</span></div>
   </div>
 </article></div>
+  
 </main>
+<script>
+(function(){
+  var allCards = Array.from(document.querySelectorAll('#genreGrid .bk'));
+  var pageSize = 20;
+  var currentPage = 1;
+  var activeSubGenre = 'all';
+  var sortBy = 'rating';
+  function applyFilters(){
+    var filtered = allCards.filter(function(card){
+      if(activeSubGenre==='all') return true;
+      var genres = card.dataset.genre || '';
+      return genres.indexOf(activeSubGenre)>=0;
+    });
+    // Sort
+    filtered.sort(function(a,b){
+      if(sortBy==='rating') return parseFloat(b.querySelector('.bk-rating')?.textContent||0) - parseFloat(a.querySelector('.bk-rating')?.textContent||0);
+      if(sortBy==='chapters'){var ca=parseInt((a.querySelector('.bk-meta span:last-child')?.textContent||'').match(/(\d+)\s*ch/)?.[1]||0);var cb=parseInt((b.querySelector('.bk-meta span:last-child')?.textContent||'').match(/(\d+)\s*ch/)?.[1]||0);return cb-ca;}
+      if(sortBy==='words') return (parseInt(b.dataset.words)||0) - (parseInt(a.dataset.words)||0);
+      if(sortBy==='recent') return 0; // static pages, preserve order
+      return 0;
+    });
+    var totalPages = Math.ceil(filtered.length/pageSize);
+    var start = (currentPage-1)*pageSize;
+    var end = start+pageSize;
+    allCards.forEach(function(c){c.style.display='none';});
+    filtered.slice(start,end).forEach(function(c){c.style.display='';});
+    var grid = document.getElementById('genreGrid');
+    // Reorder DOM
+    var visible = filtered.slice(start,end).map(function(c){return c;});
+    var rest = filtered.slice(end).concat(filtered.slice(0,start)).concat(allCards.filter(function(c){return filtered.indexOf(c)<0;}));
+    visible.forEach(function(c){grid.appendChild(c);});
+    // Update count
+    var countEl = document.getElementById('genreCount');
+    if(countEl) countEl.textContent = filtered.length+' of 2 novels';
+    // Update pagination
+    document.getElementById('pgInfo').textContent = 'Page '+currentPage+' of '+totalPages;
+    document.getElementById('pgPrev').disabled = currentPage<=1;
+    document.getElementById('pgNext').disabled = currentPage>=totalPages;
+    var nums = document.querySelectorAll('#pgNums .pg-num');
+    nums.forEach(function(n,i){n.classList.toggle('active',i+1===currentPage);});
+    // Show/hide pagination
+    var pgDiv = document.getElementById('genrePagination');
+    if(pgDiv) pgDiv.style.display = totalPages<=1?'none':'';
+  }
+  window.goPage = function(dir){currentPage+=dir;applyFilters();window.scrollTo({top:0,behavior:'smooth'});};
+  window.goToPage = function(p){currentPage=p;applyFilters();window.scrollTo({top:0,behavior:'smooth'});};
+  window.filterBySubGenre = function(sg){
+    activeSubGenre=sg;
+    currentPage=1;
+    document.querySelectorAll('.qf-chip').forEach(function(c){c.classList.toggle('active',c.textContent.trim().startsWith(sg==='all'?'All':sg));});
+    applyFilters();
+  };
+  window.sortGenre = function(){
+    sortBy = document.getElementById('genreSort').value;
+    currentPage = 1;
+    applyFilters();
+  };
+  applyFilters();
+})();
+</script>
 <footer class="ft" role="contentinfo">
   <div class="ft-grid">
     <div class="ft-brand"><div class="ft-logo">FictionVerse</div><p>Independent publisher of original English web novels. Read free chapters, support indie authors.</p></div>
@@ -386,7 +460,7 @@ a{color:inherit;text-decoration:none}
     <div class="ft-col"><h4>Community</h4><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/author">Become an Author</a></div>
     <div class="ft-col"><h4>About</h4><a href="/about">Our Story</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:support@fiction.aichatmail.one">Support</a></div>
   </div>
-  <div class="ft-bottom"><span>© 2026 FictionVerse Publishing. Original fiction, independently published.</span><div class="ft-social"><a href="#" title="Twitter" aria-label="Twitter">𝕏</a><a href="#" title="Discord" aria-label="Discord">💬</a></div></div>
+  <div class="ft-bottom"><span>© 2026 FictionVerse Publishing. Original fiction, independently published.</span><div class="ft-social"><a href="/community" title="Community" aria-label="Community">💬</a></div></div>
 </footer>
 <script src="/app.js"></script>
 <script>window._FV_BOOK_COUNT=35;</script>

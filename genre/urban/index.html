@@ -350,9 +350,24 @@ a{color:inherit;text-decoration:none}
   </nav>
 </div></header>
 <section class="hero-new" style="min-height:auto;padding:40px 0"><div class="hero-grid" style="grid-template-columns:1fr;text-align:center"><div class="hero-text" style="max-width:100%"><h1>Urban Fantasy</h1><p class="hero-sub" style="max-width:100%;text-align:center">Magic, supernatural forces, hidden worlds in modern cities · 10 novels</p></div></div></section>
-<main class="ct">
+<main class="ct" data-genre="urban">
   <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <span>Urban Fantasy</span></nav>
-  <div class="grid"><article class="bk anim-up" data-slug="painted-skin-retold" data-genre="urban" data-tier="free" data-title="Painted Skin: A Modern Retelling" data-author="Mei Lin" data-status="ongoing" data-words="31795">
+  <div class="tb">
+    <span class="tb-count" id="genreCount">10 novels</span>
+    <select class="tb-sort" id="genreSort" onchange="sortGenre()">
+      <option value="rating">⭐ Top Rated</option>
+      <option value="chapters">📖 Most Chapters</option>
+      <option value="recent">🔥 Recently Updated</option>
+      <option value="words">📚 Longest</option>
+    </select>
+  </div>
+  <div class="browse-filters" style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px"><button class="qf-chip active" onclick="filterBySubGenre('all')">All (10)</button><button class="qf-chip" onclick="filterBySubGenre('Urban Fantasy')">Urban Fantasy (8)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Supernatural')">Supernatural (2)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Werewolf')">Werewolf (2)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Romance')">Romance (2)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Urban')">Urban (1)</button>
+<button class="qf-chip" onclick="filterBySubGenre('Alchemy')">Alchemy (1)</button></div>
+  <div class="grid" id="genreGrid"><article class="bk anim-up" data-slug="painted-skin-retold" data-genre="urban" data-tier="free" data-title="Painted Skin: A Modern Retelling" data-author="Mei Lin" data-status="ongoing" data-words="31795">
   <a href="/read/painted-skin-retold/" class="bk-cv"><img src="/images/covers/dao-celestial-blade.png" alt="Painted Skin: A Modern Retelling novel cover" loading="lazy"><span class="bk-tier free">FREE</span><div class="bk-progress"><div class="prog-bar" style="width:100%"></div></div></a>
   <div class="bk-bd">
     <div class="bk-genres"><span class="bk-genre g-urban">Urban Fantasy · Horror · Liaozhai Adaptation</span></div>
@@ -362,7 +377,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.8</span>
       <span>20 ch · 32k words</span>
     </div>
-    <div class="bk-stats"><span>👁 658 reads</span><span>📚 82 shelves</span></div>
+    <div class="bk-stats"><span>👁 654 reads</span><span>📚 37 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="serpent-kiss-modern" data-genre="urban" data-tier="free" data-title="Serpent's Kiss" data-author="Xu Xian" data-status="ongoing" data-words="36212">
@@ -375,7 +390,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 36k words</span>
     </div>
-    <div class="bk-stats"><span>👁 736 reads</span><span>📚 66 shelves</span></div>
+    <div class="bk-stats"><span>👁 718 reads</span><span>📚 35 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="gods-gig-economy" data-genre="urban" data-tier="free" data-title="Gods of the Gig Economy" data-author="Wang Cai" data-status="ongoing" data-words="8287">
@@ -388,7 +403,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.7</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1189 reads</span><span>📚 83 shelves</span></div>
+    <div class="bk-stats"><span>👁 1444 reads</span><span>📚 64 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="last-oracle-shanghai" data-genre="urban" data-tier="free" data-title="The Last Oracle of Shanghai" data-author="Midnight Quill" data-status="ongoing" data-words="88148">
@@ -401,7 +416,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>38 ch · 88k words</span>
     </div>
-    <div class="bk-stats"><span>👁 808 reads</span><span>📚 72 shelves</span></div>
+    <div class="bk-stats"><span>👁 1128 reads</span><span>📚 83 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="demon-kitchen" data-genre="urban" data-tier="free" data-title="The Demon Kitchen" data-author="Shi Fu" data-status="ongoing" data-words="9011">
@@ -414,7 +429,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★½ 4.6</span>
       <span>5 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1470 reads</span><span>📚 98 shelves</span></div>
+    <div class="bk-stats"><span>👁 1269 reads</span><span>📚 87 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="silver-fang-academy" data-genre="urban" data-tier="free" data-title="Silver Fang Academy" data-author="Luna Grey" data-status="ongoing" data-words="29636">
@@ -427,7 +442,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 30k words</span>
     </div>
-    <div class="bk-stats"><span>👁 604 reads</span><span>📚 24 shelves</span></div>
+    <div class="bk-stats"><span>👁 1233 reads</span><span>📚 96 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="samsara-app" data-genre="urban" data-tier="free" data-title="The Samsara App" data-author="Liu Xing" data-status="ongoing" data-words="7597">
@@ -440,7 +455,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.4</span>
       <span>20 ch · 8k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1346 reads</span><span>📚 64 shelves</span></div>
+    <div class="bk-stats"><span>👁 904 reads</span><span>📚 92 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="last-alchemist-chengdu" data-genre="urban" data-tier="free" data-title="The Last Alchemist of Chengdu" data-author="Midnight Quill" data-status="ongoing" data-words="34017">
@@ -453,7 +468,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 34k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1650 reads</span><span>📚 84 shelves</span></div>
+    <div class="bk-stats"><span>👁 1634 reads</span><span>📚 65 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="blood-moon-rising" data-genre="urban" data-tier="free" data-title="Blood Moon Rising: The Wolf King's Awakening" data-author="Fenrir Shadow" data-status="ongoing" data-words="33372">
@@ -466,7 +481,7 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.3</span>
       <span>20 ch · 33k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1596 reads</span><span>📚 58 shelves</span></div>
+    <div class="bk-stats"><span>👁 1422 reads</span><span>📚 85 shelves</span></div>
   </div>
 </article>
 <article class="bk anim-up" data-slug="spirit-taxi" data-genre="urban" data-tier="free" data-title="Spirit Taxi" data-author="Chen Mo" data-status="ongoing" data-words="8839">
@@ -479,10 +494,71 @@ a{color:inherit;text-decoration:none}
       <span class="bk-rating">★★★★ 4.2</span>
       <span>20 ch · 9k words</span>
     </div>
-    <div class="bk-stats"><span>👁 1113 reads</span><span>📚 26 shelves</span></div>
+    <div class="bk-stats"><span>👁 905 reads</span><span>📚 62 shelves</span></div>
   </div>
 </article></div>
+  
 </main>
+<script>
+(function(){
+  var allCards = Array.from(document.querySelectorAll('#genreGrid .bk'));
+  var pageSize = 20;
+  var currentPage = 1;
+  var activeSubGenre = 'all';
+  var sortBy = 'rating';
+  function applyFilters(){
+    var filtered = allCards.filter(function(card){
+      if(activeSubGenre==='all') return true;
+      var genres = card.dataset.genre || '';
+      return genres.indexOf(activeSubGenre)>=0;
+    });
+    // Sort
+    filtered.sort(function(a,b){
+      if(sortBy==='rating') return parseFloat(b.querySelector('.bk-rating')?.textContent||0) - parseFloat(a.querySelector('.bk-rating')?.textContent||0);
+      if(sortBy==='chapters'){var ca=parseInt((a.querySelector('.bk-meta span:last-child')?.textContent||'').match(/(\d+)\s*ch/)?.[1]||0);var cb=parseInt((b.querySelector('.bk-meta span:last-child')?.textContent||'').match(/(\d+)\s*ch/)?.[1]||0);return cb-ca;}
+      if(sortBy==='words') return (parseInt(b.dataset.words)||0) - (parseInt(a.dataset.words)||0);
+      if(sortBy==='recent') return 0; // static pages, preserve order
+      return 0;
+    });
+    var totalPages = Math.ceil(filtered.length/pageSize);
+    var start = (currentPage-1)*pageSize;
+    var end = start+pageSize;
+    allCards.forEach(function(c){c.style.display='none';});
+    filtered.slice(start,end).forEach(function(c){c.style.display='';});
+    var grid = document.getElementById('genreGrid');
+    // Reorder DOM
+    var visible = filtered.slice(start,end).map(function(c){return c;});
+    var rest = filtered.slice(end).concat(filtered.slice(0,start)).concat(allCards.filter(function(c){return filtered.indexOf(c)<0;}));
+    visible.forEach(function(c){grid.appendChild(c);});
+    // Update count
+    var countEl = document.getElementById('genreCount');
+    if(countEl) countEl.textContent = filtered.length+' of 10 novels';
+    // Update pagination
+    document.getElementById('pgInfo').textContent = 'Page '+currentPage+' of '+totalPages;
+    document.getElementById('pgPrev').disabled = currentPage<=1;
+    document.getElementById('pgNext').disabled = currentPage>=totalPages;
+    var nums = document.querySelectorAll('#pgNums .pg-num');
+    nums.forEach(function(n,i){n.classList.toggle('active',i+1===currentPage);});
+    // Show/hide pagination
+    var pgDiv = document.getElementById('genrePagination');
+    if(pgDiv) pgDiv.style.display = totalPages<=1?'none':'';
+  }
+  window.goPage = function(dir){currentPage+=dir;applyFilters();window.scrollTo({top:0,behavior:'smooth'});};
+  window.goToPage = function(p){currentPage=p;applyFilters();window.scrollTo({top:0,behavior:'smooth'});};
+  window.filterBySubGenre = function(sg){
+    activeSubGenre=sg;
+    currentPage=1;
+    document.querySelectorAll('.qf-chip').forEach(function(c){c.classList.toggle('active',c.textContent.trim().startsWith(sg==='all'?'All':sg));});
+    applyFilters();
+  };
+  window.sortGenre = function(){
+    sortBy = document.getElementById('genreSort').value;
+    currentPage = 1;
+    applyFilters();
+  };
+  applyFilters();
+})();
+</script>
 <footer class="ft" role="contentinfo">
   <div class="ft-grid">
     <div class="ft-brand"><div class="ft-logo">FictionVerse</div><p>Independent publisher of original English web novels. Read free chapters, support indie authors.</p></div>
@@ -490,7 +566,7 @@ a{color:inherit;text-decoration:none}
     <div class="ft-col"><h4>Community</h4><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/author">Become an Author</a></div>
     <div class="ft-col"><h4>About</h4><a href="/about">Our Story</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:support@fiction.aichatmail.one">Support</a></div>
   </div>
-  <div class="ft-bottom"><span>© 2026 FictionVerse Publishing. Original fiction, independently published.</span><div class="ft-social"><a href="#" title="Twitter" aria-label="Twitter">𝕏</a><a href="#" title="Discord" aria-label="Discord">💬</a></div></div>
+  <div class="ft-bottom"><span>© 2026 FictionVerse Publishing. Original fiction, independently published.</span><div class="ft-social"><a href="/community" title="Community" aria-label="Community">💬</a></div></div>
 </footer>
 <script src="/app.js"></script>
 <script>window._FV_BOOK_COUNT=35;</script>

@@ -520,7 +520,7 @@ const BASE_FOOTER = `<footer class="ft" role="contentinfo">
     <div class="ft-col"><h4>Community</h4><a href="/community">Forum</a><a href="/unpublished">Unpublished</a><a href="/author">Become an Author</a></div>
     <div class="ft-col"><h4>About</h4><a href="/about">Our Story</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="mailto:${site.email}">Support</a></div>
   </div>
-  <div class="ft-bottom"><span>© 2026 ${site.company}. Original fiction, independently published.</span><div class="ft-social"><a href="#" title="Twitter" aria-label="Twitter">𝕏</a><a href="#" title="Discord" aria-label="Discord">💬</a></div></div>
+  <div class="ft-bottom"><span>© 2026 ${site.company}. Original fiction, independently published.</span><div class="ft-social"><a href="/community" title="Community" aria-label="Community">💬</a></div></div>
 </footer>
 <script src="/app.js"></script>
 <script>window._FV_BOOK_COUNT=${books.length};</script>
@@ -1375,6 +1375,37 @@ for (const g of genreOrder) {
 
   const sortedGBooks = [...stat.books].sort((a, b) => b.rating - a.rating);
   const gCards = sortedGBooks.map(bookCard).join('\n');
+  const genrePageSize = 20;
+  const genreTotalPages = Math.ceil(sortedGBooks.length / genrePageSize);
+
+  // Sub-genre chips for this genre's books
+  const subGenres = {};
+  for (const bk of stat.books) {
+    for (const sg of (bk.genres || [bk.genre])) {
+      if (sg !== g) {
+        subGenres[sg] = (subGenres[sg] || 0) + 1;
+      }
+    }
+  }
+  const subGenreChips = Object.entries(subGenres).sort((a,b)=>b[1]-a[1]).slice(0,6)
+    .map(([sg, cnt]) => `<button class="qf-chip" onclick="filterBySubGenre('${sg}')">${GENRE_TAXONOMY[sg]?.name || sg} (${cnt})</button>`).join('\n');
+  const hasSubGenres = subGenreChips.length > 0;
+
+  // Pagination HTML
+  const genPagination = () => {
+    let pg = '';
+    if (genreTotalPages <= 1) return pg;
+    pg += `<div class="pagination" id="genrePagination"><div class="pg-inner">`;
+    pg += `<button class="pg-btn" id="pgPrev" onclick="goPage(-1)" disabled>← Previous</button>`;
+    pg += `<span class="pg-info" id="pgInfo">Page 1 of ${genreTotalPages}</span>`;
+    pg += `<button class="pg-btn" id="pgNext" onclick="goPage(1)" ${genreTotalPages <= 1 ? 'disabled' : ''}>Next →</button>`;
+    pg += `</div><div class="pg-nums" id="pgNums">`;
+    for (let p = 1; p <= genreTotalPages; p++) {
+      pg += `<button class="pg-num${p===1?' active':''}" onclick="goToPage(${p})">${p}</button>`;
+    }
+    pg += `</div></div>`;
+    return pg;
+  };
 
   const gSchema = {
     "@context": "https://schema.org", "@type": "CollectionPage",
@@ -1398,10 +1429,81 @@ for (const g of genreOrder) {
 <script type="application/ld+json">${JSON.stringify(gBC)}</script>`)}
 ${BASE_HEADER}
 <section class="hero-new" style="min-height:auto;padding:40px 0"><div class="hero-grid" style="grid-template-columns:1fr;text-align:center"><div class="hero-text" style="max-width:100%"><h1>${stat.name}</h1><p class="hero-sub" style="max-width:100%;text-align:center">${stat.desc} · ${stat.books.length} novel${stat.books.length!==1?'s':''}</p></div></div></section>
-<main class="ct">
+<main class="ct" data-genre="${g}">
   <nav aria-label="Breadcrumb" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.72rem;color:var(--dim);padding:16px 0">/ <a href="/">Library</a> / <span>${stat.name}</span></nav>
-  <div class="grid">${gCards}</div>
+  <div class="tb">
+    <span class="tb-count" id="genreCount">${sortedGBooks.length} novel${sortedGBooks.length!==1?'s':''}</span>
+    <select class="tb-sort" id="genreSort" onchange="sortGenre()">
+      <option value="rating">⭐ Top Rated</option>
+      <option value="chapters">📖 Most Chapters</option>
+      <option value="recent">🔥 Recently Updated</option>
+      <option value="words">📚 Longest</option>
+    </select>
+  </div>
+  ${hasSubGenres ? `<div class="browse-filters" style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px"><button class="qf-chip active" onclick="filterBySubGenre('all')">All (${stat.books.length})</button>${subGenreChips}</div>` : ''}
+  <div class="grid" id="genreGrid">${gCards}</div>
+  ${genPagination()}
 </main>
+<script>
+(function(){
+  var allCards = Array.from(document.querySelectorAll('#genreGrid .bk'));
+  var pageSize = ${genrePageSize};
+  var currentPage = 1;
+  var activeSubGenre = 'all';
+  var sortBy = 'rating';
+  function applyFilters(){
+    var filtered = allCards.filter(function(card){
+      if(activeSubGenre==='all') return true;
+      var genres = card.dataset.genre || '';
+      return genres.indexOf(activeSubGenre)>=0;
+    });
+    // Sort
+    filtered.sort(function(a,b){
+      if(sortBy==='rating') return parseFloat(b.querySelector('.bk-rating')?.textContent||0) - parseFloat(a.querySelector('.bk-rating')?.textContent||0);
+      if(sortBy==='chapters'){var ca=parseInt((a.querySelector('.bk-meta span:last-child')?.textContent||'').match(/(\\d+)\\s*ch/)?.[1]||0);var cb=parseInt((b.querySelector('.bk-meta span:last-child')?.textContent||'').match(/(\\d+)\\s*ch/)?.[1]||0);return cb-ca;}
+      if(sortBy==='words') return (parseInt(b.dataset.words)||0) - (parseInt(a.dataset.words)||0);
+      if(sortBy==='recent') return 0; // static pages, preserve order
+      return 0;
+    });
+    var totalPages = Math.ceil(filtered.length/pageSize);
+    var start = (currentPage-1)*pageSize;
+    var end = start+pageSize;
+    allCards.forEach(function(c){c.style.display='none';});
+    filtered.slice(start,end).forEach(function(c){c.style.display='';});
+    var grid = document.getElementById('genreGrid');
+    // Reorder DOM
+    var visible = filtered.slice(start,end).map(function(c){return c;});
+    var rest = filtered.slice(end).concat(filtered.slice(0,start)).concat(allCards.filter(function(c){return filtered.indexOf(c)<0;}));
+    visible.forEach(function(c){grid.appendChild(c);});
+    // Update count
+    var countEl = document.getElementById('genreCount');
+    if(countEl) countEl.textContent = filtered.length+' of ${sortedGBooks.length} novels';
+    // Update pagination
+    document.getElementById('pgInfo').textContent = 'Page '+currentPage+' of '+totalPages;
+    document.getElementById('pgPrev').disabled = currentPage<=1;
+    document.getElementById('pgNext').disabled = currentPage>=totalPages;
+    var nums = document.querySelectorAll('#pgNums .pg-num');
+    nums.forEach(function(n,i){n.classList.toggle('active',i+1===currentPage);});
+    // Show/hide pagination
+    var pgDiv = document.getElementById('genrePagination');
+    if(pgDiv) pgDiv.style.display = totalPages<=1?'none':'';
+  }
+  window.goPage = function(dir){currentPage+=dir;applyFilters();window.scrollTo({top:0,behavior:'smooth'});};
+  window.goToPage = function(p){currentPage=p;applyFilters();window.scrollTo({top:0,behavior:'smooth'});};
+  window.filterBySubGenre = function(sg){
+    activeSubGenre=sg;
+    currentPage=1;
+    document.querySelectorAll('.qf-chip').forEach(function(c){c.classList.toggle('active',c.textContent.trim().startsWith(sg==='all'?'All':sg));});
+    applyFilters();
+  };
+  window.sortGenre = function(){
+    sortBy = document.getElementById('genreSort').value;
+    currentPage = 1;
+    applyFilters();
+  };
+  applyFilters();
+})();
+</script>
 ${BASE_FOOTER}`;
   fs.writeFileSync(`${dir}/index.html`, genreHTML);
   console.log(`  genre/${g}/index.html (${stat.books.length} books)`);
