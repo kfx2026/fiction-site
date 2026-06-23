@@ -477,6 +477,33 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 </main>
+
+  <section id="fv-reviews" class="fv-reviews-section" style="max-width:800px;margin:0 auto;margin-top:32px;padding:24px 16px 48px;border-top:1px solid rgba(255,255,255,0.06)">
+    <h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Reviews <span id="fv-review-count" style="font-size:0.72rem;color:var(--dim)"></span></h3>
+    <div id="fv-avg-rating" style="font-size:1.2rem;color:var(--gold);margin-bottom:12px"></div>
+    <div id="fv-review-list" style="margin-bottom:16px"></div>
+    <form class="fv-review-form" style="background:rgba(255,255,255,0.02);border-radius:8px;padding:14px">
+      <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center">
+        <input name="name" placeholder="Your name" style="flex:1;padding:6px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.78rem;font-family:inherit" maxlength="30">
+        <span style="font-size:0.72rem;color:var(--dim)">Rating:</span>
+        <input type="hidden" id="fv-rating-val" name="rating" value="0">
+        <span class="fv-star" data-v="1" style="cursor:pointer;font-size:1.1rem;color:rgba(255,255,255,0.2)">★</span>
+        <span class="fv-star" data-v="2" style="cursor:pointer;font-size:1.1rem;color:rgba(255,255,255,0.2)">★</span>
+        <span class="fv-star" data-v="3" style="cursor:pointer;font-size:1.1rem;color:rgba(255,255,255,0.2)">★</span>
+        <span class="fv-star" data-v="4" style="cursor:pointer;font-size:1.1rem;color:rgba(255,255,255,0.2)">★</span>
+        <span class="fv-star" data-v="5" style="cursor:pointer;font-size:1.1rem;color:rgba(255,255,255,0.2)">★</span>
+      </div>
+      <textarea name="content" placeholder="Write a review..." rows="2" style="width:100%;padding:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.78rem;font-family:inherit;resize:vertical"></textarea>
+      <button type="submit" style="margin-top:8px;padding:6px 20px;border-radius:20px;border:none;background:var(--accent,#4f8cff);color:#fff;cursor:pointer;font-size:0.78rem;font-family:inherit">Submit Review</button>
+    </form>
+    <style>
+      .fv-star.on{color:var(--gold,#e8c040)!important}
+      .fv-review-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+      .fv-review-head{display:flex;gap:8px;align-items:center;margin-bottom:4px}
+      .fv-review-name{font-weight:600;color:#fff;font-size:0.78rem}
+      .fv-review-stars{color:var(--gold,#e8c040);font-size:0.72rem}
+    </style>
+  </section>
 <footer class="ft" role="contentinfo">
   <div class="ft-grid">
     <div class="ft-brand"><div class="ft-logo">FictionVerse</div><p>Independent publisher of original English web novels. Read free chapters, support indie authors.</p></div>
