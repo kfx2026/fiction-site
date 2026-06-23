@@ -58,6 +58,17 @@ a{color:inherit;text-decoration:none}
 .ft-social{display:flex;gap:12px}
 .ft-social a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .15s;color:var(--dim)}
 .ft-social a:hover{background:var(--accent);color:#fff}
+/* Book cards for shelf grid */
+#shelfGrid .bk{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s}
+#shelfGrid .bk:hover{border-color:rgba(232,192,64,.15);transform:translateY(-4px)}
+#shelfGrid .bk-cv{aspect-ratio:2/3;display:block;overflow:hidden;background:rgba(255,255,255,.02)}
+#shelfGrid .bk-cv img{width:100%;height:100%;object-fit:cover}
+#shelfGrid .bk-bd{padding:12px 14px}
+#shelfGrid .bk-title{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.82rem;font-weight:600;margin-bottom:4px}
+#shelfGrid .bk-title a{color:#fff}
+#shelfGrid .bk-title a:hover{color:var(--gold)}
+#shelfGrid .bk-author{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.66rem;color:var(--dim);margin-bottom:6px}
+#shelfGrid .bk-meta{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.62rem;color:var(--gold)}
 @media(max-width:768px){.ft-grid{grid-template-columns:1fr 1fr;gap:24px}.page-hero h1{font-size:1.6rem}}
 @media(max-width:480px){.ft-grid{grid-template-columns:1fr}.ct{padding:20px 12px 40px}.page-hero{padding:32px 12px 24px}}
 </style>
@@ -86,10 +97,10 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="ct">
-  <div class="empty-state">
+  <div class="empty-state" id="shelfEmpty">
     <div class="es-icon">📖</div>
     <h3>Your bookshelf is empty</h3>
-    <p>Start building your personal library! Browse our collection of original web novels, click the bookmark icon on any novel page, and they'll appear right here. Track your reading progress across all your devices.</p>
+    <p>Start building your personal library! Browse our collection of original web novels, click the bookmark icon on any novel page, and they'll appear right here.</p>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
       <a href="/" class="btn btn-primary">Browse Library</a>
       <a href="/genre/xianxia/" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.72rem;color:var(--dim);padding:12px 20px;border:1px solid rgba(255,255,255,0.08);border-radius:100px;transition:all .15s">Xianxia</a>
@@ -97,6 +108,8 @@ a{color:inherit;text-decoration:none}
       <a href="/genre/scifi/" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:.72rem;color:var(--dim);padding:12px 20px;border:1px solid rgba(255,255,255,0.08);border-radius:100px;transition:all .15s">Sci-Fi</a>
     </div>
   </div>
+
+  <div id="shelfGrid" style="display:none;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-bottom:32px"></div>
 
   <div class="how-grid" style="margin-top:40px">
     <div class="how-card"><div class="hc-num">1</div><h4>Browse & Discover</h4><p>Explore 35+ original English web novels across Xianxia, Urban Fantasy, and Sci-Fi.</p></div>
@@ -117,4 +130,40 @@ a{color:inherit;text-decoration:none}
 </footer>
 
 <script src="/app.js"></script>
+<script>
+(function(){
+  var bm = [];
+  try { bm = JSON.parse(localStorage.getItem('fv_bm') || '[]'); } catch(e) {}
+  var grid = document.getElementById('shelfGrid');
+  var empty = document.getElementById('shelfEmpty');
+  
+  if (bm.length === 0) {
+    if(empty) empty.style.display = 'block';
+    if(grid) grid.style.display = 'none';
+    return;
+  }
+  
+  if(empty) empty.style.display = 'none';
+  if(grid) grid.style.display = 'grid';
+  
+  // Build book list from bookmark data
+  var html = '';
+  bm.forEach(function(b){
+    var slug = b.slug;
+    // Convert slug to readable title
+    var title = slug.split('-').map(function(w){ return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
+    html += '<article class="bk card-hover">' +
+      '<a href="/read/' + slug + '/chapters/' + b.chapter + '" class="bk-cv">' +
+        '<img src="/images/covers/' + slug + '.png" alt="' + title + '" loading="lazy" onerror="this.src=\'/images/covers/default.png\'">' +
+      '</a>' +
+      '<div class="bk-bd">' +
+        '<h2 class="bk-title"><a href="/read/' + slug + '/chapters/' + b.chapter + '">' + title + '</a></h2>' +
+        '<div class="bk-author">Last: ' + (b.title || 'Chapter ' + b.chapter) + '</div>' +
+        '<div class="bk-meta"><span>📖 Continue reading</span></div>' +
+      '</div>' +
+    '</article>';
+  });
+  grid.innerHTML = html;
+})();
+</script>
 </body></html>
