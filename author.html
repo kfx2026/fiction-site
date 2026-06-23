@@ -470,8 +470,17 @@ function doEmailRegisterActual() {
   fetch(API_BASE+'/api/author/register', { method:'POST', mode:'cors', credentials:'omit', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p,displayName:e.split('@')[0],agreeToTerms:true,agreementTimestamp:new Date().toISOString()}) })
     .then(r => r.json())
     .then(d => {
-      if (d.ok) { REG_EMAIL = e; document.getElementById('verifyBox').style.display='block'; }
-      else { showErr(d.error || 'Register failed'); }
+      if (d.token) {
+        // Direct login after register (no email verification needed)
+        AUTH_TOKEN = d.token;
+        try { sessionStorage.setItem('fv_token', d.token); } catch(x){}
+        enterApp();
+        toast('Account created! Welcome, ' + (d.displayName || e.split('@')[0]), 'success');
+      } else if (d.error === 'Need verification') {
+        REG_EMAIL = e; document.getElementById('verifyBox').style.display='block';
+      } else {
+        showErr(d.error || 'Register failed');
+      }
     }).catch(() => showErr('API unreachable'));
 }
 

@@ -83,7 +83,7 @@ async function authorAuth(env, request) {
   const token = authHeader.replace('Bearer ', '');
   if (!token) return null;
   const author = await env.DB.prepare(
-    'SELECT * FROM authors WHERE auth_token = ? AND token_expires > datetime(\'now\') AND verified = 1'
+    'SELECT * FROM authors WHERE auth_token = ? AND token_expires > datetime(\'now\')'
   ).bind(token).first();
   return author;
 }
@@ -899,27 +899,21 @@ async function authorRegister(env, data) {
     return json({ error: 'This email is already registered' }, 409);
   }
 
-  const code = generateCode();
-  const codeExpires = new Date(Date.now() + 10 * 60 * 1000).toISOString().replace('T', ' ').substring(0, 19);
   const id = 'auth_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
   const pwHash = hashPassword(password);
+  const token = generateToken();
+  const tokenExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').substring(0, 19);
 
+  // Register directly as verified (skip email — MailChannels blocked by Chinese email providers)
   await env.DB.prepare(
-    `INSERT INTO authors (id, email, password_hash, display_name, pen_name, verify_code, verify_code_expires, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`
-  ).bind(id, email, pwHash, displayName, penName || displayName, code, codeExpires).run();
+    `INSERT INTO authors (id, email, password_hash, display_name, pen_name, verified, auth_token, token_expires, created_at)
+     VALUES (?, ?, ?, ?, ?, 1, ?, ?, datetime('now'))`
+  ).bind(id, email, pwHash, displayName, penName || displayName, token, tokenExpires).run();
 
-  // Send real email
-  const sent = await sendEmail(email, 
-    'FictionVerse — Your Verification Code',
-    `Welcome to FictionVerse, ${displayName}!\n\nYour verification code is: ${code}\n\nThis code expires in 10 minutes.\n\nIf you didn't create this account, please ignore this email.\n\n— FictionVerse Team`
-  );
-  
-  console.log(`Sent verification to ${email}: ${sent ? 'OK' : 'FAILED'}, code=${code}`);
+  // Try sending welcome email in background (non-blocking)
+  sendEmail(email, 'FictionVerse — Welcome!', `Welcome to FictionVerse, ${displayName}!\n\nYour author account is ready. Start writing!\n\nLogin: ${email}\n\n— FictionVerse Team`).catch(() => {});
 
-  return json({ 
-    ok: true, 
-    message: 'Verification code sent to your email. Please check your inbox (and spam folder).'
+  return json({ ok: true, token, email, displayName, message: 'Account created! You are now logged in.' });
   });
 }
 
@@ -1125,11 +1119,16 @@ async function authorLogin(env, data) {
   const pwHash = hashPassword(password);
   
   const author = await env.DB.prepare(
-    'SELECT * FROM authors WHERE email = ? AND password_hash = ? AND verified = 1'
+    'SELECT * FROM authors WHERE email = ? AND password_hash = ?'
   ).bind(email, pwHash).first();
 
   if (!author) {
-    return json({ error: 'Invalid email or password. Make sure your email is verified.' }, 401);
+    return json({ error: 'Invalid email or password.' }, 401);
+  }
+
+  // Auto-verify if not already verified (email verification bypassed)
+  if (!author.verified) {
+    await env.DB.prepare('UPDATE authors SET verified = 1 WHERE email = ?').bind(email).run();
   }
 
   // Generate new token
