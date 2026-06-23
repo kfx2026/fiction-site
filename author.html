@@ -861,13 +861,15 @@ function deploySite(showToast) {
   if (statusEl) statusEl.textContent = '🔄 Triggering build...';
 
   api('/api/deploy', 'POST').then(function(r) {
-    if (r.ok) {
-      if (statusEl) statusEl.textContent = '✅ Site updating (1-2 min)...';
-      if (showToast) toast('Deploy triggered!', 'success');
+    if (r.ok || r.skipped) {
+      if (statusEl) statusEl.textContent = r.skipped ? '📦 Save saved (deploy via GitHub Actions)' : '✅ Site updating (1-2 min)...';
+      if (showToast && !r.skipped) toast('Saved & deploying...', 'success');
     } else {
-      if (statusEl) statusEl.textContent = '❌ '+(r.error||'Failed');
-      if (showToast) toast(r.error||'Deploy failed', 'error');
+      if (statusEl) statusEl.textContent = '⚠️ '+(r.error||'Deploy skipped');
+      // Don't show toast for deploy errors — save already succeeded, deploy is automatic via GitHub
     }
+    if (btn) { btn.disabled = false; btn.textContent = '⚡ Deploy Now'; }
+  }).catch(function() {
     if (btn) { btn.disabled = false; btn.textContent = '⚡ Deploy Now'; }
   });
 }

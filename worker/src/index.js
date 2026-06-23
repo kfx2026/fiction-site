@@ -817,7 +817,7 @@ async function updateBookStats(env, slug) {
 async function triggerDeploy(env) {
   const hookUrl = env.DEPLOY_HOOK_URL;
   if (!hookUrl) {
-    return json({ error: 'DEPLOY_HOOK_URL not configured' }, 500);
+    return json({ ok: true, skipped: true, message: 'Deploy via GitHub Actions — no hook URL configured' });
   }
 
   try {
