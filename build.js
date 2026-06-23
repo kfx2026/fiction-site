@@ -1561,11 +1561,20 @@ const staticPage = (slug, title, desc, content) => {
 };
 
 const aboutContent = `<h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">Our Mission</h2>
-<p style="font-size:0.85rem;color:var(--dim);margin-bottom:16px">${site.name} is an independent publisher of original English web novels. We believe great stories should be accessible — every novel starts with 5 free chapters, and the rest is unlocked with a single payment. No subscriptions, ever.</p>
-<h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">Editorial Standards</h2>
-<p style="font-size:0.85rem;color:var(--dim);margin-bottom:16px">Every novel published on FictionVerse undergoes editorial review for originality (human-written, not AI-generated), quality (grammar, plotting, characterization), and content guideline compliance (no hate speech, no adult content, no copyright infringement).</p>
-<h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">For Authors</h2>
-<p style="font-size:0.85rem;color:var(--dim)">We welcome original English fiction submissions in Xianxia, Cultivation, Urban Fantasy, Supernatural, Sci-Fi, LitRPG, and related speculative fiction. Email a synopsis and first 5 chapters to ${site.email}.</p>`;
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:16px">${site.name} is an independent publisher of original English web novels. We believe every storyteller deserves a stage, and every reader deserves a new world to explore. Web novels have exploded across Asia, but English-language independent fiction still lacks a dedicated home — FictionVerse fills that gap.</p>
+<h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">What We Stand For</h2>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:8px"><strong>🎭 Original Stories Only</strong> — No AI-generated filler. No plagiarism. Every novel on FictionVerse is written by a real human author.</p>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:8px"><strong>🔓 Free to Read</strong> — Every novel starts with free chapters. Readers decide what's worth supporting — not paywalls. No subscriptions, ever.</p>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:8px"><strong>⚖️ Fair to Authors</strong> — Authors keep 85% of their earnings. We take a small platform fee to keep the lights on.</p>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:8px"><strong>🛡️ Quality Review</strong> — Every chapter goes through automated content review before publication. No spam, no scams.</p>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:8px"><strong>💬 Reader Community</strong> — Discuss chapters, share theories, post reviews. Fiction is better when shared.</p>
+<h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">How It Works</h2>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:12px"><strong>For Readers:</strong> Browse our library of ${books.length}+ original novels. Start reading any book's free chapters instantly — no account needed. Create a bookshelf to track your progress and join discussions in the community forum.</p>
+<p style="font-size:0.85rem;color:var(--dim);margin-bottom:16px"><strong>For Authors:</strong> Register, verify your email, and start publishing. Upload chapters through your dashboard. Each submission goes through automated quality review. Pass, and your chapter goes live. Get flagged, and you'll receive feedback for revision. Earn 85% of reader payments.</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+  <a href="/" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.82rem;font-weight:600;padding:10px 24px;border-radius:100px;background:var(--gold);color:#0a0b10;display:inline-block">Browse Library</a>
+  <a href="/author" style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:0.78rem;padding:10px 24px;border:1px solid rgba(255,255,255,0.15);border-radius:100px;color:var(--dim);display:inline-block">Become an Author</a>
+</div>`;
 
 const termsContent = `<h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">1. Acceptance of Terms</h2><p style="font-size:0.85rem;color:var(--dim);margin-bottom:12px">By accessing ${site.url}, you agree to be bound by these Terms of Service. If you do not agree, please do not use our website.</p>
 <h2 style="font-size:1.05rem;font-weight:700;color:#fff;margin:24px 0 8px">2. Services Description</h2><p style="font-size:0.85rem;color:var(--dim);margin-bottom:12px">${site.name} provides original English web novels for reading online. Some novels are free, others require a one-time payment to unlock full access. ${site.name} does not charge subscription fees.</p>
@@ -1594,60 +1603,14 @@ staticPage('about', 'About FictionVerse', 'About FictionVerse — independent pu
 staticPage('terms', 'Terms of Service — FictionVerse', 'Terms of Service for FictionVerse.', termsContent);
 staticPage('privacy', 'Privacy Policy — FictionVerse', 'Privacy Policy for FictionVerse.', privacyContent);
 
-// ─── Bookshelf 页面 ───
-const shelfContent = `<div id="fv-bookshelf">
-  <div id="fv-shelf-empty" style="display:none;text-align:center;padding:48px 20px">
-    <p style="font-size:2rem;margin-bottom:12px">📚</p>
-    <h2 style="color:#fff;font-size:1.1rem;margin-bottom:8px">Your bookshelf is empty</h2>
-    <p style="color:var(--dim);font-size:0.82rem">Tap the ❤️ button on any novel's chapter page to save it here.</p>
-    <a href="/" style="display:inline-block;margin-top:16px;padding:8px 24px;border-radius:20px;background:var(--accent, #4f8cff);color:#fff;text-decoration:none;font-size:0.82rem">Browse Library →</a>
-  </div>
-  <div class="bk-gr" id="fv-shelf-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
-</div>
-<script src="/reader.js"></script>`;
-staticPage('bookshelf', 'My Bookshelf — FictionVerse', 'Your saved novels on FictionVerse.', shelfContent);
+// ─── Bookshelf 页面 (hand-crafted standalone HTML, skip staticPage) ───
+// staticPage('bookshelf', ...) — replaced by standalone bookshelf.html
 
-// ─── Community 页面 ───
-const forumContent = `<div id="fv-forum">
-  <div id="fv-forum-new" style="margin-bottom:16px">
-    <form onsubmit="postTopic(event)" style="display:flex;gap:8px">
-      <input id="fv-topic-title" placeholder="Start a discussion..." style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:0.82rem;font-family:inherit">
-      <button type="submit" style="padding:8px 20px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:0.82rem;font-family:inherit">Post</button>
-    </form>
-  </div>
-  <div id="fv-forum-list" style="font-size:0.82rem;color:var(--dim)">Loading discussions...</div>
-</div>
-<script src="/reader.js"></script>`;
-staticPage('community', 'Community — FictionVerse', 'Discuss web novels with fellow readers on the FictionVerse community forum.', forumContent);
+// ─── Community 页面 (hand-crafted standalone HTML, skip staticPage) ───
+// staticPage('community', ...) — replaced by standalone community.html
 
-// ─── Unpublished 页面 ───
-const unpublishedContent = `<div id="fv-unpublished" style="font-size:0.84rem;color:var(--dim)">
-  <p style="margin-bottom:8px;font-size:0.78rem;color:var(--amber,#d4a853)">⏳ These works are currently under review or revision. They may become available after author updates.</p>
-  <p style="margin-bottom:20px;font-size:0.72rem;color:var(--dim)">FictionVerse maintains a quality-first policy. Rejected or flagged chapters are placed here pending author revision.</p>
-  <div class="bk-gr" id="fv-unpub-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
-    <p style="grid-column:1/-1;text-align:center;padding:32px;color:var(--dim);font-size:0.82rem">Loading unpublished works...</p>
-  </div>
-</div>
-<script>
-(async()=>{
-  try{
-    const r=await fetch('https://api.aichatmail.one/api/unpublished');
-    const data=await r.json();
-    const g=document.getElementById('fv-unpub-grid');
-    if(!data||!data.length){
-      g.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:48px 20px"><span style="font-size:2rem">📦</span><br><br><span style="color:var(--dim);font-size:0.82rem">No unpublished works at this time.</span><br><span style="color:var(--dim);font-size:0.72rem">All books have passed review or are in progress.</span></p>';
-      return;
-    }
-    g.innerHTML=data.map(b=>{
-      const gn=b.genre||'fiction';
-      return '<article class="bk" style="opacity:0.7"><div class="bk-cv" style="position:relative"><img src="'+(b.cover||'/images/covers/default.png')+'" alt="'+b.title+'" loading="lazy" style="filter:grayscale(100%)"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5)"><span style="background:var(--amber);color:#000;padding:4px 12px;border-radius:12px;font-size:0.6rem;font-weight:700">PENDING</span></div></div><div class="bk-bd"><div class="bk-genre">'+gn+'</div><h2 class="bk-title" style="color:var(--dim)">'+b.title+'</h2><div class="bk-author">by '+b.author+'</div><div class="bk-meta"><span>'+b.total_chapters+' ch</span><span style="color:var(--amber)">Awaiting revision</span></div></div></article>';
-    }).join('');
-  }catch(e){
-    document.getElementById('fv-unpub-grid').innerHTML='<p style="grid-column:1/-1;text-align:center;padding:32px;color:var(--dim)">Unable to load. Please check back later.</p>';
-  }
-})();
-</script>`;
-staticPage('unpublished', 'Unpublished — FictionVerse', 'Works under review on FictionVerse.', unpublishedContent);
+// ─── Unpublished 页面 (hand-crafted standalone HTML, skip staticPage) ───
+// staticPage('unpublished', ...) — replaced by standalone unpublished.html
 
 // ─── 4. 404页面 ───
 const p404 = `${BASE_HEAD('Page Not Found — FictionVerse', 'Page not found.', site.url)+''}
