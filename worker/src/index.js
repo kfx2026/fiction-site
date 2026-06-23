@@ -1169,15 +1169,30 @@ async function authorGetMe(env, request) {
 
 // ═══ API Tokens ═══
 async function listApiTokens(env, request) {
-  // 需要认证
   const authType = await getAuthType(env, request);
   if (!authType) return json({ error: 'Unauthorized' }, 401);
-  const email = authType === 'master' ? (new URL(request.url)).searchParams.get('email') || '' : (authType.email || '');
-  if (!email) return json({ error: 'email required' }, 400);
+  
+  // Master: show all tokens, or filter by email if provided
+  // Author: show own tokens
+  let email;
+  if (authType === 'master') {
+    email = (new URL(request.url)).searchParams.get('email') || '';
+  } else {
+    email = authType.email || '';
+  }
+  if (!email && authType !== 'master') return json({ error: 'email required' }, 400);
 
-  const { results } = await env.DB.prepare(
-    'SELECT id, author_email, label, created_at, last_used, substr(token,1,8)||\'...\' as token_preview FROM api_tokens WHERE author_email = ? ORDER BY created_at DESC'
-  ).bind(email).all();
+  let results;
+  if (email) {
+    results = (await env.DB.prepare(
+      'SELECT id, author_email, label, scope, created_at, last_used, substr(token,1,8)||\'...\' as token_preview FROM api_tokens WHERE author_email = ? ORDER BY created_at DESC'
+    ).bind(email).all()).results;
+  } else {
+    // Master without email filter: show all tokens
+    results = (await env.DB.prepare(
+      'SELECT id, author_email, label, scope, created_at, last_used, substr(token,1,8)||\'...\' as token_preview FROM api_tokens ORDER BY created_at DESC'
+    ).all()).results;
+  }
   return json(results);
 }
 
@@ -1185,7 +1200,7 @@ async function createApiToken(env, request, body) {
   const authType = await getAuthType(env, request);
   if (!authType) return json({ error: 'Unauthorized' }, 401);
   const email = authType === 'master' ? (body.email || '') : (authType.email || '');
-  if (!email) return json({ error: 'email required' }, 400);
+  if (!email) return json({ error: 'Email required — admin must specify email in body' }, 400);
 
   const label = body.label || 'Default';
   const scope = body.scope || 'full';

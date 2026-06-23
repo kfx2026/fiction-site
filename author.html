@@ -171,13 +171,16 @@ a{color:var(--accent);text-decoration:none}
       <span>I have <b style="color:#fff">read the entire Author Agreement</b> above. I understand that my content will be reviewed and that prohibited content will result in immediate termination. <b>This agreement will be stored in my author profile.</b></span>
     </label>
 
-    <div style="display:flex;gap:8px;margin-bottom:16px">
+    <div style="display:flex;gap:8px;margin-bottom:16px" id="btnRow">
       <button onclick="doEmailLogin()" style="flex:1">Login</button>
       <button id="btnRegister" onclick="showRegForm()" style="flex:1;background:var(--green);color:#0a0b10;opacity:0.4;pointer-events:none;transition:opacity 0.3s" disabled>Register</button>
     </div>
 
-    <div id="regConfirm" style="display:none;margin-bottom:12px">
-      <button onclick="doEmailRegister()" style="width:100%;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.85rem;padding:12px">✓ Create Account</button>
+    <div id="regSection" style="display:none">
+      <div style="margin-bottom:16px">
+        <button onclick="doEmailRegister()" style="width:100%;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.85rem;padding:12px">✓ Create Account</button>
+      </div>
+      <a href="#" onclick="hideRegForm();return false" style="display:block;text-align:center;font-size:0.65rem;color:var(--dim);margin-bottom:8px">← Back to Login</a>
     </div>
 
     <!-- Verify code -->
@@ -560,9 +563,21 @@ function handleCaptchaSubmit() {
 // ═══════════════ REGISTER FLOW ═══════════════
 function showRegForm() {
   document.getElementById('securityQBox').style.display = 'block';
-  document.getElementById('regConfirm').style.display = 'block';
+  document.getElementById('regSection').style.display = 'block';
+  document.getElementById('btnRow').style.display = 'none';
   document.getElementById('captchaBox').style.display = 'block';
   genCaptcha();
+}
+
+function hideRegForm() {
+  document.getElementById('securityQBox').style.display = 'none';
+  document.getElementById('regSection').style.display = 'none';
+  document.getElementById('btnRow').style.display = 'flex';
+  document.getElementById('captchaBox').style.display = 'none';
+  document.getElementById('captchaInput').value = '';
+  document.getElementById('secQuestion').value = '';
+  document.getElementById('secAnswer').value = '';
+  clearErr();
 }
 
 function doEmailRegister() {
