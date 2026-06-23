@@ -185,7 +185,11 @@ a{color:var(--accent);text-decoration:none}
       <a href="#" data-panel="payment" onclick="showPanel('payment')">💳 Payment Settings</a>
       <a href="#" data-panel="deploy" onclick="showPanel('deploy')">🚀 Deploy</a>
       <a href="#" data-panel="apitoken" onclick="showPanel('apitoken')" style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;font-size:0.72rem;color:var(--dim)">🔑 API Token</a>
+      <a href="#" onclick="doLogout()" style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.05);padding-top:12px;font-size:0.72rem;color:var(--red)">🚪 Logout / 退出</a>
     </nav>
+    <div style="position:absolute;bottom:16px;left:0;right:0;padding:0 20px">
+      <a href="#" onclick="deleteAccount()" style="display:block;text-align:center;font-size:0.62rem;color:rgba(255,71,87,0.4);padding:6px 0;transition:color 0.15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='rgba(255,71,87,0.4)'">⚠️ Delete My Account</a>
+    </div>
   </div>
 
   <div class="content">
@@ -923,6 +927,36 @@ function loadEarnings() {
       list.innerHTML = '<table style="width:100%;font-size:0.72rem"><thead><tr style="color:var(--dim);text-align:left"><th>Date</th><th>Book</th><th>Amount</th><th>Fee</th><th>Net</th></tr></thead><tbody>'+r.transactions.map(function(t){return '<tr><td>'+t.date+'</td><td>'+t.book+'</td><td>$'+t.amount+'</td><td>-$'+(t.platform_fee||0)+'</td><td style="color:var(--green)">$'+(t.author_share||0)+'</td></tr>';}).join('')+'</tbody></table>';
     }
   }).catch(function() {});
+}
+
+// ═══════════════ LOGOUT ═══════════════
+function doLogout() {
+  try { sessionStorage.removeItem('fv_token'); } catch(x){}
+  AUTH_TOKEN = '';
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('loginGate').style.display = 'flex';
+  toast('Logged out', 'info');
+}
+
+// ═══════════════ DELETE ACCOUNT ═══════════════
+function deleteAccount() {
+  if (!confirm('⚠️ DELETE YOUR ENTIRE ACCOUNT?\n\nThis will:\n• Delete your author account permanently\n• Delete ALL your books and chapters\n• Remove all your content from the site\n• All data will be lost FOREVER\n\nType your email to confirm.')) return;
+  
+  var confirmEmail = prompt('Type your email to confirm account deletion:');
+  if (!confirmEmail) return;
+  
+  if (!confirm('FINAL WARNING: This cannot be undone!\n\nEmail: ' + confirmEmail + '\n\nAll your books, chapters, and account data will be permanently deleted.\n\nClick OK to proceed.')) return;
+  
+  api('/api/author/account', 'DELETE', { email: confirmEmail }).then(function(r) {
+    if (r.ok) {
+      toast('Account deleted. All data removed.', 'success');
+      doLogout();
+    } else {
+      toast(r.error || 'Deletion failed', 'error');
+    }
+  }).catch(function(e) {
+    toast('Network error during deletion', 'error');
+  });
 }
 </script>
 </body>

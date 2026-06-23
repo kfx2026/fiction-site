@@ -204,6 +204,10 @@ async function handleRequest(request, env) {
   if (path === '/api/author/resend-code' && request.method === 'POST') {
     return authorResendCode(env, await request.json());
   }
+  // Delete account (requires auth)
+  if (path === '/api/author/account' && request.method === 'DELETE') {
+    return deleteAuthorAccount(env, request, await request.json());
+  }
 
   // API Tokens (requires auth)
   if (path === '/api/author/tokens' && request.method === 'GET') {
@@ -952,6 +956,51 @@ async function authorVerify(env, data) {
   ).bind(token, expires, email).run();
 
   return json({ ok: true, token, email });
+}
+
+async function deleteAuthorAccount(env, request, data) {
+  const authType = await getAuthType(env, request);
+  if (!authType) return json({ error: 'Unauthorized' }, 401);
+  
+  const { email } = data;
+  if (!email) return json({ error: 'Email required' }, 400);
+  
+  // Verify the authenticated user matches the email (or is admin)
+  if (authType !== 'master' && authType.email !== email) {
+    return json({ error: 'You can only delete your own account' }, 403);
+  }
+  
+  // Find the author
+  const author = authType === 'master'
+    ? await env.DB.prepare('SELECT * FROM authors WHERE email = ?').bind(email).first()
+    : authType;
+  
+  if (!author) return json({ error: 'Author not found' }, 404);
+  
+  const authorEmail = author.email || email;
+  const authorId = author.id;
+  
+  // 1. Delete all chapters for this author's books
+  const books = await env.DB.prepare('SELECT slug FROM books WHERE author = ?').bind(authorEmail).all();
+  for (const book of books.results) {
+    await env.DB.prepare('DELETE FROM chapters WHERE book_slug = ?').bind(book.slug).run();
+  }
+  
+  // 2. Delete all books
+  await env.DB.prepare('DELETE FROM books WHERE author = ?').bind(authorEmail).run();
+  
+  // 3. Delete API tokens
+  await env.DB.prepare('DELETE FROM api_tokens WHERE author_id = ?').bind(authorId).run();
+  
+  // 4. Delete agreements
+  await env.DB.prepare('DELETE FROM agreements WHERE author_email = ?').bind(authorEmail).run();
+  
+  // 5. Delete the author record
+  await env.DB.prepare('DELETE FROM authors WHERE email = ?').bind(authorEmail).run();
+  
+  console.log(`Account deleted: ${authorEmail} — all books, chapters, tokens removed`);
+  
+  return json({ ok: true, message: 'Account and all associated content permanently deleted.' });
 }
 
 async function authorLogin(env, data) {
