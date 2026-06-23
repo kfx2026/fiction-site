@@ -468,10 +468,6 @@ function doEmailLogin() {
     }).catch(() => showErr('API unreachable'));
 }
 
-function doEmailRegister() {
-  var e = document.getElementById('loginEmail').value.trim();
-  var p = document.getElementById('loginPwd').value;
-  if (!e || !p) return;
 function doVerify() {
   var code = document.getElementById('verifyCode').value.trim();
   if (!code) return;
