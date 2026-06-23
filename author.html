@@ -36,7 +36,9 @@ a{color:var(--accent);text-decoration:none}
 .form-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .form-group{flex:1;min-width:180px}
 .form-group label{display:block;font-size:0.7rem;color:var(--dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#fff;font-size:0.82rem;font-family:inherit}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:0.82rem;font-family:inherit}
+.form-group select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b8fa0'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.form-group select option{background:#11131f;color:#d8dae0}
 .form-group textarea{min-height:80px;resize:vertical}
 .form-group input[type="datetime-local"]{color-scheme:dark}
 /* Buttons */
@@ -225,7 +227,7 @@ a{color:var(--accent);text-decoration:none}
           </div>
           <div class="form-row">
             <div class="form-group"><label>Rating</label><input id="bRating" type="number" step="0.1" value="4.5"></div>
-            <div class="form-group"><label>Cover Path</label><input id="bCover" placeholder="/images/covers/x.png"></div>
+            <div class="form-group"><label>Cover Path (e.g. /images/covers/mybook.png)</label><input id="bCover" placeholder="/images/covers/xxx.png"></div>
             <div class="form-group"><label>Cover Alt</label><input id="bCoverAlt"></div>
           </div>
           <div class="form-group"><label>Description</label><textarea id="bDesc" rows="2"></textarea></div>
@@ -466,9 +468,15 @@ function doLogin() {
 
 // ═══════════════ API HELPERS ═══════════════
 function api(path, method, body) {
-  var opts = { method: method, headers: { 'Authorization': 'Bearer '+AUTH_TOKEN } };
+  var opts = { method: method, mode: 'cors', credentials: 'omit', headers: { 'Authorization': 'Bearer '+AUTH_TOKEN } };
   if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
-  return fetch(API_BASE+path, opts).then(r => r.json());
+  return fetch(API_BASE+path, opts).then(function(r) {
+    if (!r.ok) throw new Error('HTTP '+r.status+': '+(r.statusText||''));
+    return r.json();
+  }).catch(function(e) {
+    toast('Network error: '+(e.message||'Cannot connect to API server. Check network.'), 'error');
+    throw e;
+  });
 }
 
 function toast(msg, type) {
