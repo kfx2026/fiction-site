@@ -914,7 +914,6 @@ async function authorRegister(env, data) {
   sendEmail(email, 'FictionVerse — Welcome!', `Welcome to FictionVerse, ${displayName}!\n\nYour author account is ready. Start writing!\n\nLogin: ${email}\n\n— FictionVerse Team`).catch(() => {});
 
   return json({ ok: true, token, email, displayName, message: 'Account created! You are now logged in.' });
-  });
 }
 
 async function authorResendCode(env, data) {
