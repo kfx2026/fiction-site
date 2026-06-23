@@ -97,7 +97,17 @@ a{color:var(--accent);text-decoration:none}
     <p style="margin-bottom:24px;font-size:0.76rem;color:var(--dim)">Create your account and start publishing.</p>
     
     <input type="email" id="loginEmail" placeholder="your@email.com" style="text-align:left;margin-bottom:8px">
-    <input type="password" id="loginPwd" placeholder="Password (8+ chars, A-Z + 0-9)" style="text-align:left;margin-bottom:16px">
+    <input type="password" id="loginPwd" placeholder="Password (8+ chars, A-Z + 0-9)" style="text-align:left;margin-bottom:6px">
+    <a href="#" onclick="showResetPwd();return false" style="display:block;text-align:right;font-size:0.65rem;color:var(--dim);margin-bottom:12px">Forgot password?</a>
+
+    <!-- ═══ Math Captcha ═══ -->
+    <div id="captchaBox" style="display:none;margin-bottom:12px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:none">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.95rem;font-weight:700;color:#fff;min-width:70px" id="captchaQuestion"></span>
+        <span style="color:var(--dim);font-size:0.7rem">=</span>
+        <input type="number" id="captchaAnswer" placeholder="?" style="width:80px;text-align:center;font-size:1rem" onkeydown="if(event.key==='Enter')handleCaptchaEnter()">
+      </div>
+    </div>
     
     <!-- ═══ Author Agreement (must scroll to bottom) ═══ -->
     <div style="margin-bottom:16px">
@@ -158,6 +168,27 @@ a{color:var(--accent);text-decoration:none}
         <input type="text" id="verifyCode" placeholder="000000" maxlength="6" style="text-align:center;font-size:1.2rem;letter-spacing:4px;flex:2">
         <button onclick="doVerify()" style="flex:1;background:var(--gold);color:#0a0b10;font-weight:700">Verify</button>
       </div>
+    </div>
+
+    <!-- Reset Password -->
+    <div id="resetBox" style="display:none;margin-bottom:16px;padding:14px;background:rgba(232,192,64,0.05);border:1px solid rgba(232,192,64,0.15);border-radius:8px">
+      <p style="font-size:0.75rem;color:#fff;font-weight:700;margin-bottom:2px">🔑 Reset Password</p>
+      <div id="resetStep1">
+        <p style="font-size:0.68rem;color:var(--dim);margin-bottom:10px">Enter your email, we'll send a reset code.</p>
+        <div style="display:flex;gap:8px">
+          <input type="email" id="resetEmail" placeholder="your@email.com" style="flex:2;text-align:left">
+          <button onclick="sendResetCode()" style="flex:1;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.72rem">Send Code</button>
+        </div>
+      </div>
+      <div id="resetStep2" style="display:none">
+        <p style="font-size:0.68rem;color:var(--dim);margin-bottom:10px">📧 Code sent! Enter code + new password.</p>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input type="text" id="resetCode" placeholder="000000" maxlength="6" style="flex:1;text-align:center;font-size:1.1rem;letter-spacing:3px">
+        </div>
+        <input type="password" id="resetNewPwd" placeholder="New password (8+ chars, A-Z + 0-9)" style="width:100%;text-align:left;margin-bottom:8px">
+        <button onclick="doResetPassword()" style="width:100%;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.78rem">Reset Password</button>
+      </div>
+      <a href="#" onclick="hideResetPwd();return false" style="display:block;text-align:center;font-size:0.6rem;color:var(--dim);margin-top:8px">← Back to login</a>
     </div>
 
     <p class="login-error" id="loginError"></p>
@@ -428,7 +459,15 @@ function doEmailRegister() {
   if (!e || !p) return;
   if (p.length < 8) { showErr('Password need 8+ chars'); return; }
   if (!document.getElementById('agreeTerms').checked) { showErr('Please agree to Author Agreement first'); return; }
-  fetch(API_BASE+'/api/author/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p,displayName:e.split('@')[0],agreeToTerms:true,agreementTimestamp:new Date().toISOString()}) })
+  
+  // Captcha check before register
+  requireCaptcha(doEmailRegisterActual);
+}
+
+function doEmailRegisterActual() {
+  var e = document.getElementById('loginEmail').value.trim();
+  var p = document.getElementById('loginPwd').value;
+  fetch(API_BASE+'/api/author/register', { method:'POST', mode:'cors', credentials:'omit', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p,displayName:e.split('@')[0],agreeToTerms:true,agreementTimestamp:new Date().toISOString()}) })
     .then(r => r.json())
     .then(d => {
       if (d.ok) { REG_EMAIL = e; document.getElementById('verifyBox').style.display='block'; }
@@ -448,7 +487,102 @@ function doVerify() {
 }
 
 function showErr(msg) { document.getElementById('loginError').textContent = msg; document.getElementById('loginError').style.display = 'block'; }
+function clearErr() { document.getElementById('loginError').style.display = 'none'; }
 function enterApp() { document.getElementById('loginGate').style.display = 'none'; document.getElementById('app').classList.remove('hidden'); loadDashboard(); loadBookList(); }
+
+// ═══════════════ CAPTCHA ═══════════════
+var captchaAnswer = 0;
+var captchaCallback = null;
+
+function genCaptcha() {
+  var a = Math.floor(Math.random() * 9) + 1;
+  var b = Math.floor(Math.random() * 9) + 1;
+  captchaAnswer = a + b;
+  document.getElementById('captchaQuestion').textContent = a + ' + ' + b + ' =';
+  document.getElementById('captchaAnswer').value = '';
+  document.getElementById('captchaBox').style.display = 'block';
+}
+
+function checkCaptcha() {
+  var ans = parseInt(document.getElementById('captchaAnswer').value);
+  if (ans === captchaAnswer) {
+    document.getElementById('captchaBox').style.display = 'none';
+    return true;
+  }
+  showErr('Wrong answer. Try again.');
+  genCaptcha();
+  return false;
+}
+
+function handleCaptchaEnter() {
+  if (!checkCaptcha()) return;
+  if (captchaCallback) { captchaCallback(); captchaCallback = null; }
+}
+
+function requireCaptcha(cb) {
+  captchaCallback = cb;
+  genCaptcha();
+  document.getElementById('captchaAnswer').focus();
+}
+
+// ═══════════════ RESET PASSWORD ═══════════════
+function showResetPwd() {
+  document.getElementById('resetBox').style.display = 'block';
+  document.getElementById('resetStep1').style.display = 'block';
+  document.getElementById('resetStep2').style.display = 'none';
+  document.getElementById('resetEmail').value = document.getElementById('loginEmail').value;
+  clearErr();
+}
+
+function hideResetPwd() {
+  document.getElementById('resetBox').style.display = 'none';
+}
+
+function sendResetCode() {
+  var email = document.getElementById('resetEmail').value.trim();
+  if (!email) { showErr('Enter your email first'); return; }
+  
+  fetch(API_BASE+'/api/author/forgot-password', {
+    method:'POST', mode:'cors', credentials:'omit',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:email})
+  }).then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.ok) {
+        document.getElementById('resetStep1').style.display = 'none';
+        document.getElementById('resetStep2').style.display = 'block';
+        clearErr();
+      } else {
+        showErr(d.error || 'Failed to send code');
+      }
+    }).catch(function(){ showErr('API unreachable'); });
+}
+
+function doResetPassword() {
+  var email = document.getElementById('resetEmail').value.trim();
+  var code = document.getElementById('resetCode').value.trim();
+  var pwd = document.getElementById('resetNewPwd').value;
+  
+  if (!code) { showErr('Enter the reset code'); return; }
+  if (!pwd) { showErr('Enter a new password'); return; }
+  if (pwd.length < 8) { showErr('Password must be at least 8 characters'); return; }
+  
+  fetch(API_BASE+'/api/author/reset-password', {
+    method:'POST', mode:'cors', credentials:'omit',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:email, code:code, newPassword:pwd})
+  }).then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.ok) {
+        toast('Password reset! Please login.', 'success');
+        hideResetPwd();
+        document.getElementById('loginPwd').value = '';
+        document.getElementById('loginEmail').value = email;
+      } else {
+        showErr(d.error || 'Reset failed');
+      }
+    }).catch(function(){ showErr('API unreachable'); });
+}
 
 function doLogin() {
   var token = document.getElementById('loginToken').value.trim();
