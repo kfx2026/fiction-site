@@ -812,7 +812,7 @@ function saveBook(e) {
   var oldSlug = document.getElementById('bookSlugOld').value;
   var data = {
     title: document.getElementById('bTitle').value,
-    slug: document.getElementById('bSlug').value || document.getElementById('bTitle').value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),
+    slug: document.getElementById('bSlug').value || (function(t){var s=t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return s||('novel-'+Date.now().toString(36));})(document.getElementById('bTitle').value),
     author: document.getElementById('bAuthor').value,
     authorBio: document.getElementById('bAuthorBio').value,
     genre: GENRE_MAP[document.getElementById('bGenre').value]||'xianxia',
