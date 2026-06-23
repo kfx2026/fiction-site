@@ -98,15 +98,27 @@ a{color:var(--accent);text-decoration:none}
     
     <input type="email" id="loginEmail" placeholder="your@email.com" style="text-align:left;margin-bottom:8px">
     <input type="password" id="loginPwd" placeholder="Password (8+ chars, A-Z + 0-9)" style="text-align:left;margin-bottom:6px">
-    <a href="#" onclick="showResetPwd();return false" style="display:block;text-align:right;font-size:0.65rem;color:var(--dim);margin-bottom:12px">Forgot password?</a>
+    <a href="#" onclick="showResetPwd();return false" style="display:block;text-align:right;font-size:0.65rem;color:var(--dim);margin-bottom:8px">Forgot password?</a>
 
-    <!-- ═══ Math Captcha ═══ -->
-    <div id="captchaBox" style="display:none;margin-bottom:12px;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;display:none">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:0.95rem;font-weight:700;color:#fff;min-width:70px" id="captchaQuestion"></span>
-        <span style="color:var(--dim);font-size:0.7rem">=</span>
-        <input type="number" id="captchaAnswer" placeholder="?" style="width:80px;text-align:center;font-size:1rem" onkeydown="if(event.key==='Enter')handleCaptchaEnter()">
-      </div>
+    <!-- ═══ Security Question (register only) ═══ -->
+    <div id="securityQBox" style="display:none;margin-bottom:10px">
+      <p style="font-size:0.68rem;color:var(--dim);margin-bottom:6px">🔐 Security Question (for password recovery)</p>
+      <select id="secQuestion" style="width:100%;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:var(--dim);font-size:0.78rem;font-family:inherit;margin-bottom:6px;appearance:none;-webkit-appearance:none;cursor:pointer">
+        <option value="" style="background:#11131f;color:var(--dim)">— Choose a question —</option>
+        <option value="What city were you born in?" style="background:#11131f;color:#d8dae0">🏙️ What city were you born in?</option>
+        <option value="What is your mother's maiden name?" style="background:#11131f;color:#d8dae0">👩 What is your mother's maiden name?</option>
+        <option value="What was the name of your first pet?" style="background:#11131f;color:#d8dae0">🐱 What was the name of your first pet?</option>
+        <option value="What was your childhood nickname?" style="background:#11131f;color:#d8dae0">👶 What was your childhood nickname?</option>
+        <option value="What is your favorite book?" style="background:#11131f;color:#d8dae0">📖 What is your favorite book?</option>
+      </select>
+      <input type="text" id="secAnswer" placeholder="Your answer" style="width:100%;text-align:left;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#fff;font-size:0.78rem;font-family:inherit">
+    </div>
+
+    <!-- ═══ Canvas Captcha ═══ -->
+    <div id="captchaBox" style="display:none;margin-bottom:12px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;text-align:center">
+      <p style="font-size:0.62rem;color:var(--dim);margin-bottom:8px">🤖 Human verification — type the characters below</p>
+      <canvas id="captchaCanvas" width="220" height="60" style="border-radius:4px;cursor:pointer;margin-bottom:6px" onclick="genCaptcha()" title="Click to refresh"></canvas>
+      <input type="text" id="captchaInput" placeholder="Enter characters" maxlength="4" style="width:120px;text-align:center;font-size:1.1rem;letter-spacing:6px;padding:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;color:#fff;font-family:monospace" onkeydown="if(event.key==='Enter')handleCaptchaSubmit()">
     </div>
     
     <!-- ═══ Author Agreement (must scroll to bottom) ═══ -->
@@ -158,7 +170,11 @@ a{color:var(--accent);text-decoration:none}
 
     <div style="display:flex;gap:8px;margin-bottom:16px">
       <button onclick="doEmailLogin()" style="flex:1">Login</button>
-      <button id="btnRegister" onclick="doEmailRegister()" style="flex:1;background:var(--green);color:#0a0b10;opacity:0.4;pointer-events:none;transition:opacity 0.3s" disabled>Register</button>
+      <button id="btnRegister" onclick="showRegForm()" style="flex:1;background:var(--green);color:#0a0b10;opacity:0.4;pointer-events:none;transition:opacity 0.3s" disabled>Register</button>
+    </div>
+
+    <div id="regConfirm" style="display:none;margin-bottom:12px">
+      <button onclick="doEmailRegister()" style="width:100%;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.85rem;padding:12px">✓ Create Account</button>
     </div>
 
     <!-- Verify code -->
@@ -174,17 +190,16 @@ a{color:var(--accent);text-decoration:none}
     <div id="resetBox" style="display:none;margin-bottom:16px;padding:14px;background:rgba(232,192,64,0.05);border:1px solid rgba(232,192,64,0.15);border-radius:8px">
       <p style="font-size:0.75rem;color:#fff;font-weight:700;margin-bottom:2px">🔑 Reset Password</p>
       <div id="resetStep1">
-        <p style="font-size:0.68rem;color:var(--dim);margin-bottom:10px">Enter your email, we'll send a reset code.</p>
+        <p style="font-size:0.68rem;color:var(--dim);margin-bottom:10px">Enter your registered email.</p>
         <div style="display:flex;gap:8px">
           <input type="email" id="resetEmail" placeholder="your@email.com" style="flex:2;text-align:left">
-          <button onclick="sendResetCode()" style="flex:1;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.72rem">Send Code</button>
+          <button onclick="loadSecurityQuestion()" style="flex:1;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.72rem">Next</button>
         </div>
       </div>
       <div id="resetStep2" style="display:none">
-        <p style="font-size:0.68rem;color:var(--dim);margin-bottom:10px">📧 Code sent! Enter code + new password.</p>
-        <div style="display:flex;gap:8px;margin-bottom:8px">
-          <input type="text" id="resetCode" placeholder="000000" maxlength="6" style="flex:1;text-align:center;font-size:1.1rem;letter-spacing:3px">
-        </div>
+        <p style="font-size:0.68rem;color:var(--dim);margin-bottom:10px">🔐 Answer your security question:</p>
+        <p style="font-size:0.82rem;color:#fff;font-weight:600;margin-bottom:8px" id="resetQuestionDisplay"></p>
+        <input type="text" id="resetAnswer" placeholder="Your answer" style="width:100%;text-align:left;margin-bottom:8px">
         <input type="password" id="resetNewPwd" placeholder="New password (8+ chars, A-Z + 0-9)" style="width:100%;text-align:left;margin-bottom:8px">
         <button onclick="doResetPassword()" style="width:100%;background:var(--gold);color:#0a0b10;font-weight:700;font-size:0.78rem">Reset Password</button>
       </div>
@@ -457,33 +472,6 @@ function doEmailRegister() {
   var e = document.getElementById('loginEmail').value.trim();
   var p = document.getElementById('loginPwd').value;
   if (!e || !p) return;
-  if (p.length < 8) { showErr('Password need 8+ chars'); return; }
-  if (!document.getElementById('agreeTerms').checked) { showErr('Please agree to Author Agreement first'); return; }
-  
-  // Captcha check before register
-  requireCaptcha(doEmailRegisterActual);
-}
-
-function doEmailRegisterActual() {
-  var e = document.getElementById('loginEmail').value.trim();
-  var p = document.getElementById('loginPwd').value;
-  fetch(API_BASE+'/api/author/register', { method:'POST', mode:'cors', credentials:'omit', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p,displayName:e.split('@')[0],agreeToTerms:true,agreementTimestamp:new Date().toISOString()}) })
-    .then(r => r.json())
-    .then(d => {
-      if (d.token) {
-        // Direct login after register (no email verification needed)
-        AUTH_TOKEN = d.token;
-        try { sessionStorage.setItem('fv_token', d.token); } catch(x){}
-        enterApp();
-        toast('Account created! Welcome, ' + (d.displayName || e.split('@')[0]), 'success');
-      } else if (d.error === 'Need verification') {
-        REG_EMAIL = e; document.getElementById('verifyBox').style.display='block';
-      } else {
-        showErr(d.error || 'Register failed');
-      }
-    }).catch(() => showErr('API unreachable'));
-}
-
 function doVerify() {
   var code = document.getElementById('verifyCode').value.trim();
   if (!code) return;
@@ -499,42 +487,120 @@ function showErr(msg) { document.getElementById('loginError').textContent = msg;
 function clearErr() { document.getElementById('loginError').style.display = 'none'; }
 function enterApp() { document.getElementById('loginGate').style.display = 'none'; document.getElementById('app').classList.remove('hidden'); loadDashboard(); loadBookList(); }
 
-// ═══════════════ CAPTCHA ═══════════════
-var captchaAnswer = 0;
+// ═══════════════ CAPTCHA (Canvas) ═══════════════
+var captchaCode = '';
 var captchaCallback = null;
 
 function genCaptcha() {
-  var a = Math.floor(Math.random() * 9) + 1;
-  var b = Math.floor(Math.random() * 9) + 1;
-  captchaAnswer = a + b;
-  document.getElementById('captchaQuestion').textContent = a + ' + ' + b + ' =';
-  document.getElementById('captchaAnswer').value = '';
-  document.getElementById('captchaBox').style.display = 'block';
-}
-
-function checkCaptcha() {
-  var ans = parseInt(document.getElementById('captchaAnswer').value);
-  if (ans === captchaAnswer) {
-    document.getElementById('captchaBox').style.display = 'none';
-    return true;
+  var canvas = document.getElementById('captchaCanvas');
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 220, 60);
+  
+  // Background noise
+  ctx.fillStyle = '#11131f';
+  ctx.fillRect(0, 0, 220, 60);
+  for (var i = 0; i < 30; i++) {
+    ctx.fillStyle = 'rgba(255,255,255,' + (0.03 + Math.random() * 0.06) + ')';
+    ctx.fillRect(Math.random() * 220, Math.random() * 60, Math.random() * 8, Math.random() * 4);
   }
-  showErr('Wrong answer. Try again.');
-  genCaptcha();
-  return false;
-}
-
-function handleCaptchaEnter() {
-  if (!checkCaptcha()) return;
-  if (captchaCallback) { captchaCallback(); captchaCallback = null; }
+  
+  // Random 4-char code (letters + numbers, no confusing chars)
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  captchaCode = '';
+  for (var i = 0; i < 4; i++) captchaCode += chars[Math.floor(Math.random() * chars.length)];
+  
+  // Draw each character with random rotation/offset
+  ctx.font = 'bold 28px monospace';
+  ctx.textBaseline = 'middle';
+  for (var i = 0; i < captchaCode.length; i++) {
+    var x = 20 + i * 48 + (Math.random() * 10 - 5);
+    var y = 30 + (Math.random() * 12 - 6);
+    var angle = (Math.random() * 0.5 - 0.25);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    
+    // Random color per character
+    var hue = Math.floor(Math.random() * 360);
+    ctx.fillStyle = 'hsl(' + hue + ', 60%, ' + (55 + Math.random() * 20) + '%)';
+    ctx.fillText(captchaCode[i], 0, 0);
+    ctx.restore();
+  }
+  
+  // Distortion lines
+  for (var i = 0; i < 5; i++) {
+    ctx.strokeStyle = 'rgba(255,255,255,' + (0.05 + Math.random() * 0.1) + ')';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, Math.random() * 60);
+    ctx.quadraticCurveTo(110, Math.random() * 60, 220, Math.random() * 50);
+    ctx.stroke();
+  }
+  
+  document.getElementById('captchaInput').value = '';
 }
 
 function requireCaptcha(cb) {
   captchaCallback = cb;
+  document.getElementById('captchaBox').style.display = 'block';
   genCaptcha();
-  document.getElementById('captchaAnswer').focus();
+  document.getElementById('captchaInput').focus();
 }
 
-// ═══════════════ RESET PASSWORD ═══════════════
+function handleCaptchaSubmit() {
+  var input = document.getElementById('captchaInput').value.toUpperCase();
+  if (input === captchaCode) {
+    document.getElementById('captchaBox').style.display = 'none';
+    if (captchaCallback) { var cb = captchaCallback; captchaCallback = null; cb(); }
+  } else {
+    showErr('Wrong code. Try again.');
+    genCaptcha();
+  }
+}
+
+// ═══════════════ REGISTER FLOW ═══════════════
+function showRegForm() {
+  document.getElementById('securityQBox').style.display = 'block';
+  document.getElementById('regConfirm').style.display = 'block';
+  document.getElementById('captchaBox').style.display = 'block';
+  genCaptcha();
+}
+
+function doEmailRegister() {
+  var e = document.getElementById('loginEmail').value.trim();
+  var p = document.getElementById('loginPwd').value;
+  var sq = document.getElementById('secQuestion').value;
+  var sa = document.getElementById('secAnswer').value.trim();
+  
+  if (!e || !p) return;
+  if (p.length < 8) { showErr('Password need 8+ chars'); return; }
+  if (!document.getElementById('agreeTerms').checked) { showErr('Please agree to Author Agreement first'); return; }
+  if (!sq) { showErr('Please choose a security question'); return; }
+  if (!sa) { showErr('Please answer the security question'); return; }
+  
+  // Verify captcha
+  var input = document.getElementById('captchaInput').value.toUpperCase();
+  if (input !== captchaCode) {
+    showErr('Wrong captcha code. Try again.');
+    genCaptcha();
+    return;
+  }
+  
+  fetch(API_BASE+'/api/author/register', { method:'POST', mode:'cors', credentials:'omit', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:e,password:p,displayName:e.split('@')[0],securityQuestion:sq,securityAnswer:sa.toLowerCase().trim(),agreeToTerms:true,agreementTimestamp:new Date().toISOString()}) })
+    .then(r => r.json())
+    .then(d => {
+      if (d.token) {
+        AUTH_TOKEN = d.token;
+        try { sessionStorage.setItem('fv_token', d.token); } catch(x){}
+        enterApp();
+        toast('Account created! Welcome, ' + (d.displayName || e.split('@')[0]), 'success');
+      } else {
+        showErr(d.error || 'Register failed');
+      }
+    }).catch(() => showErr('API unreachable'));
+}
+
+// ═══════════════ RESET PASSWORD (security question) ═══════════════
 function showResetPwd() {
   document.getElementById('resetBox').style.display = 'block';
   document.getElementById('resetStep1').style.display = 'block';
@@ -547,7 +613,7 @@ function hideResetPwd() {
   document.getElementById('resetBox').style.display = 'none';
 }
 
-function sendResetCode() {
+function loadSecurityQuestion() {
   var email = document.getElementById('resetEmail').value.trim();
   if (!email) { showErr('Enter your email first'); return; }
   
@@ -557,29 +623,30 @@ function sendResetCode() {
     body:JSON.stringify({email:email})
   }).then(function(r){ return r.json(); })
     .then(function(d){
-      if (d.ok) {
+      if (d.ok && d.question) {
+        document.getElementById('resetQuestionDisplay').textContent = d.question;
         document.getElementById('resetStep1').style.display = 'none';
         document.getElementById('resetStep2').style.display = 'block';
         clearErr();
       } else {
-        showErr(d.error || 'Failed to send code');
+        showErr(d.error || 'Account not found or no security question');
       }
     }).catch(function(){ showErr('API unreachable'); });
 }
 
 function doResetPassword() {
   var email = document.getElementById('resetEmail').value.trim();
-  var code = document.getElementById('resetCode').value.trim();
+  var answer = document.getElementById('resetAnswer').value.trim();
   var pwd = document.getElementById('resetNewPwd').value;
   
-  if (!code) { showErr('Enter the reset code'); return; }
+  if (!answer) { showErr('Answer your security question'); return; }
   if (!pwd) { showErr('Enter a new password'); return; }
   if (pwd.length < 8) { showErr('Password must be at least 8 characters'); return; }
   
   fetch(API_BASE+'/api/author/reset-password', {
     method:'POST', mode:'cors', credentials:'omit',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({email:email, code:code, newPassword:pwd})
+    body:JSON.stringify({email:email, answer:answer, newPassword:pwd})
   }).then(function(r){ return r.json(); })
     .then(function(d){
       if (d.ok) {

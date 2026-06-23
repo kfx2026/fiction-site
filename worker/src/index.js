@@ -904,11 +904,12 @@ async function authorRegister(env, data) {
   const token = generateToken();
   const tokenExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').substring(0, 19);
 
-  // Register directly as verified (skip email — MailChannels blocked by Chinese email providers)
+  // Register directly as verified (skip email verification)
   await env.DB.prepare(
-    `INSERT INTO authors (id, email, password_hash, display_name, pen_name, verified, auth_token, token_expires, created_at)
-     VALUES (?, ?, ?, ?, ?, 1, ?, ?, datetime('now'))`
-  ).bind(id, email, pwHash, displayName, penName || displayName, token, tokenExpires).run();
+    `INSERT INTO authors (id, email, password_hash, display_name, pen_name, security_question, security_answer, verified, auth_token, token_expires, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, datetime('now'))`
+  ).bind(id, email, pwHash, displayName, penName || displayName, 
+    data.securityQuestion || '', data.securityAnswer || '', token, tokenExpires).run();
 
   // Try sending welcome email in background (non-blocking)
   sendEmail(email, 'FictionVerse — Welcome!', `Welcome to FictionVerse, ${displayName}!\n\nYour author account is ready. Start writing!\n\nLogin: ${email}\n\n— FictionVerse Team`).catch(() => {});
@@ -950,70 +951,56 @@ function checkRateLimit(ip, maxRequests = 5, windowSec = 60) {
 // ═══════════════ FORGOT / RESET PASSWORD ═══════════════
 async function forgotPassword(env, request, data) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (!checkRateLimit(ip, 3, 60)) {
+  if (!checkRateLimit(ip, 5, 60)) {
     return json({ error: 'Too many attempts. Please wait a minute.' }, 429);
   }
   
   const { email } = data;
   if (!email) return json({ error: 'Email is required' }, 400);
   
-  // Check author exists and is verified
-  const author = await env.DB.prepare('SELECT * FROM authors WHERE email = ? AND verified = 1').bind(email).first();
-  if (!author) {
-    // Don't reveal if email exists — always return ok for security
-    return json({ ok: true, message: 'If this email is registered, a reset code has been sent.' });
+  const author = await env.DB.prepare(
+    'SELECT security_question FROM authors WHERE email = ? AND verified = 1'
+  ).bind(email).first();
+  
+  if (!author || !author.security_question) {
+    return json({ error: 'Account not found or no security question set' }, 404);
   }
   
-  const code = generateCode();
-  const codeExpires = new Date(Date.now() + 10 * 60 * 1000).toISOString().replace('T', ' ').substring(0, 19);
-  
-  await env.DB.prepare(
-    'UPDATE authors SET verify_code = ?, verify_code_expires = ? WHERE email = ?'
-  ).bind(code, codeExpires, email).run();
-  
-  const sent = await sendEmail(email,
-    'FictionVerse — Password Reset Code',
-    `Hello,\n\nYou requested a password reset for your FictionVerse author account.\n\nYour reset code is: ${code}\n\nThis code expires in 10 minutes.\n\nIf you didn't request this, please ignore this email.\n\n— FictionVerse Team`
-  );
-  
-  console.log(`Password reset code sent to ${email}: ${sent ? 'OK' : 'FAILED'}, code=${code}`);
-  
-  return json({ ok: true, message: 'If this email is registered, a reset code has been sent.' });
+  // Return the security question — user must answer correctly to reset
+  return json({ ok: true, question: author.security_question });
 }
 
 async function resetPassword(env, request, data) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (!checkRateLimit(ip, 3, 60)) {
+  if (!checkRateLimit(ip, 5, 60)) {
     return json({ error: 'Too many attempts. Please wait a minute.' }, 429);
   }
   
-  const { email, code, newPassword } = data;
-  if (!email || !code || !newPassword) {
-    return json({ error: 'Email, code, and new password are required' }, 400);
+  const { email, answer, newPassword } = data;
+  if (!email || !answer || !newPassword) {
+    return json({ error: 'Email, security answer, and new password are required' }, 400);
   }
   
-  // Validate password strength
   const pwError = validatePassword(newPassword);
   if (pwError) return json({ error: pwError }, 400);
   
-  // Verify code
+  // Verify security answer
   const author = await env.DB.prepare(
-    'SELECT * FROM authors WHERE email = ? AND verify_code = ? AND verify_code_expires > datetime(\'now\') AND verified = 1'
-  ).bind(email, code).first();
+    'SELECT * FROM authors WHERE email = ? AND security_answer = ? AND verified = 1'
+  ).bind(email, answer.toLowerCase().trim()).first();
   
   if (!author) {
-    return json({ error: 'Invalid or expired reset code' }, 400);
+    return json({ error: 'Incorrect security answer' }, 400);
   }
   
-  // Update password
   const pwHash = hashPassword(newPassword);
   await env.DB.prepare(
-    'UPDATE authors SET password_hash = ?, verify_code = NULL, verify_code_expires = NULL, auth_token = NULL, token_expires = NULL WHERE email = ?'
+    'UPDATE authors SET password_hash = ?, auth_token = NULL, token_expires = NULL WHERE email = ?'
   ).bind(pwHash, email).run();
   
-  console.log(`Password reset for ${email}`);
+  console.log(`Password reset (security Q&A) for ${email}`);
   
-  return json({ ok: true, message: 'Password reset successfully. Please login with your new password.' });
+  return json({ ok: true, message: 'Password reset successfully. Please login.' });
 }
 
 // Admin direct password reset (no email needed, master token only)
