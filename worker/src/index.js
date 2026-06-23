@@ -389,6 +389,10 @@ async function handleRequest(request, env) {
     if (request.method === 'PUT') return updateBook(env, slug, await request.json());
     if (request.method === 'DELETE') return deleteBook(env, slug);
   }
+  // Admin: delete book by author+title (for fixing broken books)
+  if (path === '/api/books/cleanup' && request.method === 'POST') {
+    return cleanupBadBook(env, request, await request.json());
+  }
 
   // Chapters
   const chMatch2 = path.match(/^\/api\/books\/([a-z0-9-]+)\/chapters$/);
@@ -594,6 +598,23 @@ async function deleteBook(env, slug) {
   await env.DB.prepare('DELETE FROM chapters WHERE book_slug = ?').bind(slug).run();
   await env.DB.prepare('DELETE FROM books WHERE slug = ?').bind(slug).run();
   return json({ ok: true });
+}
+
+// Admin cleanup: delete book by author (for fixing broken books with empty slugs)
+async function cleanupBadBook(env, request, data) {
+  if (!auth(request)) return json({ error: 'Admin only' }, 403);
+  const { author } = data;
+  if (!author) return json({ error: 'author required' }, 400);
+  
+  // Find and delete books with empty or broken slugs for this author
+  const books = (await env.DB.prepare('SELECT slug FROM books WHERE author = ?').bind(author).all()).results;
+  let deleted = 0;
+  for (const b of books) {
+    await env.DB.prepare('DELETE FROM chapters WHERE book_slug = ?').bind(b.slug).run();
+    await env.DB.prepare('DELETE FROM books WHERE slug = ?').bind(b.slug).run();
+    deleted++;
+  }
+  return json({ ok: true, deleted });
 }
 
 // Export D1 books as books.json format for static site build sync
