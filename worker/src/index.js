@@ -211,6 +211,10 @@ async function handleRequest(request, env) {
   if (path === '/api/author/reset-password' && request.method === 'POST') {
     return resetPassword(env, request, await request.json());
   }
+  // Admin password reset (bypass email, master token only)
+  if (path === '/api/author/admin-reset-password' && request.method === 'POST') {
+    return adminResetPassword(env, request, await request.json());
+  }
   // Delete account (requires auth)
   if (path === '/api/author/account' && request.method === 'DELETE') {
     return deleteAuthorAccount(env, request, await request.json());
@@ -1017,6 +1021,29 @@ async function resetPassword(env, request, data) {
   console.log(`Password reset for ${email}`);
   
   return json({ ok: true, message: 'Password reset successfully. Please login with your new password.' });
+}
+
+// Admin direct password reset (no email needed, master token only)
+async function adminResetPassword(env, request, data) {
+  if (!auth(request)) return json({ error: 'Admin access only' }, 403);
+  
+  const { email, newPassword } = data;
+  if (!email || !newPassword) return json({ error: 'Email and new password required' }, 400);
+  
+  const pwError = validatePassword(newPassword);
+  if (pwError) return json({ error: pwError }, 400);
+  
+  const author = await env.DB.prepare('SELECT * FROM authors WHERE email = ?').bind(email).first();
+  if (!author) return json({ error: 'Author not found' }, 404);
+  
+  const pwHash = hashPassword(newPassword);
+  await env.DB.prepare(
+    'UPDATE authors SET password_hash = ?, verify_code = NULL, verify_code_expires = NULL, auth_token = NULL, token_expires = NULL WHERE email = ?'
+  ).bind(pwHash, email).run();
+  
+  console.log(`Admin reset password for ${email}`);
+  
+  return json({ ok: true, message: 'Password reset by admin. Login with new password.' });
 }
 
 async function authorVerify(env, data) {
